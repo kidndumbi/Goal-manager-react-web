@@ -1,5 +1,7 @@
-const goalsReducer = (state: any, action: any) => {
-  let goals = [];
+import { GoalModel } from "../../models/GoalModel.interface";
+
+const goalsReducer = (state: any, action: { type: string; goalsData: any[]; searchValue: string; }) => {
+  let goals: GoalModel[] = [];
 
   if (action.type === "ALL") {
     goals = action.goalsData;

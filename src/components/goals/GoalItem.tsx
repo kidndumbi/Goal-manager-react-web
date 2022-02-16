@@ -2,9 +2,10 @@ import Moment from "react-moment";
 import "moment-timezone";
 import { timeDiffCalc } from "../../utils/timeFormatting";
 import React, { useState, useEffect, PropsWithChildren } from "react";
+import { GoalModel } from "../../models/GoalModel.interface";
 
 interface Props {
-  goal: any;
+  goal: GoalModel;
   className: string;
 }
 
