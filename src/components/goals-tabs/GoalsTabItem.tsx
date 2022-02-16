@@ -1,6 +1,16 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
-const GoalsTabItem = (props: any) => {
+import { MouseEventHandler, PropsWithChildren } from "react";
+
+interface Props {
+  className: string;
+  background: string;
+  count: number;
+  tabName: string;
+  onClick: MouseEventHandler<HTMLAnchorElement>;
+}
+
+const GoalsTabItem = (props: PropsWithChildren<Props>) => {
   return (
     <li className="nav-item">
       <a

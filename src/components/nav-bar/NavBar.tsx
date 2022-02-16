@@ -1,7 +1,13 @@
-import { useEffect, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
-const NavBar = ({ onSearch }: any) => {
+
+interface Props {
+  onSearch: Function
+}
+
+
+const NavBar = ({ onSearch }: PropsWithChildren<Props>) => {
   const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
