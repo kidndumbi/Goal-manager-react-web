@@ -1,7 +1,7 @@
 import { PropsWithChildren, useContext, useEffect, useState } from "react";
 import { GoalsContext } from "../../contexts/goals.context";
 import { GoalsTabsContext } from "../../contexts/goalsTabs.context";
-import { GoalTabModel } from "../../models/GoalTabModel";
+import { GoalTabModel } from "../../models/GoalTabModel.interface";
 import GoalsTabItem from "./GoalsTabItem";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
@@ -12,7 +12,7 @@ interface Props {
 
 const GoalsTabList = (props: PropsWithChildren<Props>) => {
   const { goalsData } = useContext<any>(GoalsContext);
-  const { goalsTabs, setGoalsTabs } = useContext<any>(GoalsTabsContext);
+  const { goalsTabs, setGoalsTabs } = useContext(GoalsTabsContext);
 
   useEffect(() => {
     const tabsClone = [...goalsTabs];
@@ -34,7 +34,7 @@ const GoalsTabList = (props: PropsWithChildren<Props>) => {
   useEffect(() => {
     console.log("goalsTabs", goalsTabs);
     props.onGoalTypeSelected(
-      goalsTabs.find((g: any) => g.active === true).name
+      goalsTabs.find((g: any) => g.active === true)?.name
     );
   }, [goalsTabs]);
 
