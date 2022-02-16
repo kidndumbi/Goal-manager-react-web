@@ -1,11 +1,22 @@
 import Moment from "react-moment";
 import "moment-timezone";
 import { timeDiffCalc } from "../../utils/timeFormatting";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, PropsWithChildren } from "react";
 
-const GoalItem = ({ goal, className }: any) => {
-  const getStatusColor = (status: any) => {
-    const colors: any = {
+interface Props {
+  goal: any;
+  className: string;
+}
+
+interface Colors {
+  FAILED: string;
+  IN_PROGRESS: string;
+  COMPLETE: string;
+}
+
+const GoalItem = ({ goal, className }: PropsWithChildren<Props>) => {
+  const getStatusColor = (status: "FAILED" | "IN_PROGRESS" | "COMPLETE") => {
+    const colors: Colors = {
       FAILED: "text-danger",
       IN_PROGRESS: "text-info",
       COMPLETE: "text-success",
@@ -14,8 +25,10 @@ const GoalItem = ({ goal, className }: any) => {
     return colors[status];
   };
 
-  const getStatusDisplayName = (status: string) => {
-    const displayName: any = {
+  const getStatusDisplayName = (
+    status: "FAILED" | "IN_PROGRESS" | "COMPLETE"
+  ) => {
+    const displayName: Colors = {
       FAILED: "FAILED",
       IN_PROGRESS: "IN PROGRESS",
       COMPLETE: "COMPLETE",

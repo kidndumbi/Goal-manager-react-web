@@ -1,9 +1,16 @@
-import { useEffect, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { GoalTabModel } from "../../models/GoalTabModel";
 import GoalsTabItem from "./GoalsTabItem";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
-const GoalsTabList = (props: any) => {
+
+interface Props {
+  goalsData: any;
+  onGoalTypeSelected: Function;
+}
+
+
+const GoalsTabList = (props: PropsWithChildren<Props>) => {
   const [tabs, setTabs] = useState<GoalTabModel[]>([
     { name: "ALL", background: "bg-secondary", count: 0, title: "All Tasks" },
     {

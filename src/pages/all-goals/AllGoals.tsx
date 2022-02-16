@@ -1,8 +1,13 @@
-import { useState } from "react";
+import { PropsWithChildren, useState } from "react";
 import GoalsTabList from "../../components/goals-tabs/GoalsTabList";
 import GoalList from "../../components/goals/GoalsList";
 
-const AllGoals = (props: any) => {
+interface Props {
+   goalsData: any;
+   searchValue: string;
+}
+
+const AllGoals = (props: PropsWithChildren<Props>) => {
 
     const [selectedGoalType, setSelectedGoalType] = useState('');
 
