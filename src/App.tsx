@@ -1,18 +1,18 @@
-import React from 'react';
+import React from "react";
 import { useEffect, useState } from "react";
 import classes from "./App.module.scss";
 import NavBar from "./components/nav-bar/NavBar";
+import { GoalsContext } from "./contexts/goals.context";
 import AllGoals from "./pages/all-goals/AllGoals";
 
 function App() {
   const [goalsData, setGoalsdata] = useState([]);
-
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState("");
 
   const onSearchHandler = (value: any) => {
-    console.log('serch value = ', value);
+    console.log("serch value = ", value);
     setSearchValue(value);
-  }
+  };
 
   useEffect(() => {
     fetch("https://whispering-headland-62985.herokuapp.com/goals-manager/goals")
@@ -26,11 +26,16 @@ function App() {
 
   return (
     <>
-      <NavBar onSearch={onSearchHandler}></NavBar>
+      <GoalsContext.Provider value={{ goalsData }}>
+        <NavBar onSearch={onSearchHandler}></NavBar>
 
-      <div className={`${classes.App} container`} style={{ paddingTop: "40px" }}>
-        <AllGoals goalsData={goalsData} searchValue={searchValue}/>
-      </div>
+        <div
+          className={`${classes.App} container`}
+          style={{ paddingTop: "40px" }}
+        >
+          <AllGoals searchValue={searchValue} />
+        </div>
+      </GoalsContext.Provider>
     </>
   );
 }
