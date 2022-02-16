@@ -1,24 +1,28 @@
-import { PropsWithChildren, useEffect, useState } from "react";
+import { PropsWithChildren, useContext, useEffect, useState } from "react";
+import { SearchedValueContext } from "../../contexts/searchedValue.context";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
 interface Props {
-  onSearch: Function
+  
 }
 
 
-const NavBar = ({ onSearch }: PropsWithChildren<Props>) => {
-  const [searchValue, setSearchValue] = useState("");
+const NavBar = (Props: PropsWithChildren<Props>) => {
+  const [searchValueLocal, setSearchValueLocal] = useState("");
+
+  const { setSearchValue } = useContext<any>(SearchedValueContext)
 
   useEffect(() => {
+
     const searchTimeout = setTimeout(() => {
-      onSearch(searchValue);
+      setSearchValue(searchValueLocal)
     }, 500);
 
     return () => {
       clearTimeout(searchTimeout);
     };
-  }, [searchValue]);
+  }, [searchValueLocal]);
 
   return (
     <>
@@ -54,7 +58,7 @@ const NavBar = ({ onSearch }: PropsWithChildren<Props>) => {
                 placeholder="Search"
                 aria-label="Search"
                 onChange={(event) => {
-                  setSearchValue(event.target.value);
+                  setSearchValueLocal(event.target.value);
                 }}
               />
             </form>

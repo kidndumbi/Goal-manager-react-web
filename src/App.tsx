@@ -5,40 +5,43 @@ import NavBar from "./components/nav-bar/NavBar";
 import { GoalsTabsContext } from "./contexts/goalsTabs.context";
 import { GoalsContext } from "./contexts/goals.context";
 import AllGoals from "./pages/all-goals/AllGoals";
+import { SearchedValueContext } from "./contexts/searchedValue.context";
 
 function App() {
   /// GOLABAL DATA
   const [goalsData, setGoalsdata] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [goalsTabs, setGoalsTabs] = useState([
-    { name: "ALL", background: "bg-secondary", count: 0, title: "All Tasks", active: false },
+    {
+      name: "ALL",
+      background: "bg-secondary",
+      count: 0,
+      title: "All Tasks",
+      active: false,
+    },
     {
       name: "IN_PROGRESS",
       background: "bg-primary",
       count: 0,
       title: "Tasks in Progress",
-      active: true
+      active: true,
     },
     {
       name: "COMPLETE",
       background: "bg-success",
       count: 0,
       title: "Completed Tasks",
-      active: false
+      active: false,
     },
     {
       name: "FAILED",
       background: "bg-danger",
       count: 0,
       title: "Failed Tasks",
-      active: false
+      active: false,
     },
   ]);
 
-  const onSearchHandler = (value: any) => {
-    console.log("serch value = ", value);
-    setSearchValue(value);
-  };
 
   useEffect(() => {
     fetch("https://whispering-headland-62985.herokuapp.com/goals-manager/goals")
@@ -53,15 +56,17 @@ function App() {
   return (
     <>
       <GoalsContext.Provider value={{ goalsData }}>
-        <GoalsTabsContext.Provider value={{goalsTabs, setGoalsTabs}}>
-          <NavBar onSearch={onSearchHandler}></NavBar>
+        <GoalsTabsContext.Provider value={{ goalsTabs, setGoalsTabs }}>
+          <SearchedValueContext.Provider value={{ searchValue, setSearchValue }}>
+            <NavBar ></NavBar>
 
-          <div
-            className={`${classes.App} container`}
-            style={{ paddingTop: "40px" }}
-          >
-            <AllGoals searchValue={searchValue} />
-          </div>
+            <div
+              className={`${classes.App} container`}
+              style={{ paddingTop: "40px" }}
+            >
+              <AllGoals  />
+            </div>
+          </SearchedValueContext.Provider>
         </GoalsTabsContext.Provider>
       </GoalsContext.Provider>
     </>
