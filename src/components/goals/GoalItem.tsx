@@ -8,15 +8,10 @@ interface Props {
   className: string;
 }
 
-interface Colors {
-  FAILED: string;
-  IN_PROGRESS: string;
-  COMPLETE: string;
-}
 
 const GoalItem = ({ goal, className }: PropsWithChildren<Props>) => {
   const getStatusColor = (status: "FAILED" | "IN_PROGRESS" | "COMPLETE") => {
-    const colors: Colors = {
+    const colors = {
       FAILED: "text-danger",
       IN_PROGRESS: "text-info",
       COMPLETE: "text-success",
@@ -28,7 +23,7 @@ const GoalItem = ({ goal, className }: PropsWithChildren<Props>) => {
   const getStatusDisplayName = (
     status: "FAILED" | "IN_PROGRESS" | "COMPLETE"
   ) => {
-    const displayName: Colors = {
+    const displayName  = {
       FAILED: "FAILED",
       IN_PROGRESS: "IN PROGRESS",
       COMPLETE: "COMPLETE",
