@@ -1,14 +1,17 @@
-import { PropsWithChildren, useEffect, useReducer } from "react";
+import { PropsWithChildren, useContext, useEffect, useReducer } from "react";
+import { GoalsContext } from "../../contexts/goals.context";
 import GoalItem from "./GoalItem";
 import { goalsReducer } from "./reducers";
 
 interface Props {
-  goalsData: string; 
   selectedGoalType:string;
   searchValue: string;
 }
 
-const GoalList = ({goalsData, selectedGoalType:type, searchValue}: PropsWithChildren<Props>) => {
+const GoalList = ({ selectedGoalType:type, searchValue}: PropsWithChildren<Props>) => {
+
+  const { goalsData } = useContext<any>(GoalsContext);
+
   const [goalsInfo, dispatchGoalsData] = useReducer(
     goalsReducer,
     goalsData

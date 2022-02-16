@@ -1,16 +1,20 @@
-import { PropsWithChildren, useEffect, useState } from "react";
+import { PropsWithChildren, useContext, useEffect, useState } from "react";
+import { GoalsContext } from "../../contexts/goals.context";
 import { GoalTabModel } from "../../models/GoalTabModel";
 import GoalsTabItem from "./GoalsTabItem";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
 interface Props {
-  goalsData: any;
   onGoalTypeSelected: Function;
 }
 
 
 const GoalsTabList = (props: PropsWithChildren<Props>) => {
+
+
+  const { goalsData } = useContext<any>(GoalsContext)
+
   const [tabs, setTabs] = useState<GoalTabModel[]>([
     { name: "ALL", background: "bg-secondary", count: 0, title: "All Tasks" },
     {
@@ -38,9 +42,9 @@ const GoalsTabList = (props: PropsWithChildren<Props>) => {
 
     tabsClone.forEach((tab) => {
       if (tab.name === "ALL") {
-        tab["count"] = props.goalsData.length;
+        tab["count"] = goalsData.length;
       } else {
-        const filteredData = props.goalsData.filter(
+        const filteredData = goalsData.filter(
           (g: any) => g.status === tab.name
         );
         tab["count"] = filteredData ? filteredData.length : 0;
@@ -48,7 +52,7 @@ const GoalsTabList = (props: PropsWithChildren<Props>) => {
     });
 
     setTabs(tabsClone);
-  }, [props.goalsData]);
+  }, [goalsData]);
 
   const [activeTab, setActiveTab] = useState<GoalTabModel | undefined>(
     tabs.find((t) => t.name === "IN_PROGRESS")
