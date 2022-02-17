@@ -1,19 +1,14 @@
-import { PropsWithChildren, useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { CurrentPageContext } from "../../contexts/currentPage.context";
+import { PropsWithChildren, useEffect, useState } from "react";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
 interface Props {
-  onSearch: Function;
+  onSearch: Function
 }
+
 
 const NavBar = ({ onSearch }: PropsWithChildren<Props>) => {
   const [searchValue, setSearchValue] = useState("");
-
-  const { currentPage } = useContext<any>(CurrentPageContext);
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     const searchTimeout = setTimeout(() => {
@@ -51,13 +46,8 @@ const NavBar = ({ onSearch }: PropsWithChildren<Props>) => {
               <li className="nav-item">
                 <a className="nav-link">Reports</a>
               </li>
-              <li className="nav-item">
-                <button className="btn btn-primary" type="button" onClick={() => { navigate('/addGoal')  }}>
-                  New Goal
-                </button>
-              </li>
             </ul>
-            { currentPage === 'MainPage' && <form className="d-flex">
+            <form className="d-flex">
               <input
                 className="form-control me-2"
                 type="search"
@@ -67,7 +57,7 @@ const NavBar = ({ onSearch }: PropsWithChildren<Props>) => {
                   setSearchValue(event.target.value);
                 }}
               />
-            </form>}
+            </form>
           </div>
         </div>
       </nav>
