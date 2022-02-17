@@ -6,10 +6,11 @@ import { GoalsContext } from "./contexts/goals.context";
 import AllGoals from "./pages/all-goals/AllGoals";
 import { GoalTabModel } from "./models/GoalTabModel.interface";
 import { GoalModel } from "./models/GoalModel.interface";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { EditGoal } from "./pages/edit-goal/EditGoal";
 import { AddGoal } from "./pages/add-goal/AddGoal";
 import { CurrentPageContext } from "./contexts/currentPage.context";
+import { Reports } from "./pages/reports/reporst";
 
 function App() {
   /// GOLABAL DATA
@@ -77,6 +78,7 @@ function App() {
                 />
                 <Route path="editGoal" element={<EditGoal />} />
                 <Route path="addGoal" element={<AddGoal />} />
+                <Route path="reports" element={<Reports />} />
               </Routes>
             </div>
           </CurrentPageContext.Provider>
