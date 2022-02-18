@@ -56,17 +56,19 @@ const NavBar = ({ onSearch }: PropsWithChildren<Props>) => {
                   <a className="nav-link">Reports</a>
                 </Link>
               </li>
-              <li className="nav-item">
-                <button
-                  className="btn btn-primary"
-                  type="button"
-                  onClick={() => {
-                    navigate("/addGoal");
-                  }}
-                >
-                  New Goal
-                </button>
-              </li>
+              {currentPage === "MainPage" && (
+                <li className="nav-item">
+                  <button
+                    className="btn btn-primary"
+                    type="button"
+                    onClick={() => {
+                      navigate("/addGoal");
+                    }}
+                  >
+                    New Goal
+                  </button>
+                </li>
+              )}
             </ul>
             {currentPage === "MainPage" && (
               <form className="d-flex">
