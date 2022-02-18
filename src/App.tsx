@@ -76,7 +76,7 @@ function App() {
                   path="/"
                   element={<AllGoals searchValue={searchValue} />}
                 />
-                <Route path="editGoal" element={<EditGoal />} />
+                <Route path="editGoal/:id" element={<EditGoal />} />
                 <Route path="addGoal" element={<AddGoal />} />
                 <Route path="reports" element={<Reports />} />
               </Routes>

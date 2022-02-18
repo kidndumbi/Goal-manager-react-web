@@ -3,6 +3,7 @@ import "moment-timezone";
 import { timeDiffCalc } from "../../utils/timeFormatting";
 import React, { useState, useEffect, PropsWithChildren } from "react";
 import { GoalModel } from "../../models/GoalModel.interface";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   goal: GoalModel;
@@ -11,6 +12,10 @@ interface Props {
 
 
 const GoalItem = ({ goal, className }: PropsWithChildren<Props>) => {
+
+  const navigate = useNavigate()
+
+
   const getStatusColor = (status: "FAILED" | "IN_PROGRESS" | "COMPLETE") => {
     const colors = {
       FAILED: "text-danger",
@@ -99,7 +104,7 @@ const GoalItem = ({ goal, className }: PropsWithChildren<Props>) => {
           </div>
         )}
 
-        <button className="btn btn-primary">Edit</button>
+        <button className="btn btn-primary" onClick={() => { navigate(`/editGoal/${goal.id}`) }}>Edit</button>
       </div>
     </div>
   );
