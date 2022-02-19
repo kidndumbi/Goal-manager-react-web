@@ -1,28 +1,34 @@
-import { PropsWithChildren, useContext, useEffect, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { CurrentPageContext } from "../../contexts/currentPage.context";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
 interface Props {
-  onSearch: Function;
+
 }
 
-const NavBar = ({ onSearch }: PropsWithChildren<Props>) => {
+const NavBar = (props: PropsWithChildren<Props>) => {
   const [searchValue, setSearchValue] = useState("");
 
-  const { currentPage } = useContext<any>(CurrentPageContext);
+  const currentPage = useSelector((state: any) => state.currentPage);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log("current page change:: ", currentPage);
+  }, [currentPage]);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const searchTimeout = setTimeout(() => {
-      onSearch(searchValue);
+      dispatch({ type: "SET_SEARCH_VALUE", payload: { searchValue } });
     }, 500);
     return () => {
       clearTimeout(searchTimeout);
     };
   }, [searchValue]);
+
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">

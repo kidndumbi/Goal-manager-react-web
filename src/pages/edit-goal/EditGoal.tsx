@@ -1,7 +1,6 @@
-import { PropsWithChildren, useContext, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { PropsWithChildren, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { CurrentPageContext } from "../../contexts/currentPage.context";
 import { GoalModel } from "../../models/GoalModel.interface";
 
 interface EditGoalProps {}
@@ -9,14 +8,17 @@ interface EditGoalProps {}
 const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
   const params = useParams();
 
-  const [goal, setGoal] = useState<GoalModel>();
+  const dispatch = useDispatch();
 
-  const { setCurrentPage } = useContext<any>(CurrentPageContext);
+  const [goal, setGoal] = useState<GoalModel>();
 
   const goalsData = useSelector((state: any) => state.goals);
 
   useEffect(() => {
-    setCurrentPage("editGoal");
+    dispatch({
+      type: "SET_CURRENT_PAGE",
+      payload: { currentPage: "editGoal" },
+    });
   }, []);
 
   useEffect(() => {
@@ -44,7 +46,6 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
           <option value="2"> Option2 </option>
         </select>
       </div>
-     
     </>
   );
 };
