@@ -2,7 +2,6 @@ import { PropsWithChildren, useContext, useEffect, useState } from "react";
 import GoalsTabList from "../../components/goals-tabs/GoalsTabList";
 import GoalList from "../../components/goals/GoalsList";
 import { CurrentPageContext } from "../../contexts/currentPage.context";
-import { GoalsContext } from "../../contexts/goals.context";
 
 interface Props {
    searchValue: string;
