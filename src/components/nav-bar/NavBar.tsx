@@ -1,6 +1,6 @@
-import { PropsWithChildren, useContext, useEffect, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { CurrentPageContext } from "../../contexts/currentPage.context";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
@@ -11,7 +11,11 @@ interface Props {
 const NavBar = ({ onSearch }: PropsWithChildren<Props>) => {
   const [searchValue, setSearchValue] = useState("");
 
-  const { currentPage } = useContext<any>(CurrentPageContext);
+  const currentPage  = useSelector((state: any) => state.currentPage);
+
+  useEffect(() => {
+    console.log("current page change:: ", currentPage);
+  }, [currentPage]);
 
   const navigate = useNavigate();
 

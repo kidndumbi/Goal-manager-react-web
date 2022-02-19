@@ -1,5 +1,5 @@
-import { PropsWithChildren, useContext, useEffect } from "react"
-import { CurrentPageContext } from "../../contexts/currentPage.context"
+import { PropsWithChildren, useEffect } from "react"
+import { useDispatch } from "react-redux";
 
 interface AddGoalProps {
 
@@ -7,10 +7,13 @@ interface AddGoalProps {
 
 const AddGoal = (props: PropsWithChildren<AddGoalProps>) => {
 
-    const { setCurrentPage } = useContext<any>(CurrentPageContext);
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        setCurrentPage('AddGoal')
+        dispatch({
+            type: "SET_CURRENT_PAGE",
+            payload: { currentPage: "AddGoal" },
+          });
     }, []);
 
     return (

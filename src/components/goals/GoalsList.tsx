@@ -1,6 +1,5 @@
-import { PropsWithChildren, useContext, useEffect, useReducer } from "react";
+import { PropsWithChildren, useEffect, useReducer } from "react";
 import { useSelector } from "react-redux";
-import { GoalModel } from "../../models/GoalModel.interface";
 import GoalItem from "./GoalItem";
 import { goalsReducer } from "./reducers";
 
