@@ -1,7 +1,7 @@
 import { PropsWithChildren, useContext, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { CurrentPageContext } from "../../contexts/currentPage.context";
-import { GoalsContext } from "../../contexts/goals.context";
 import { GoalModel } from "../../models/GoalModel.interface";
 
 interface EditGoalProps {}
@@ -13,14 +13,14 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
 
   const { setCurrentPage } = useContext<any>(CurrentPageContext);
 
-  const { goalsData } = useContext(GoalsContext);
+  const goalsData = useSelector((state: any) => state.goals);
 
   useEffect(() => {
     setCurrentPage("editGoal");
   }, []);
 
   useEffect(() => {
-    const filteredGoal = goalsData.filter((g) => g.id === params.id);
+    const filteredGoal = goalsData.filter((g: any) => g.id === params.id);
     setGoal(filteredGoal[0]);
   }, [goalsData]);
 

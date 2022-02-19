@@ -1,5 +1,5 @@
 import { PropsWithChildren, useContext, useEffect, useState } from "react";
-import { GoalsContext } from "../../contexts/goals.context";
+import { useSelector } from "react-redux";
 import { GoalsTabsContext } from "../../contexts/goalsTabs.context";
 import { GoalTabModel } from "../../models/GoalTabModel.interface";
 import GoalsTabItem from "./GoalsTabItem";
@@ -11,7 +11,7 @@ interface Props {
 }
 
 const GoalsTabList = (props: PropsWithChildren<Props>) => {
-  const { goalsData } = useContext<any>(GoalsContext);
+  const goalsData = useSelector((state: any) => state.goals);
   const { goalsTabs, setGoalsTabs } = useContext(GoalsTabsContext);
 
   useEffect(() => {

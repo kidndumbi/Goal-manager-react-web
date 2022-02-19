@@ -1,5 +1,5 @@
 import { PropsWithChildren, useContext, useEffect, useReducer } from "react";
-import { GoalsContext } from "../../contexts/goals.context";
+import { useSelector } from "react-redux";
 import { GoalModel } from "../../models/GoalModel.interface";
 import GoalItem from "./GoalItem";
 import { goalsReducer } from "./reducers";
@@ -13,7 +13,7 @@ const GoalList = ({
   selectedGoalType: type,
   searchValue,
 }: PropsWithChildren<Props>) => {
-  const { goalsData }:{goalsData: GoalModel[]} = useContext<any>(GoalsContext);
+  const goalsData = useSelector((state: any) => state.goals);
 
   const [goalsInfo, dispatchGoalsData] = useReducer(goalsReducer, goalsData);
 
