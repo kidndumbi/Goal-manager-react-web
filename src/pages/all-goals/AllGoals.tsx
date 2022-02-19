@@ -1,10 +1,10 @@
 import { PropsWithChildren, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import GoalsTabList from "../../components/goals-tabs/GoalsTabList";
 import GoalList from "../../components/goals/GoalsList";
 
 interface Props {
-  searchValue: string;
+
 }
 const AllGoals = (props: PropsWithChildren<Props>) => {
   const [selectedGoalType, setSelectedGoalType] = useState("");
@@ -25,7 +25,6 @@ const AllGoals = (props: PropsWithChildren<Props>) => {
       <GoalsTabList onGoalTypeSelected={goalTypeSelectedHandler}></GoalsTabList>
       <GoalList
         selectedGoalType={selectedGoalType}
-        searchValue={props.searchValue}
       ></GoalList>
     </>
   );

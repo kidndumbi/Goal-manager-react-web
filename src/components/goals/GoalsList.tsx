@@ -5,16 +5,15 @@ import { goalsReducer } from "./reducers";
 
 interface Props {
   selectedGoalType: string;
-  searchValue: string;
 }
 
 const GoalList = ({
   selectedGoalType: type,
-  searchValue,
 }: PropsWithChildren<Props>) => {
   const goalsData = useSelector((state: any) => state.goals);
 
   const [goalsInfo, dispatchGoalsData] = useReducer(goalsReducer, goalsData);
+  const searchValue = useSelector((state: any) => state.searchValue);
 
   useEffect(() => {
     dispatchGoalsData({

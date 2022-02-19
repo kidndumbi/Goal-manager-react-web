@@ -22,7 +22,6 @@ function App() {
     console.log("the goals data store ", goalsData);
   }, [goalsData]);
 
-  const [searchValue, setSearchValue] = useState("");
   const [goalsTabs, setGoalsTabs] = useState<GoalTabModel[]>([
     {
       name: "ALL",
@@ -59,38 +58,31 @@ function App() {
       url: "https://whispering-headland-62985.herokuapp.com/goals-manager/goals",
     },
     (data: GoalModel[]) => {
-      dispatch({ type: "GET_ALL_GOALS", payload: {goals: data} });
+      dispatch({ type: "GET_ALL_GOALS", payload: { goals: data } });
     },
     (err: any) => {
       console.log("ERRRROR happend", err);
     }
   );
 
-  const onSearchHandler = (value: any) => {
-    setSearchValue(value);
-  };
   useEffect(() => {
     sendRequest();
   }, []);
   return (
     <>
-
       <GoalsTabsContext.Provider value={{ goalsTabs, setGoalsTabs }}>
-          <NavBar onSearch={onSearchHandler}></NavBar>
-          <div
-            className={`${classes.App} container`}
-            style={{ paddingTop: "40px" }}
-          >
-            <Routes>
-              <Route
-                path="/"
-                element={<AllGoals searchValue={searchValue} />}
-              />
-              <Route path="editGoal/:id" element={<EditGoal />} />
-              <Route path="addGoal" element={<AddGoal />} />
-              <Route path="reports" element={<Reports />} />
-            </Routes>
-          </div>
+        <NavBar ></NavBar>
+        <div
+          className={`${classes.App} container`}
+          style={{ paddingTop: "40px" }}
+        >
+          <Routes>
+            <Route path="/" element={<AllGoals  />} />
+            <Route path="editGoal/:id" element={<EditGoal />} />
+            <Route path="addGoal" element={<AddGoal />} />
+            <Route path="reports" element={<Reports />} />
+          </Routes>
+        </div>
       </GoalsTabsContext.Provider>
     </>
   );
