@@ -1,3 +1,4 @@
+import { configureStore, createSlice } from "@reduxjs/toolkit";
 import { createStore } from "redux";
 import { GoalModel } from "../models/GoalModel.interface";
 
@@ -12,34 +13,46 @@ export interface StoreActionModel {
   payload?: any;
 }
 
-const storeReducer = (
-  state: StoreStateModel = { goals: [], currentPage: "MainPage", searchValue: '' },
-  action: StoreActionModel
-): StoreStateModel => {
-  if (action.type === "GET_ALL_GOALS") {
-    return {
-      ...state,
-      goals: action.payload.goals,
-    };
-  }
+const goalsSlice = createSlice({
+  name: "goals",
+  initialState: { goals: [] },
+  reducers: {
+    setGoals: (state: any, action) => {
+      state.goals = action.payload.goals;
+    },
+  },
+});
 
-  if (action.type === "SET_CURRENT_PAGE") {
-    return {
-      ...state,
-      currentPage: action.payload.currentPage,
-    };
-  }
+const currentPageSlice = createSlice({
+  name: "currentPage",
+  initialState: {currentPage: 'MainPage'},
+  reducers: {
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload.currentPage;
+    },
+  },
+});
 
-  if (action.type === "SET_SEARCH_VALUE") {
-    return {
-      ...state,
-      searchValue: action.payload.searchValue,
-    };
-  }
+const serachValueSlice = createSlice({
+  name: "searchValue",
+  initialState: {searchValue: ''},
+  reducers: {
+    setSearchValue: (state, action) => {
+      state.searchValue = action.payload.searchValue;
+    },
+  },
+});
 
-  return state;
-};
+const goalsActions = goalsSlice.actions;
+const currentPageActions = currentPageSlice.actions;
+const searchValueActions = serachValueSlice.actions;
 
-const store = createStore(storeReducer);
+const store = configureStore({
+  reducer: {
+    goals: goalsSlice.reducer,
+    currentPage: currentPageSlice.reducer,
+    searchValue: serachValueSlice.reducer,
+  },
+});
 
-export { store };
+export { store, goalsActions, currentPageActions, searchValueActions };

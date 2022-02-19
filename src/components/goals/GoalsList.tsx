@@ -10,10 +10,10 @@ interface Props {
 const GoalList = ({
   selectedGoalType: type,
 }: PropsWithChildren<Props>) => {
-  const goalsData = useSelector((state: any) => state.goals);
+  const goalsData = useSelector((state: any) => state.goals.goals);
 
   const [goalsInfo, dispatchGoalsData] = useReducer(goalsReducer, goalsData);
-  const searchValue = useSelector((state: any) => state.searchValue);
+  const searchValue = useSelector((state: any) => state.searchValue.searchValue);
 
   useEffect(() => {
     dispatchGoalsData({
