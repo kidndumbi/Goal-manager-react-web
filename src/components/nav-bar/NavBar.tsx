@@ -1,28 +1,27 @@
 import { PropsWithChildren, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { searchValueActions } from "../../store";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
-interface Props {
-
-}
+interface Props {}
 
 const NavBar = (props: PropsWithChildren<Props>) => {
   const [searchValue, setSearchValue] = useState("");
 
-  const currentPage = useSelector((state: any) => state.currentPage);
+  const currentPage = useSelector(
+    (state: any) => state.currentPage.currentPage
+  );
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    console.log("current page change:: ", currentPage);
-  }, [currentPage]);
+  useEffect(() => {}, [currentPage]);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const searchTimeout = setTimeout(() => {
-      dispatch({ type: "SET_SEARCH_VALUE", payload: { searchValue } });
+      dispatch(searchValueActions.setSearchValue({ searchValue }));
     }, 500);
     return () => {
       clearTimeout(searchTimeout);

@@ -11,11 +11,12 @@ import { AddGoal } from "./pages/add-goal/AddGoal";
 import { Reports } from "./pages/reports/reporst";
 import { useHttp } from "./hooks/use-http.hook";
 import { useDispatch, useSelector } from "react-redux";
+import { goalsActions } from "./store";
 
 function App() {
   /// GOLABAL DATA
 
-  const goalsData = useSelector((state: any) => state.goals);
+  const goalsData = useSelector((state: any) => state.goals.goals);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -58,7 +59,7 @@ function App() {
       url: "https://whispering-headland-62985.herokuapp.com/goals-manager/goals",
     },
     (data: GoalModel[]) => {
-      dispatch({ type: "GET_ALL_GOALS", payload: { goals: data } });
+      dispatch(goalsActions.setGoals({ goals: data }));
     },
     (err: any) => {
       console.log("ERRRROR happend", err);

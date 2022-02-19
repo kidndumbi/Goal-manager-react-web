@@ -11,7 +11,7 @@ interface Props {
 }
 
 const GoalsTabList = (props: PropsWithChildren<Props>) => {
-  const goalsData = useSelector((state: any) => state.goals);
+  const goalsData = useSelector((state: any) => state.goals.goals);
   const { goalsTabs, setGoalsTabs } = useContext(GoalsTabsContext);
 
   useEffect(() => {

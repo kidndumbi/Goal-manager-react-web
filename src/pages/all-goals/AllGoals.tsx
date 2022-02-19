@@ -2,6 +2,7 @@ import { PropsWithChildren, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import GoalsTabList from "../../components/goals-tabs/GoalsTabList";
 import GoalList from "../../components/goals/GoalsList";
+import { currentPageActions } from "../../store";
 
 interface Props {
 
@@ -11,10 +12,7 @@ const AllGoals = (props: PropsWithChildren<Props>) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch({
-      type: "SET_CURRENT_PAGE",
-      payload: { currentPage: "MainPage" },
-    });
+    dispatch(currentPageActions.setCurrentPage({ currentPage: "MainPage" }));
   }, []);
 
   const goalTypeSelectedHandler = (selected: any) => {
