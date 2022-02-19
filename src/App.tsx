@@ -11,6 +11,7 @@ import { EditGoal } from "./pages/edit-goal/EditGoal";
 import { AddGoal } from "./pages/add-goal/AddGoal";
 import { CurrentPageContext } from "./contexts/currentPage.context";
 import { Reports } from "./pages/reports/reporst";
+import { useHttp } from "./hooks/use-http.hook";
 
 function App() {
   /// GOLABAL DATA
@@ -48,18 +49,15 @@ function App() {
     },
   ]);
 
+  const { sendRequest } = useHttp({url:"https://whispering-headland-62985.herokuapp.com/goals-manager/goals" }, (data: GoalModel[]) => {
+      setGoalsdata(data);
+  }, (err: any) => { console.log('ERRRROR happend', err) });
+
   const onSearchHandler = (value: any) => {
-    console.log("serch value = ", value);
     setSearchValue(value);
   };
   useEffect(() => {
-    fetch("https://whispering-headland-62985.herokuapp.com/goals-manager/goals")
-      .then((response) => response.json())
-      // 4. Setting *dogImage* to the image url that we received from the response above
-      .then((data: GoalModel[]) => {
-        console.log("goals = ", data);
-        setGoalsdata(data);
-      });
+    sendRequest();
   }, []);
   return (
     <>
