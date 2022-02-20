@@ -1,20 +1,16 @@
 import Moment from "react-moment";
 import "moment-timezone";
 import { timeDiffCalc } from "../../utils/timeFormatting";
-import React, { useState, useEffect, PropsWithChildren } from "react";
+import { useState, useEffect, PropsWithChildren } from "react";
 import { GoalModel } from "../../models/GoalModel.interface";
-import { useNavigate } from "react-router-dom";
 
 interface Props {
   goal: GoalModel;
   className: string;
+  onEdit: Function;
 }
 
-
-const GoalItem = ({ goal, className }: PropsWithChildren<Props>) => {
-
-  const navigate = useNavigate()
-
+const GoalItem = ({ goal, className, onEdit }: PropsWithChildren<Props>) => {
 
   const getStatusColor = (status: "FAILED" | "IN_PROGRESS" | "COMPLETE") => {
     const colors = {
@@ -29,7 +25,7 @@ const GoalItem = ({ goal, className }: PropsWithChildren<Props>) => {
   const getStatusDisplayName = (
     status: "FAILED" | "IN_PROGRESS" | "COMPLETE"
   ) => {
-    const displayName  = {
+    const displayName = {
       FAILED: "FAILED",
       IN_PROGRESS: "IN PROGRESS",
       COMPLETE: "COMPLETE",
@@ -104,7 +100,14 @@ const GoalItem = ({ goal, className }: PropsWithChildren<Props>) => {
           </div>
         )}
 
-        <button className="btn btn-primary" onClick={() => { navigate(`/editGoal/${goal.id}`) }}>Edit</button>
+        <button
+          className="btn btn-primary"
+          onClick={() => {
+            onEdit(goal.id);
+          }}
+        >
+          Edit
+        </button>
       </div>
     </div>
   );
