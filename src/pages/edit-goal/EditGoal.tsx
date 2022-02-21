@@ -2,7 +2,7 @@ import { PropsWithChildren, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { GoalModel } from "../../models/GoalModel.interface";
-import { currentPageActions } from "../../store";
+import { currentPageActions } from "../../store/currentPage";
 
 interface EditGoalProps {}
 

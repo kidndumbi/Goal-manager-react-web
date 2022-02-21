@@ -11,7 +11,7 @@ interface Props {
 }
 
 const GoalItem = ({ goal, className, onEdit }: PropsWithChildren<Props>) => {
-
+  
   const getStatusColor = (status: "FAILED" | "IN_PROGRESS" | "COMPLETE") => {
     const colors = {
       FAILED: "text-danger",

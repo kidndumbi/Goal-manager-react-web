@@ -4,14 +4,12 @@ import NavBar from "./components/nav-bar/NavBar";
 import { GoalsTabsContext } from "./contexts/goalsTabs.context";
 import AllGoals from "./pages/all-goals/AllGoals";
 import { GoalTabModel } from "./models/GoalTabModel.interface";
-import { GoalModel } from "./models/GoalModel.interface";
 import { Routes, Route } from "react-router-dom";
 import { EditGoal } from "./pages/edit-goal/EditGoal";
 import { AddGoal } from "./pages/add-goal/AddGoal";
 import { Reports } from "./pages/reports/reporst";
-import { useHttp } from "./hooks/use-http.hook";
 import { useDispatch, useSelector } from "react-redux";
-import { goalsActions } from "./store";
+import { getGoalsThunk } from "./store/goals";
 
 function App() {
   /// GOLABAL DATA
@@ -20,7 +18,7 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log("the goals data store ", goalsData);
+    
   }, [goalsData]);
 
   const [goalsTabs, setGoalsTabs] = useState<GoalTabModel[]>([
@@ -54,20 +52,9 @@ function App() {
     },
   ]);
 
-  const { sendRequest } = useHttp(
-    {
-      url: "https://whispering-headland-62985.herokuapp.com/goals-manager/goals",
-    },
-    (data: GoalModel[]) => {
-      dispatch(goalsActions.setGoals({ goals: data }));
-    },
-    (err: any) => {
-      console.log("ERRRROR happend", err);
-    }
-  );
 
   useEffect(() => {
-    sendRequest();
+    dispatch(getGoalsThunk());
   }, []);
   return (
     <>
