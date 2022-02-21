@@ -1,6 +1,6 @@
 import { PropsWithChildren, useEffect } from "react"
 import { useDispatch } from "react-redux";
-import { currentPageActions } from "../../store";
+import { currentPageActions } from "../../store/currentPage";
 
 interface AddGoalProps {
 
