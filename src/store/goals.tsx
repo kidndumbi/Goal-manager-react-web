@@ -10,17 +10,21 @@ const goalsSlice = createSlice({
   },
 });
 
-const getGoalsThunk = () => {
-  return (dispatch: any) => {
-    fetch("https://whispering-headland-62985.herokuapp.com/goals-manager/goals")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        dispatch(goalsActions.setGoals({ goals: data }));
-      });
+const getGoals = () => {
+  return async (dispatch: any) => {
+    try {
+      const goals = await fetch(
+        "https://whispering-headland-62985.herokuapp.com/goals-manager/goals"
+      ).then((response) => response.json());
+
+      dispatch(goalsActions.setGoals({ goals }));
+    } catch (error) {}
   };
 };
 
-const goalsActions = goalsSlice.actions;
+const goalsActions = {
+  ...goalsSlice.actions,
+  getGoals,
+};
 
-export { goalsSlice, goalsActions, getGoalsThunk };
+export { goalsSlice, goalsActions };
