@@ -9,7 +9,7 @@ import { EditGoal } from "./pages/edit-goal/EditGoal";
 import { AddGoal } from "./pages/add-goal/AddGoal";
 import { Reports } from "./pages/reports/reporst";
 import { useDispatch, useSelector } from "react-redux";
-import { getGoalsThunk } from "./store/goals";
+import { goalsActions } from "./store/goals";
 
 function App() {
   /// GOLABAL DATA
@@ -54,7 +54,7 @@ function App() {
 
 
   useEffect(() => {
-    dispatch(getGoalsThunk());
+    dispatch(goalsActions.getGoals());
   }, []);
   return (
     <>
