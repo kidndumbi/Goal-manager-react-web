@@ -2,6 +2,7 @@ import { PropsWithChildren, useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { GoalsTabsContext } from "../../contexts/goalsTabs.context";
 import { GoalTabModel } from "../../models/GoalTabModel.interface";
+import { Loading } from "../goals/Loading";
 import GoalsTabItem from "./GoalsTabItem";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
@@ -12,6 +13,7 @@ interface Props {
 
 const GoalsTabList = (props: PropsWithChildren<Props>) => {
   const goalsData = useSelector((state: any) => state.goals.goals);
+
   const { goalsTabs, setGoalsTabs } = useContext(GoalsTabsContext);
 
   useEffect(() => {
@@ -54,6 +56,7 @@ const GoalsTabList = (props: PropsWithChildren<Props>) => {
 
   return (
     <div>
+      
       <ul className="nav nav-tabs">
         {goalsTabs.map((tab: any) => {
           return (

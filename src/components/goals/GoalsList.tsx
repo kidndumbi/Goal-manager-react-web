@@ -2,6 +2,7 @@ import { PropsWithChildren, useEffect, useReducer } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import GoalItem from "./GoalItem";
+import { Loading } from "./Loading";
 import { goalsReducer } from "./reducers";
 
 interface Props {
@@ -9,10 +10,11 @@ interface Props {
 }
 
 const GoalList = ({ selectedGoalType: type }: PropsWithChildren<Props>) => {
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const goalsData = useSelector((state: any) => state.goals.goals);
+  const loadingGoals = useSelector((state: any) => state.goals.loading);
+  const goalsError = useSelector((state: any) => state.goals.error);
 
   const [goalsInfo, dispatchGoalsData] = useReducer(goalsReducer, goalsData);
   const searchValue = useSelector(
@@ -20,7 +22,7 @@ const GoalList = ({ selectedGoalType: type }: PropsWithChildren<Props>) => {
   );
 
   const editHandler = (id: string) => {
-      navigate(`/editGoal/${id}`)
+    navigate(`/editGoal/${id}`);
   };
 
   useEffect(() => {
@@ -33,6 +35,13 @@ const GoalList = ({ selectedGoalType: type }: PropsWithChildren<Props>) => {
 
   return (
     <>
+      {loadingGoals && (
+        <Loading
+          className="pt-3 "
+          style={{ width: "3rem", height: "3rem" }}
+          text="Please Wait..."
+        ></Loading>
+      )}
       {goalsInfo.map((goal: any) => {
         return (
           <GoalItem

@@ -7,7 +7,7 @@ import { GoalModel } from "../../models/GoalModel.interface";
 interface Props {
   goal: GoalModel;
   className: string;
-  onEdit: Function;
+  onEdit: (id: string) => void;
 }
 
 const GoalItem = ({ goal, className, onEdit }: PropsWithChildren<Props>) => {
