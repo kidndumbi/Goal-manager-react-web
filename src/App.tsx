@@ -10,16 +10,14 @@ import { AddGoal } from "./pages/add-goal/AddGoal";
 import { Reports } from "./pages/reports/reporst";
 import { useDispatch, useSelector } from "react-redux";
 import { goalsActions } from "./store/goals";
+import { Loading } from "./components/goals/Loading";
 
 function App() {
   /// GOLABAL DATA
 
-  const goalsData = useSelector((state: any) => state.goals.goals);
+
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    
-  }, [goalsData]);
 
   const [goalsTabs, setGoalsTabs] = useState<GoalTabModel[]>([
     {
@@ -60,10 +58,12 @@ function App() {
     <>
       <GoalsTabsContext.Provider value={{ goalsTabs, setGoalsTabs }}>
         <NavBar ></NavBar>
+        
         <div
           className={`${classes.App} container`}
           style={{ paddingTop: "40px" }}
         >
+          
           <Routes>
             <Route path="/" element={<AllGoals  />} />
             <Route path="editGoal/:id" element={<EditGoal />} />
