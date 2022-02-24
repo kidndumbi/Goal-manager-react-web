@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { GoalModel } from "../../models/GoalModel.interface";
 import { currentPageActions } from "../../store/currentPage";
+import { Button, Modal } from "react-bootstrap";
+import { Objective } from "../../components/objective/Objective";
 
 interface EditGoalProps {}
 
@@ -13,10 +15,6 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
   const statusOptions = useSelector(
     (state: any) => state.statusOptions.options
   );
-
-  useEffect(() => {
-    console.log("statusOptions", statusOptions);
-  });
 
   const dispatch = useDispatch();
 
@@ -37,19 +35,35 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
     console.log("goal data", goal);
   }, [goal]);
 
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   return (
     <>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modal heading</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
       <Link to="/">
-        <button className="btn btn-primary" type="button">
-          {"Back"}
-        </button>
+        <Button variant="primary">{"Back"}</Button>
       </Link>
 
       <div className="d-flex justify-content-between pt-2">
         <h2>{goal?.name}</h2>
-        <button className="btn btn-danger" type="button">
-          Delete
-        </button>
+        <Button variant="danger">Delete</Button>
       </div>
       <hr />
       <div>
@@ -81,6 +95,32 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
             </Moment>
           </span>
         </div>
+      </div>
+      <div className="pt-4" style={{ color: "#0d6efd" }}>
+        <h3>Objectives</h3>
+      </div>
+      <hr></hr>
+      <div>
+        {goal?.objectives.map((objective: any) => {
+          return (
+            <div className="pb-2">
+              <Objective
+                onMarkedForDelete={() => {
+                  console.log("marked for deletion triggered", objective);
+                }}
+                onEdit={(objective) => {
+                  console.log("objective to edit", objective);
+                }}
+                data={objective}
+              ></Objective>
+            </div>
+          );
+        })}
+      </div>
+      <div className="d-grid gap-2 mb-4">
+        <Button variant="primary" size="lg">
+          Update
+        </Button>
       </div>
     </>
   );
