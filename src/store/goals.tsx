@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { GoalModel } from "../models/GoalModel.interface";
 
-type GoalsStateModel = {
+export type GoalsStateModel = {
   goals: GoalModel[];
   loading: boolean;
   error: any;
