@@ -103,17 +103,17 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
       <div>
         {goal?.objectives.map((objective: any) => {
           return (
-            <div className="pb-2">
-              <Objective
-                onMarkedForDelete={() => {
-                  console.log("marked for deletion triggered", objective);
-                }}
-                onEdit={(objective) => {
-                  console.log("objective to edit", objective);
-                }}
-                data={objective}
-              ></Objective>
-            </div>
+            <Objective
+              key={objective.id}
+              className="pb-2"
+              onMarkedForDelete={() => {
+                console.log("marked for deletion triggered", objective);
+              }}
+              onEdit={(objective) => {
+                console.log("objective to edit", objective);
+              }}
+              data={objective}
+            ></Objective>
           );
         })}
       </div>
