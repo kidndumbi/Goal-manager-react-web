@@ -2,7 +2,7 @@ import { PropsWithChildren, useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { GoalsTabsContext } from "../../contexts/goalsTabs.context";
 import { GoalTabModel } from "../../models/GoalTabModel.interface";
-import { Loading } from "../goals/Loading";
+import { Loading } from "../loading/Loading";
 import GoalsTabItem from "./GoalsTabItem";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */

@@ -2,7 +2,7 @@ import { PropsWithChildren, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import GoalsTabList from "../../components/goals-tabs/GoalsTabList";
 import GoalList from "../../components/goals/GoalsList";
-import { Loading } from "../../components/goals/Loading";
+import { Loading } from "../../components/loading/Loading";
 import { currentPageActions } from "../../store/currentPage";;
 
 interface Props {
