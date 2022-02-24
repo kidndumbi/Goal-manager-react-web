@@ -10,7 +10,7 @@ import { AddGoal } from "./pages/add-goal/AddGoal";
 import { Reports } from "./pages/reports/reporst";
 import { useDispatch, useSelector } from "react-redux";
 import { goalsActions } from "./store/goals";
-import { Loading } from "./components/goals/Loading";
+import { Loading } from "./components/loading/Loading";
 
 function App() {
   /// GOLABAL DATA

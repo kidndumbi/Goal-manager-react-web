@@ -2,7 +2,7 @@ import { PropsWithChildren, useEffect, useReducer } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import GoalItem from "./GoalItem";
-import { Loading } from "./Loading";
+import { Loading } from "../loading/Loading";
 import { goalsReducer } from "./reducers";
 
 interface Props {
