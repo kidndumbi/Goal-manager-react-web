@@ -1,13 +1,15 @@
-import { configureStore, createSlice } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 import { GoalModel } from "../models/GoalModel.interface";
 import { currentPageSlice } from "./currentPage";
 import { goalsSlice } from "./goals";
 import { searchValueSlice } from "./search";
+import { statusOptionsSlice } from "./statusOptions";
 
 export interface StoreStateModel {
   goals?: GoalModel[];
   currentPage?: string;
   searchValue?: string;
+  statusOptions?: any[]
 }
 
 export interface StoreActionModel {
@@ -15,8 +17,6 @@ export interface StoreActionModel {
   payload?: any;
 }
 
-// const goalsActions = goalsSlice.actions;
-// const currentPageActions = currentPageSlice.actions;
 const searchValueActions = searchValueSlice.actions;
 
 const store = configureStore({
@@ -24,6 +24,7 @@ const store = configureStore({
     goals: goalsSlice.reducer,
     currentPage: currentPageSlice.reducer,
     searchValue: searchValueSlice.reducer,
+    statusOptions: statusOptionsSlice.reducer
   },
 });
 

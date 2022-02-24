@@ -1,6 +1,7 @@
 import { PropsWithChildren, useEffect, useState } from "react";
+import Moment from "react-moment";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { GoalModel } from "../../models/GoalModel.interface";
 import { currentPageActions } from "../../store/currentPage";
 
@@ -8,6 +9,14 @@ interface EditGoalProps {}
 
 const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
   const params = useParams();
+
+  const statusOptions = useSelector(
+    (state: any) => state.statusOptions.options
+  );
+
+  useEffect(() => {
+    console.log("statusOptions", statusOptions);
+  });
 
   const dispatch = useDispatch();
 
@@ -30,7 +39,13 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
 
   return (
     <>
-      <div className="d-flex justify-content-between">
+      <Link to="/">
+        <button className="btn btn-primary" type="button">
+          {"Back"}
+        </button>
+      </Link>
+
+      <div className="d-flex justify-content-between pt-2">
         <h2>{goal?.name}</h2>
         <button className="btn btn-danger" type="button">
           Delete
@@ -38,11 +53,34 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
       </div>
       <hr />
       <div>
-        <label htmlFor="edit-goal-status"> Status </label>
-        <select id="edit-goal-status" className="form-control" autoFocus={true}>
-          <option value="1"> Option1 </option>
-          <option value="2"> Option2 </option>
+        <div className="pb-2">
+          <strong>Due Date: </strong>
+          <span>
+            <Moment format="dddd Do MMMM YYYY h:mm A">{goal?.dueDate}</Moment>
+          </span>
+        </div>
+        <label htmlFor="edit-goal-status">
+          {" "}
+          <strong>Status</strong>{" "}
+        </label>
+        <select
+          id="edit-goal-status"
+          className="form-control"
+          value={goal?.status}
+          autoFocus={true}
+        >
+          {statusOptions.map((status: { name: string; value: string }) => {
+            return <option value={status.value}> {status.name} </option>;
+          })}
         </select>
+        <div className="pt-2">
+          <strong>Created On: </strong>
+          <span>
+            <Moment format="dddd Do MMMM YYYY h:mm A">
+              {goal?.createDate}
+            </Moment>
+          </span>
+        </div>
       </div>
     </>
   );
