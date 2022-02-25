@@ -6,6 +6,9 @@ import { GoalModel } from "../../models/GoalModel.interface";
 import { currentPageActions } from "../../store/currentPage";
 import { Button, Modal } from "react-bootstrap";
 import { Objective } from "../../components/objective/Objective";
+import { ObjectiveModel } from "../../models/ObjectiveModel.interface";
+import { EditModal } from "../../components/edit-modal/EditModal";
+import { goalsActions } from "../../store/goals";
 
 interface EditGoalProps {}
 
@@ -19,6 +22,11 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
   const dispatch = useDispatch();
 
   const [goal, setGoal] = useState<GoalModel>();
+
+  const [dataToEdit, setDataToEdit] = useState<{ data: any; type: string }>({
+    data: {},
+    type: "",
+  });
 
   const goalsData = useSelector((state: any) => state.goals.goals);
 
@@ -35,30 +43,75 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
     console.log("goal data", goal);
   }, [goal]);
 
-  const [show, setShow] = useState(false);
+  const [showEditModal, setshowEditModal] = useState(false);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleCloseEditModal = () => {
+    setshowEditModal(false);
+  };
+  const handleShowEditModal = () => setshowEditModal(true);
+
+  const markedFordeleteHandler = (objective: ObjectiveModel) => {
+    const objectiveClone = goal?.objectives
+      ? JSON.parse(JSON.stringify(goal.objectives))
+      : [];
+    objectiveClone.forEach((objectiveC: ObjectiveModel) => {
+      if (objective.id === objectiveC.id) {
+        objectiveC.markedForDeletion = !objectiveC.markedForDeletion;
+      }
+    });
+
+    setGoal((prevState: any) => {
+      return {
+        ...prevState,
+        objectives: objectiveClone,
+      };
+    });
+  };
+
+  const onEdithandler = (objective: ObjectiveModel) => {
+    console.log("objective to edit", objective);
+    setDataToEdit({ data: objective, type: "objective" });
+    handleShowEditModal();
+  };
+
+  const onSaveEditChangesHandler = (modifiedData: any) => {
+    setshowEditModal(false);
+
+    if (modifiedData.type === "objective") {
+      const objectiveClone = goal?.objectives
+        ? JSON.parse(JSON.stringify(goal.objectives))
+        : [];
+      objectiveClone.forEach((objectiveC: ObjectiveModel) => {
+        if (modifiedData.data.id === objectiveC.id) {
+          console.log("ids match?");
+          objectiveC.markedForUpdate = true;
+          objectiveC.dueDate = modifiedData.data.dueDate;
+          objectiveC.name = modifiedData.data.name;
+          objectiveC.status = modifiedData.data.status;
+        }
+      });
+      setGoal((prevState: any) => {
+        return {
+          ...prevState,
+          objectives: objectiveClone,
+        };
+      });
+      return;
+    }
+
+    console.log("onSaveEditChangesHandler ", modifiedData);
+  };
 
   return (
     <>
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
+      <EditModal
+        showModal={showEditModal}
+        onCloseModal={handleCloseEditModal}
+        onSaveChanges={onSaveEditChangesHandler}
+        dataToEdit={dataToEdit}
+      ></EditModal>
       <Link to="/">
-        <Button variant="primary">{"Back"}</Button>
+        <Button variant="outline-primary">{"Back"}</Button>
       </Link>
 
       <div className="d-flex justify-content-between pt-2">
@@ -101,24 +154,22 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
       </div>
       <hr></hr>
       <div>
-        {goal?.objectives.map((objective: any) => {
+        {goal?.objectives.map((objective: ObjectiveModel) => {
           return (
             <Objective
               key={objective.id}
-              className="pb-2"
-              onMarkedForDelete={() => {
-                console.log("marked for deletion triggered", objective);
-              }}
-              onEdit={(objective) => {
-                console.log("objective to edit", objective);
-              }}
+              className="mb-2"
+              onMarkedForDelete={markedFordeleteHandler.bind(null, objective)}
+              onEdit={onEdithandler.bind(null, objective)}
               data={objective}
             ></Objective>
           );
         })}
       </div>
       <div className="d-grid gap-2 mb-4">
-        <Button variant="primary" size="lg">
+        <Button variant="primary" size="lg" onClick={() => {
+          dispatch(goalsActions.updateGoal(goal));
+        }}>
           Update
         </Button>
       </div>

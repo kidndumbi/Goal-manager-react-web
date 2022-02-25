@@ -5,17 +5,24 @@ export type GoalsStateModel = {
   goals: GoalModel[];
   loading: boolean;
   error: any;
+  goalUpdateError: any;
 };
 
 type GoalsReducersModel = {
   setGoals: (state: GoalsStateModel, action: any) => void;
   setLoading: (state: GoalsStateModel, action: any) => void;
   setError: (state: GoalsStateModel, action: any) => void;
+  setGoalUpdateError: (state: GoalsStateModel, action: any) => void;
 };
 
 const goalsSlice = createSlice<GoalsStateModel, GoalsReducersModel>({
   name: "goals",
-  initialState: { goals: [], loading: false, error: null },
+  initialState: {
+    goals: [],
+    loading: false,
+    error: null,
+    goalUpdateError: null,
+  },
   reducers: {
     setGoals: (state: GoalsStateModel, action) => {
       state.goals = action.payload.goals;
@@ -25,6 +32,9 @@ const goalsSlice = createSlice<GoalsStateModel, GoalsReducersModel>({
     },
     setError: (state: GoalsStateModel, action) => {
       state.error = action.payload.error;
+    },
+    setGoalUpdateError: (state: GoalsStateModel, action) => {
+      state.goalUpdateError = action.payload.error;
     },
   },
 });
@@ -48,9 +58,37 @@ const getGoals = () => {
   };
 };
 
+const updateGoal = (goal: GoalModel | undefined) => {
+  return async (dispatch: any) => {
+    try {
+      dispatch(goalsActions.setGoalUpdateError({ error: null }));
+      const goalSaved = fetch(
+        `https://whispering-headland-62985.herokuapp.com/goals-manager/goals/${goal?.id}`,
+        { method: "PUT",headers: {
+          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        }, body: JSON.stringify(goal) }
+      ).then((response) => response.json());
+
+      dispatch(goalsActions.getGoals());
+    } catch (error) {
+      dispatch(goalsActions.setGoalUpdateError({ error }));
+    }
+  };
+};
+
+// updateGoal(goal: GoalModel): Observable<GoalModel> {
+//   return this.http.put<GoalModel>(`/goals-manager/goals/${goal.id}`, goal)
+//   .pipe(map(goal => {
+//     this.setIsoDateValues(goal);
+//     return goal;
+//   }))
+// }
+
 const goalsActions = {
   ...goalsSlice.actions,
   getGoals,
+  updateGoal
 };
 
 export { goalsSlice, goalsActions };

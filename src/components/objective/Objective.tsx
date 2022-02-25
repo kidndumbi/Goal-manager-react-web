@@ -1,9 +1,10 @@
 import { Button, Card } from "react-bootstrap";
 import Moment from "react-moment";
 import { useSelector } from "react-redux";
+import { ObjectiveModel } from "../../models/ObjectiveModel.interface";
 
 type ObjectiveProps = {
-  data: any;
+  data: ObjectiveModel;
   onEdit: (objective: any) => void;
   onMarkedForDelete: (objective: any) => void;
   className?: string;
@@ -22,18 +23,20 @@ const Objective: React.FC<ObjectiveProps> = ({
   return (
     <>
       <Card className={className}>
-        <Card.Header>{data.name}</Card.Header>
-        <Card.Body>
-          <Card.Title>
-            <div className="d-flex justify-content-between">
-              <span>Special title treatment</span>
+        <Card.Header>
+        <div className="d-flex justify-content-between">
+              <span>{data.name}</span>
               <Button
-                variant="danger"
+                variant={`${data.markedForDeletion === true ? 'outline-danger' : 'danger'}`}
                 onClick={onMarkedForDelete.bind(null, data)}
               >
-                Delete
+                {`${data.markedForDeletion === true ? 'Undo Delete' : 'Delete'}`}
               </Button>
             </div>
+        </Card.Header>
+        <Card.Body>
+          <Card.Title>
+  
           </Card.Title>
           <Card.Text>
             <div>
