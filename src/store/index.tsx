@@ -4,6 +4,7 @@ import { currentPageSlice } from "./currentPage";
 import { goalsSlice } from "./goals";
 import { searchValueSlice } from "./search";
 import { statusOptionsSlice } from "./statusOptions";
+import { toastsSlice } from "./toasts";
 
 export interface StoreStateModel {
   goals?: GoalModel[];
@@ -24,7 +25,8 @@ const store = configureStore({
     goals: goalsSlice.reducer,
     currentPage: currentPageSlice.reducer,
     searchValue: searchValueSlice.reducer,
-    statusOptions: statusOptionsSlice.reducer
+    statusOptions: statusOptionsSlice.reducer,
+    toasts: toastsSlice.reducer
   },
 });
 

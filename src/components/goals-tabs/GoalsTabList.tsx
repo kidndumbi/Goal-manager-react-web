@@ -34,7 +34,6 @@ const GoalsTabList = (props: PropsWithChildren<Props>) => {
   }, [goalsData]);
 
   useEffect(() => {
-    console.log("goalsTabs", goalsTabs);
     props.onGoalTypeSelected(
       goalsTabs.find((g: any) => g.active === true)?.name
     );

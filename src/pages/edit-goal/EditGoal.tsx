@@ -9,6 +9,7 @@ import { Objective } from "../../components/objective/Objective";
 import { ObjectiveModel } from "../../models/ObjectiveModel.interface";
 import { EditModal } from "../../components/edit-modal/EditModal";
 import { goalsActions } from "../../store/goals";
+import { toastActions } from "../../store/toasts";
 
 interface EditGoalProps {}
 
@@ -21,7 +22,14 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
 
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(currentPageActions.setCurrentPage({ currentPage: "EditGoal" }));
+  }, []);
+
   const [goal, setGoal] = useState<GoalModel>();
+  useEffect(() => {
+    console.log("goal data", goal);
+  }, [goal]);
 
   const [dataToEdit, setDataToEdit] = useState<{ data: any; type: string }>({
     data: {},
@@ -29,19 +37,10 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
   });
 
   const goalsData = useSelector((state: any) => state.goals.goals);
-
-  useEffect(() => {
-    dispatch(currentPageActions.setCurrentPage({ currentPage: "EditGoal" }));
-  }, []);
-
   useEffect(() => {
     const filteredGoal = goalsData.filter((g: any) => g.id === params.id);
     setGoal(filteredGoal[0]);
   }, [goalsData]);
-
-  useEffect(() => {
-    console.log("goal data", goal);
-  }, [goal]);
 
   const [showEditModal, setshowEditModal] = useState(false);
 
@@ -101,7 +100,6 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
       });
       return;
     } else if (modifiedData.type === "goalHeaders") {
-      //console.log("update goal headers here!");
       const { dueDate, name, status } = modifiedData.data;
       setGoal((prevState: any) => {
         return {
@@ -112,7 +110,6 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
         };
       });
     }
-
   };
 
   return (
@@ -124,7 +121,10 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
         dataToEdit={dataToEdit}
       ></EditModal>
       <Link to="/">
-        <Button variant="outline-primary">{"Back"}</Button>
+        <Button variant="outline-primary">
+          <i className="bi bi-arrow-left-circle-fill"></i>
+          {" Back"}
+        </Button>
       </Link>
 
       <div className="d-flex justify-content-between pt-2">

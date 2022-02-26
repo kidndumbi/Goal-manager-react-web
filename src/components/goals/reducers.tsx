@@ -9,7 +9,6 @@ const goalsReducer = (state: any, action: { type: string; goalsData: any[]; sear
     const filteredGoals = action.goalsData.filter(
       (goal: any) => goal.status === action.type
     );
-    console.log('filtered goals = ', filteredGoals);
     goals = filteredGoals;
   }
 
