@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { GoalModel } from "../../models/GoalModel.interface";
 import { currentPageActions } from "../../store/currentPage";
-import { Button, Modal } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { Objective } from "../../components/objective/Objective";
 import { ObjectiveModel } from "../../models/ObjectiveModel.interface";
 import { EditModal } from "../../components/edit-modal/EditModal";
@@ -68,9 +68,13 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
     });
   };
 
-  const onEdithandler = (objective: ObjectiveModel) => {
-    console.log("objective to edit", objective);
+  const onObjectiveEdithandler = (objective: ObjectiveModel) => {
     setDataToEdit({ data: objective, type: "objective" });
+    handleShowEditModal();
+  };
+
+  const onGoalHeaderEdithandler = () => {
+    setDataToEdit({ data: goal, type: "goalHeaders" });
     handleShowEditModal();
   };
 
@@ -83,7 +87,6 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
         : [];
       objectiveClone.forEach((objectiveC: ObjectiveModel) => {
         if (modifiedData.data.id === objectiveC.id) {
-          console.log("ids match?");
           objectiveC.markedForUpdate = true;
           objectiveC.dueDate = modifiedData.data.dueDate;
           objectiveC.name = modifiedData.data.name;
@@ -97,9 +100,19 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
         };
       });
       return;
+    } else if (modifiedData.type === "goalHeaders") {
+      //console.log("update goal headers here!");
+      const { dueDate, name, status } = modifiedData.data;
+      setGoal((prevState: any) => {
+        return {
+          ...prevState,
+          dueDate,
+          name,
+          status,
+        };
+      });
     }
 
-    console.log("onSaveEditChangesHandler ", modifiedData);
   };
 
   return (
@@ -126,27 +139,22 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
             <Moment format="dddd Do MMMM YYYY h:mm A">{goal?.dueDate}</Moment>
           </span>
         </div>
-        <label htmlFor="edit-goal-status">
-          {" "}
-          <strong>Status</strong>{" "}
-        </label>
-        <select
-          id="edit-goal-status"
-          className="form-control"
-          value={goal?.status}
-          autoFocus={true}
-        >
-          {statusOptions.map((status: { name: string; value: string }) => {
-            return <option value={status.value}> {status.name} </option>;
-          })}
-        </select>
-        <div className="pt-2">
+        <div>
+          <strong>Status: </strong>
+          {statusOptions.find((stat: any) => stat.value === goal?.status)?.name}
+        </div>
+        <div className="pt-2 pb-2">
           <strong>Created On: </strong>
           <span>
             <Moment format="dddd Do MMMM YYYY h:mm A">
               {goal?.createDate}
             </Moment>
           </span>
+        </div>
+        <div>
+          <Button variant="primary" onClick={onGoalHeaderEdithandler}>
+            Edit
+          </Button>
         </div>
       </div>
       <div className="pt-4" style={{ color: "#0d6efd" }}>
@@ -160,16 +168,20 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
               key={objective.id}
               className="mb-2"
               onMarkedForDelete={markedFordeleteHandler.bind(null, objective)}
-              onEdit={onEdithandler.bind(null, objective)}
+              onEdit={onObjectiveEdithandler.bind(null, objective)}
               data={objective}
             ></Objective>
           );
         })}
       </div>
       <div className="d-grid gap-2 mb-4">
-        <Button variant="primary" size="lg" onClick={() => {
-          dispatch(goalsActions.updateGoal(goal));
-        }}>
+        <Button
+          variant="primary"
+          size="lg"
+          onClick={() => {
+            dispatch(goalsActions.updateGoal(goal));
+          }}
+        >
           Update
         </Button>
       </div>
