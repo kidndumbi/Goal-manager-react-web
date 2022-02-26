@@ -14,21 +14,23 @@ type EditModalProps = {
 };
 
 const EditModal = (props: PropsWithChildren<EditModalProps>) => {
+  const { data } = props.dataToEdit;
+
   const [dueDate, setDueDate] = useState(new Date());
-  const [name, setName] = useState(props.dataToEdit.data.name);
-  const [status, setStatus] = useState(props.dataToEdit.data.status);
+  const [name, setName] = useState("");
+  const [status, setStatus] = useState("");
 
   useEffect(() => {
-    setDueDate(props.dataToEdit.data.dueDate);
-  }, [props.dataToEdit.data.dueDate]);
-
-  useEffect(() => {
-    setName(props.dataToEdit.data.name);
-  }, [props.dataToEdit.data.name]);
-
-  useEffect(() => {
-    setStatus(props.dataToEdit.data.status);
-  }, [props.dataToEdit.data.status]);
+    if (data.dueDate !== undefined) {
+      setDueDate(data.dueDate);
+    }
+    if (data.status !== undefined) {
+      setStatus(data.status);
+    }
+    if (data.name !== undefined) {
+      setName(data.name);
+    }
+  }, [data.dueDate, data.status, data.name]);
 
   const statusOptions = useSelector(
     (state: any) => state.statusOptions.options
@@ -49,8 +51,8 @@ const EditModal = (props: PropsWithChildren<EditModalProps>) => {
             <input
               className="form-control"
               id="edit-name"
-              type={"text"}
-              placeholder={"enter name"}
+              type="text"
+              placeholder="enter name"
               value={name}
               onChange={({ target }) => {
                 setName(target.value);
@@ -69,9 +71,7 @@ const EditModal = (props: PropsWithChildren<EditModalProps>) => {
               showTimeInput
             />
             <span>
-              <Moment format="dddd Do MMMM YYYY h:mm A">
-                {props.dataToEdit.data?.dueDate}
-              </Moment>
+              <Moment format="dddd Do MMMM YYYY h:mm A">{data?.dueDate}</Moment>
             </span>
           </div>
           <label htmlFor="edit-goal-status">
@@ -100,7 +100,7 @@ const EditModal = (props: PropsWithChildren<EditModalProps>) => {
             <strong>Created On: </strong>
             <span>
               <Moment format="dddd Do MMMM YYYY h:mm A">
-                {props.dataToEdit.data?.createDate}
+                {data?.createDate}
               </Moment>
             </span>
           </div>
@@ -117,7 +117,7 @@ const EditModal = (props: PropsWithChildren<EditModalProps>) => {
               data: {
                 name,
                 status,
-                id: props.dataToEdit.data?.id,
+                id: data?.id,
                 dueDate: new Date(dueDate).getTime(),
               },
               type: props.dataToEdit.type,
