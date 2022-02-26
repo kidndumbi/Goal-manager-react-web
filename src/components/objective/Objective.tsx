@@ -48,10 +48,6 @@ const Objective: React.FC<ObjectiveProps> = ({
                   </Moment>
                 </span>
               </div>
-              <label htmlFor="edit-goal-status">
-                {" "}
-                <strong>Status</strong>{" "}
-              </label>
               <div>
                 <strong>Status: </strong>
                 {

@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 import { PropsWithChildren, useEffect, useState } from "react";
 import Moment from "react-moment";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,7 +10,6 @@ import { Objective } from "../../components/objective/Objective";
 import { ObjectiveModel } from "../../models/ObjectiveModel.interface";
 import { EditModal } from "../../components/edit-modal/EditModal";
 import { goalsActions } from "../../store/goals";
-import { toastActions } from "../../store/toasts";
 
 interface EditGoalProps {}
 
@@ -68,7 +68,27 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
   };
 
   const onObjectiveEdithandler = (objective: ObjectiveModel) => {
-    setDataToEdit({ data: objective, type: "objective" });
+    setDataToEdit({
+      data: objective,
+      type: objective.isNew ? "new-objective" : "objective",
+    });
+    handleShowEditModal();
+  };
+
+  const addNewObjectiveHandler = () => {
+    setDataToEdit({
+      data: {
+        dueDate: goal?.dueDate,
+        name: "",
+        id: null,
+        isNew: true,
+        status: "IN_PROGRESS",
+        markedForDeletion: false,
+        markedForUpdate: true,
+      },
+      type: "new-objective",
+    });
+
     handleShowEditModal();
   };
 
@@ -99,6 +119,40 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
         };
       });
       return;
+    } else if (modifiedData.type === "new-objective") {
+      console.log("new-objective", modifiedData.data);
+
+      const objectiveClone = goal?.objectives
+        ? JSON.parse(JSON.stringify(goal.objectives))
+        : [];
+
+      // new objective that is already save in store so update in store
+      if (modifiedData.data.tempIdForNew) {
+        // not added to store so insert new record
+        console.log(
+          "new objective that is already save in store so update in store"
+        );
+
+        objectiveClone.forEach((objectiveC: ObjectiveModel) => {
+          if (modifiedData.data.tempIdForNew === objectiveC.tempIdForNew) {
+            objectiveC.dueDate = modifiedData.data.dueDate;
+            objectiveC.name = modifiedData.data.name;
+          }
+        });
+      } else {
+        console.log("not added to store so insert new record");
+        objectiveClone.push({
+          ...modifiedData.data,
+          tempIdForNew: uuidv4(),
+        });
+      }
+
+      setGoal((prevState: any) => {
+        return {
+          ...prevState,
+          objectives: objectiveClone,
+        };
+      });
     } else if (modifiedData.type === "goalHeaders") {
       const { dueDate, name, status } = modifiedData.data;
       setGoal((prevState: any) => {
@@ -158,7 +212,14 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
         </div>
       </div>
       <div className="pt-4" style={{ color: "#0d6efd" }}>
-        <h3>Objectives</h3>
+        {/* <h3>Objectives</h3> */}
+        <div className="d-flex justify-content-between pt-2">
+          <h3>Objectives</h3>
+          <Button variant="outline-success" onClick={addNewObjectiveHandler}>
+            <i className="bi bi-plus-circle-fill"></i>
+            {" ADD"}
+          </Button>
+        </div>
       </div>
       <hr></hr>
       <div>

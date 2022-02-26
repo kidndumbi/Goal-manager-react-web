@@ -4,6 +4,7 @@ import Moment from "react-moment";
 import { useSelector } from "react-redux";
 import DatePicker from "react-datepicker";
 
+
 import "react-datepicker/dist/react-datepicker.css";
 
 type EditModalProps = {
@@ -74,36 +75,45 @@ const EditModal = (props: PropsWithChildren<EditModalProps>) => {
               <Moment format="dddd Do MMMM YYYY h:mm A">{data?.dueDate}</Moment>
             </span>
           </div>
-          <label htmlFor="edit-goal-status">
-            {" "}
-            <strong>Status</strong>{" "}
-          </label>
-          <select
-            id="edit-goal-status"
-            className="form-control"
-            value={status}
-            onChange={({ target }) => {
-              setStatus(target.value);
-            }}
-            autoFocus={true}
-          >
-            {statusOptions.map((status: { name: string; value: string }) => {
-              return (
-                <option key={status.value} value={status.value}>
-                  {" "}
-                  {status.name}{" "}
-                </option>
-              );
-            })}
-          </select>
-          <div className="pt-2">
-            <strong>Created On: </strong>
-            <span>
-              <Moment format="dddd Do MMMM YYYY h:mm A">
-                {data?.createDate}
-              </Moment>
-            </span>
-          </div>
+          {props.dataToEdit.type !== "new-objective" && (
+            <div>
+              <label htmlFor="edit-goal-status">
+                {" "}
+                <strong>Status</strong>{" "}
+              </label>
+              <select
+                id="edit-goal-status"
+                className="form-control"
+                value={status}
+                onChange={({ target }) => {
+                  setStatus(target.value);
+                }}
+                autoFocus={true}
+              >
+                {statusOptions.map(
+                  (status: { name: string; value: string }) => {
+                    return (
+                      <option key={status.value} value={status.value}>
+                        {" "}
+                        {status.name}{" "}
+                      </option>
+                    );
+                  }
+                )}
+              </select>
+            </div>
+          )}
+
+          {props.dataToEdit.type !== "new-objective" && (
+            <div className="pt-2">
+              <strong>Created On: </strong>
+              <span>
+                <Moment format="dddd Do MMMM YYYY h:mm A">
+                  {data?.createDate}
+                </Moment>
+              </span>
+            </div>
+          )}
         </div>
       </Modal.Body>
       <Modal.Footer>
@@ -115,9 +125,9 @@ const EditModal = (props: PropsWithChildren<EditModalProps>) => {
           onClick={() => {
             props.onSaveChanges({
               data: {
+                ...data,
                 name,
                 status,
-                id: data?.id,
                 dueDate: new Date(dueDate).getTime(),
               },
               type: props.dataToEdit.type,
