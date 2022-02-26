@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { GoalModel } from "../models/GoalModel.interface";
+import { toastActions } from "./toasts";
 
 export type GoalsStateModel = {
   goals: GoalModel[];
@@ -54,6 +55,15 @@ const getGoals = () => {
     } catch (error) {
       dispatch(goalsActions.setLoading({ loading: false }));
       dispatch(goalsActions.setError({ error }));
+      dispatch(
+        toastActions.addToast({
+          toast: {
+            header: "Error",
+            bodyText: "There was an error retrieving goals.",
+            backgroundColor: "danger",
+          },
+        })
+      );
     }
   };
 };
@@ -62,33 +72,46 @@ const updateGoal = (goal: GoalModel | undefined) => {
   return async (dispatch: any) => {
     try {
       dispatch(goalsActions.setGoalUpdateError({ error: null }));
-      const goalSaved = fetch(
+      const goalSaved = await fetch(
         `https://whispering-headland-62985.herokuapp.com/goals-manager/goals/${goal?.id}`,
-        { method: "PUT",headers: {
-          'Content-Type': 'application/json'
-          // 'Content-Type': 'application/x-www-form-urlencoded',
-        }, body: JSON.stringify(goal) }
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(goal),
+        }
       ).then((response) => response.json());
 
+      dispatch(
+        toastActions.addToast({
+          toast: {
+            header: "Success",
+            bodyText: "Goal Updated successfully.",
+            backgroundColor: "success",
+          },
+        })
+      );
       dispatch(goalsActions.getGoals());
     } catch (error) {
       dispatch(goalsActions.setGoalUpdateError({ error }));
+      dispatch(
+        toastActions.addToast({
+          toast: {
+            header: "Error",
+            bodyText: "There was an error updating the goal. Please try again.",
+            backgroundColor: "danger",
+          },
+        })
+      );
     }
   };
 };
 
-// updateGoal(goal: GoalModel): Observable<GoalModel> {
-//   return this.http.put<GoalModel>(`/goals-manager/goals/${goal.id}`, goal)
-//   .pipe(map(goal => {
-//     this.setIsoDateValues(goal);
-//     return goal;
-//   }))
-// }
-
 const goalsActions = {
   ...goalsSlice.actions,
   getGoals,
-  updateGoal
+  updateGoal,
 };
 
 export { goalsSlice, goalsActions };

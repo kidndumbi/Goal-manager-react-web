@@ -8,16 +8,14 @@ import { Routes, Route } from "react-router-dom";
 import { EditGoal } from "./pages/edit-goal/EditGoal";
 import { AddGoal } from "./pages/add-goal/AddGoal";
 import { Reports } from "./pages/reports/reporst";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { goalsActions } from "./store/goals";
-import { Loading } from "./components/loading/Loading";
+import { Toasts } from "./components/toasts/Toasts";
 
 function App() {
   /// GOLABAL DATA
 
-
   const dispatch = useDispatch();
-
 
   const [goalsTabs, setGoalsTabs] = useState<GoalTabModel[]>([
     {
@@ -50,22 +48,21 @@ function App() {
     },
   ]);
 
-
   useEffect(() => {
     dispatch(goalsActions.getGoals());
   }, []);
   return (
     <>
       <GoalsTabsContext.Provider value={{ goalsTabs, setGoalsTabs }}>
-        <NavBar ></NavBar>
-        
+        <Toasts></Toasts>
+        <NavBar></NavBar>
+
         <div
           className={`${classes.App} container`}
           style={{ paddingTop: "40px" }}
         >
-          
           <Routes>
-            <Route path="/" element={<AllGoals  />} />
+            <Route path="/" element={<AllGoals />} />
             <Route path="editGoal/:id" element={<EditGoal />} />
             <Route path="addGoal" element={<AddGoal />} />
             <Route path="reports" element={<Reports />} />

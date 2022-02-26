@@ -24,20 +24,20 @@ const Objective: React.FC<ObjectiveProps> = ({
     <>
       <Card className={className}>
         <Card.Header>
-        <div className="d-flex justify-content-between">
-              <span>{data.name}</span>
-              <Button
-                variant={`${data.markedForDeletion === true ? 'outline-danger' : 'danger'}`}
-                onClick={onMarkedForDelete.bind(null, data)}
-              >
-                {`${data.markedForDeletion === true ? 'Undo Delete' : 'Delete'}`}
-              </Button>
-            </div>
+          <div className="d-flex justify-content-between">
+            <span>{data.name}</span>
+            <Button
+              variant={`${
+                data.markedForDeletion === true ? "outline-danger" : "danger"
+              }`}
+              onClick={onMarkedForDelete.bind(null, data)}
+            >
+              {`${data.markedForDeletion === true ? "Undo Delete" : "Delete"}`}
+            </Button>
+          </div>
         </Card.Header>
         <Card.Body>
-          <Card.Title>
-  
-          </Card.Title>
+          <Card.Title></Card.Title>
           <Card.Text>
             <div>
               <div className="pb-2">
@@ -52,24 +52,13 @@ const Objective: React.FC<ObjectiveProps> = ({
                 {" "}
                 <strong>Status</strong>{" "}
               </label>
-              <select
-                id="edit-goal-status"
-                className="form-control"
-                value={data?.status}
-                onChange={() => {}}
-                autoFocus={true}
-              >
-                {statusOptions.map(
-                  (status: { name: string; value: string }) => {
-                    return (
-                      <option key={status.value} value={status.value}>
-                        {" "}
-                        {status.name}{" "}
-                      </option>
-                    );
-                  }
-                )}
-              </select>
+              <div>
+                <strong>Status: </strong>
+                {
+                  statusOptions.find((stat: any) => stat.value === data?.status)
+                    ?.name
+                }
+              </div>
               <div className="pt-2">
                 <strong>Created On: </strong>
                 <span>
