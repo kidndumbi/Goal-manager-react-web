@@ -6,4 +6,6 @@ export interface ObjectiveModel {
   markedForUpdate: boolean;
   name: string;
   status: string;
+  isNew?: boolean;
+  tempIdForNew?:string;
 }
