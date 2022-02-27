@@ -149,11 +149,53 @@ const createGoal = (goal: GoalModel | undefined, callBackFn?: () => void) => {
   };
 };
 
+const deleteGoal = (id: string | undefined, callBackFn?: () => void) => {
+  return async (dispatch: any) => {
+    try {
+      const data = await fetch(
+        `https://whispering-headland-62985.herokuapp.com/goals-manager/goals/${id}`,
+        {
+          method: "DELETE",
+        }
+      ).then((response) => response.text());
+
+      console.log('data received:::', data);
+
+      dispatch(
+        toastActions.addToast({
+          toast: {
+            header: "Success",
+            bodyText: "Goal Deleted successfully.",
+            backgroundColor: "success",
+          },
+        })
+      );
+      dispatch(goalsActions.getGoals());
+
+      callBackFn && callBackFn();
+    } catch (error) {
+
+      console.log('Error received:::', error);
+
+      dispatch(
+        toastActions.addToast({
+          toast: {
+            header: "Error",
+            bodyText: "There was an error Deleting the goal. Please try again.",
+            backgroundColor: "danger",
+          },
+        })
+      );
+    }
+  };
+};
+
 const goalsActions = {
   ...goalsSlice.actions,
   getGoals,
   updateGoal,
   createGoal,
+  deleteGoal,
 };
 
 export { goalsSlice, goalsActions };
