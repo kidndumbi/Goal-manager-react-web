@@ -12,10 +12,10 @@ import { EditModal } from "../../components/edit-modal/EditModal";
 import { goalsActions } from "../../store/goals";
 import { ConfirmModal } from "../../components/confirm-modal/ConfirmModal";
 
+
 interface EditGoalProps {}
 
 const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
-
   const navigate = useNavigate();
   const params = useParams();
 
@@ -176,26 +176,34 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
 
   return (
     <>
-      <EditModal
-        showModal={showEditModal}
-        onCloseModal={handleCloseEditModal}
-        onSaveChanges={onSaveEditChangesHandler}
-        dataToEdit={dataToEdit}
-      ></EditModal>
-      <ConfirmModal
-        showModal={showDeleteConfirmModal}
-        onCloseModal={() => {
-          setShowDeleteConfirmModal(false);
-        }}
-        onOk={() => {
-          console.log("User Is OK");
-          setShowDeleteConfirmModal(false);
-          dispatch(goalsActions.deleteGoal(goal?.id, () => {
-            navigate('/')
-          }));
-        }}
-        bodytext="Are you sure you want to Delete?"
-      ></ConfirmModal>
+      {showEditModal && (
+        <EditModal
+          showModal={showEditModal}
+          onCloseModal={handleCloseEditModal}
+          onSaveChanges={onSaveEditChangesHandler}
+          dataToEdit={dataToEdit}
+        ></EditModal>
+      )}
+
+      {showDeleteConfirmModal && (
+        <ConfirmModal
+          showModal={showDeleteConfirmModal}
+          onCloseModal={() => {
+            setShowDeleteConfirmModal(false);
+          }}
+          onOk={() => {
+            console.log("User Is OK");
+            setShowDeleteConfirmModal(false);
+            dispatch(
+              goalsActions.deleteGoal(goal?.id, () => {
+                navigate("/");
+              })
+            );
+          }}
+          bodytext="Are you sure you want to Delete?"
+        ></ConfirmModal>
+      )}
+
       <Link to="/">
         <Button variant="outline-primary">
           <i className="bi bi-arrow-left-circle-fill"></i>
