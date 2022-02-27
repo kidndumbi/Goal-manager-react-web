@@ -50,14 +50,22 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
   const handleShowEditModal = () => setshowEditModal(true);
 
   const markedFordeleteHandler = (objective: ObjectiveModel) => {
-    const objectiveClone = goal?.objectives
+    let objectiveClone = goal?.objectives
       ? JSON.parse(JSON.stringify(goal.objectives))
       : [];
-    objectiveClone.forEach((objectiveC: ObjectiveModel) => {
-      if (objective.id === objectiveC.id) {
-        objectiveC.markedForDeletion = !objectiveC.markedForDeletion;
-      }
-    });
+
+    if (objective.isNew) {
+      objectiveClone = objectiveClone.filter((o: ObjectiveModel) => {
+        return o.tempIdForNew !== objective.tempIdForNew;
+      });
+
+    } else {
+      objectiveClone.forEach((objectiveC: ObjectiveModel) => {
+        if (objective.id === objectiveC.id) {
+          objectiveC.markedForDeletion = !objectiveC.markedForDeletion;
+        }
+      });
+    }
 
     setGoal((prevState: any) => {
       return {
@@ -129,9 +137,6 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
       // new objective that is already save in store so update in store
       if (modifiedData.data.tempIdForNew) {
         // not added to store so insert new record
-        console.log(
-          "new objective that is already save in store so update in store"
-        );
 
         objectiveClone.forEach((objectiveC: ObjectiveModel) => {
           if (modifiedData.data.tempIdForNew === objectiveC.tempIdForNew) {
@@ -140,7 +145,6 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
           }
         });
       } else {
-        console.log("not added to store so insert new record");
         objectiveClone.push({
           ...modifiedData.data,
           tempIdForNew: uuidv4(),

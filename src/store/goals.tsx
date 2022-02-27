@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { useNavigate } from "react-router-dom";
 import { GoalModel } from "../models/GoalModel.interface";
 import { toastActions } from "./toasts";
 
@@ -68,11 +69,11 @@ const getGoals = () => {
   };
 };
 
-const updateGoal = (goal: GoalModel | undefined) => {
+const updateGoal = (goal: GoalModel | undefined, callBackFn?: () => void) => {
   return async (dispatch: any) => {
     try {
       dispatch(goalsActions.setGoalUpdateError({ error: null }));
-      const goalSaved = await fetch(
+      await fetch(
         `https://whispering-headland-62985.herokuapp.com/goals-manager/goals/${goal?.id}`,
         {
           method: "PUT",
@@ -108,10 +109,51 @@ const updateGoal = (goal: GoalModel | undefined) => {
   };
 };
 
+const createGoal = (goal: GoalModel | undefined, callBackFn?: () => void) => {
+  return async (dispatch: any) => {
+    try {
+      await fetch(
+        `https://whispering-headland-62985.herokuapp.com/goals-manager/goals/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(goal),
+        }
+      ).then((response) => response.json());
+
+      dispatch(
+        toastActions.addToast({
+          toast: {
+            header: "Success",
+            bodyText: "Goal Added successfully.",
+            backgroundColor: "success",
+          },
+        })
+      );
+      dispatch(goalsActions.getGoals());
+
+      callBackFn && callBackFn();
+    } catch (error) {
+      dispatch(
+        toastActions.addToast({
+          toast: {
+            header: "Error",
+            bodyText: "There was an error creating the goal. Please try again.",
+            backgroundColor: "danger",
+          },
+        })
+      );
+    }
+  };
+};
+
 const goalsActions = {
   ...goalsSlice.actions,
   getGoals,
   updateGoal,
+  createGoal,
 };
 
 export { goalsSlice, goalsActions };
