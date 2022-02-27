@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import { PropsWithChildren, useEffect, useState } from "react";
 import Moment from "react-moment";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { GoalModel } from "../../models/GoalModel.interface";
 import { currentPageActions } from "../../store/currentPage";
 import { Button } from "react-bootstrap";
@@ -10,10 +10,13 @@ import { Objective } from "../../components/objective/Objective";
 import { ObjectiveModel } from "../../models/ObjectiveModel.interface";
 import { EditModal } from "../../components/edit-modal/EditModal";
 import { goalsActions } from "../../store/goals";
+import { ConfirmModal } from "../../components/confirm-modal/ConfirmModal";
 
 interface EditGoalProps {}
 
 const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
+
+  const navigate = useNavigate();
   const params = useParams();
 
   const statusOptions = useSelector(
@@ -49,6 +52,8 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
   };
   const handleShowEditModal = () => setshowEditModal(true);
 
+  const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
+
   const markedFordeleteHandler = (objective: ObjectiveModel) => {
     let objectiveClone = goal?.objectives
       ? JSON.parse(JSON.stringify(goal.objectives))
@@ -58,7 +63,6 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
       objectiveClone = objectiveClone.filter((o: ObjectiveModel) => {
         return o.tempIdForNew !== objective.tempIdForNew;
       });
-
     } else {
       objectiveClone.forEach((objectiveC: ObjectiveModel) => {
         if (objective.id === objectiveC.id) {
@@ -178,6 +182,20 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
         onSaveChanges={onSaveEditChangesHandler}
         dataToEdit={dataToEdit}
       ></EditModal>
+      <ConfirmModal
+        showModal={showDeleteConfirmModal}
+        onCloseModal={() => {
+          setShowDeleteConfirmModal(false);
+        }}
+        onOk={() => {
+          console.log("User Is OK");
+          setShowDeleteConfirmModal(false);
+          dispatch(goalsActions.deleteGoal(goal?.id, () => {
+            navigate('/')
+          }));
+        }}
+        bodytext="Are you sure you want to Delete?"
+      ></ConfirmModal>
       <Link to="/">
         <Button variant="outline-primary">
           <i className="bi bi-arrow-left-circle-fill"></i>
@@ -187,7 +205,14 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
 
       <div className="d-flex justify-content-between pt-2">
         <h2>{goal?.name}</h2>
-        <Button variant="danger">Delete</Button>
+        <Button
+          variant="danger"
+          onClick={() => {
+            setShowDeleteConfirmModal(true);
+          }}
+        >
+          Delete
+        </Button>
       </div>
       <hr />
       <div>
