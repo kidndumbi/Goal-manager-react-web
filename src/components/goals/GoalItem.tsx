@@ -35,15 +35,15 @@ const GoalItem = ({ goal, className, onEdit }: PropsWithChildren<Props>) => {
   };
 
   const [timeDisplayData, settimeDisplayData] = useState({
-    ellapsed: timeDiffCalc(new Date(), new Date(goal.createDate)),
-    remaining: timeDiffCalc(new Date(goal.dueDate), new Date()),
+    ellapsed: timeDiffCalc(new Date(), goal.createDate ? new Date(goal.createDate) : new Date()),
+    remaining: timeDiffCalc(goal.dueDate ? new Date(goal.dueDate) : new Date(), new Date()),
   });
 
   useEffect(() => {
     const interval = setInterval(() => {
       settimeDisplayData({
-        ellapsed: timeDiffCalc(new Date(), new Date(goal.createDate)),
-        remaining: timeDiffCalc(new Date(goal.dueDate), new Date()),
+        ellapsed: timeDiffCalc(new Date(),  goal.createDate ? new Date(goal.createDate) : new Date()),
+        remaining: timeDiffCalc(goal.dueDate ? new Date(goal.dueDate) : new Date(), new Date()),
       });
     }, 1000);
 
@@ -65,8 +65,8 @@ const GoalItem = ({ goal, className, onEdit }: PropsWithChildren<Props>) => {
         </span>
         <span className="d-block ">
           Status:{" "}
-          <span className={`fw-bold ${getStatusColor(goal.status)} `}>
-            {getStatusDisplayName(goal.status)}
+          <span className={`fw-bold ${getStatusColor(goal.status || 'IN_PROGRESS')} `}>
+            {getStatusDisplayName((goal.status || 'IN_PROGRESS'))}
           </span>
         </span>
 
@@ -77,7 +77,7 @@ const GoalItem = ({ goal, className, onEdit }: PropsWithChildren<Props>) => {
           </span>
           <span className="d-block">
             total:{" "}
-            {timeDiffCalc(new Date(goal.dueDate), new Date(goal.createDate))}
+            {timeDiffCalc(goal.dueDate ? new Date(goal.dueDate) : new Date(),goal.createDate ? new Date(goal.createDate) : new Date())}
           </span>
         </div>
 
@@ -103,7 +103,7 @@ const GoalItem = ({ goal, className, onEdit }: PropsWithChildren<Props>) => {
         <button
           className="btn btn-primary"
           onClick={() => {
-            onEdit(goal.id);
+            onEdit(goal.id || '');
           }}
         >
           Edit
