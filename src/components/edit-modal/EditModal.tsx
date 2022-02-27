@@ -1,9 +1,10 @@
-import { PropsWithChildren, useEffect, useState } from "react";
-import { Modal, Button } from "react-bootstrap";
+import { PropsWithChildren } from "react";
+import { Modal, Button, Form } from "react-bootstrap";
 import Moment from "react-moment";
 import { useSelector } from "react-redux";
 import DatePicker from "react-datepicker";
-
+import { Formik } from "formik";
+import * as Yup from "yup";
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -17,127 +18,136 @@ type EditModalProps = {
 const EditModal = (props: PropsWithChildren<EditModalProps>) => {
   const { data } = props.dataToEdit;
 
-  const [dueDate, setDueDate] = useState(new Date());
-  const [name, setName] = useState("");
-  const [status, setStatus] = useState("");
-
-  useEffect(() => {
-    if (data.dueDate !== undefined) {
-      setDueDate(data.dueDate);
-    }
-    if (data.status !== undefined) {
-      setStatus(data.status);
-    }
-    if (data.name !== undefined) {
-      setName(data.name);
-    }
-  }, [data.dueDate, data.status, data.name]);
-
   const statusOptions = useSelector(
     (state: any) => state.statusOptions.options
   );
 
-  return (
-    <Modal show={props.showModal} onHide={props.onCloseModal}>
-      <Modal.Header closeButton>
-        <Modal.Title>Edit</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <div>
-          <div>
-            <label htmlFor="edit-name">
-              {" "}
-              <strong>Name</strong>{" "}
-            </label>
-            <input
-              className="form-control"
-              id="edit-name"
-              type="text"
-              placeholder="enter name"
-              value={name}
-              onChange={({ target }) => {
-                setName(target.value);
-              }}
-            ></input>
-          </div>
-          <div className="pb-2">
-            <strong>Due Date: </strong>
-            <DatePicker
-              selected={dueDate}
-              onChange={(date: any) => {
-                setDueDate(date);
-              }}
-              timeInputLabel="Time:"
-              dateFormat="MM/dd/yyyy h:mm aa"
-              showTimeInput
-            />
-            <span>
-              <Moment format="dddd Do MMMM YYYY h:mm A">{data?.dueDate}</Moment>
-            </span>
-          </div>
-          {props.dataToEdit.type !== "new-objective" && (
-            <div>
-              <label htmlFor="edit-goal-status">
-                {" "}
-                <strong>Status</strong>{" "}
-              </label>
-              <select
-                id="edit-goal-status"
-                className="form-control"
-                value={status}
-                onChange={({ target }) => {
-                  setStatus(target.value);
-                }}
-                autoFocus={true}
-              >
-                {statusOptions.map(
-                  (status: { name: string; value: string }) => {
-                    return (
-                      <option key={status.value} value={status.value}>
-                        {" "}
-                        {status.name}{" "}
-                      </option>
-                    );
-                  }
-                )}
-              </select>
-            </div>
-          )}
+  const SignupSchema = Yup.object().shape({
+    name: Yup.string().required("Required"),
+    dueDate: Yup.string().nullable().required("Required"),
+  });
 
-          {props.dataToEdit.type !== "new-objective" && (
-            <div className="pt-2">
-              <strong>Created On: </strong>
-              <span>
-                <Moment format="dddd Do MMMM YYYY h:mm A">
-                  {data?.createDate}
-                </Moment>
-              </span>
-            </div>
-          )}
-        </div>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={props.onCloseModal}>
-          Close
-        </Button>
-        <Button
-          variant="primary"
-          onClick={() => {
-            props.onSaveChanges({
-              data: {
-                ...data,
-                name,
-                status,
-                dueDate: new Date(dueDate).getTime(),
-              },
-              type: props.dataToEdit.type,
-            });
-          }}
-        >
-          Save Changes
-        </Button>
-      </Modal.Footer>
-    </Modal>
+  return (
+    <>
+      <Modal show={props.showModal} onHide={props.onCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Formik
+            initialValues={{
+              name: data.name,
+              dueDate: data.dueDate,
+              status: data.status,
+            }}
+            validationSchema={SignupSchema}
+            onSubmit={(formData, { setSubmitting }) => {
+              props.onSaveChanges({
+                data: {
+                  ...data,
+                  ...formData,
+                  dueDate: new Date(formData.dueDate).getTime(),
+                },
+                type: props.dataToEdit.type,
+              });
+            }}
+          >
+            {({
+              values,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              isSubmitting,
+              resetForm,
+              setFieldValue,
+              isValid,
+              errors,
+            }) => (
+              <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3" controlId="formBasicEmail">
+                  <Form.Label>Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="name"
+                    value={values.name}
+                    placeholder="Enter name"
+                    onChange={handleChange}
+                  />
+                  <Form.Text className="text-muted">
+                    <span style={{ color: "red" }}>{errors.name}</span>
+                  </Form.Text>
+                </Form.Group>
+                {/* <pre>{errors.name}</pre> */}
+                <Form.Group className="mb-3" controlId="formBasicPassword">
+                  <Form.Label>Due Date</Form.Label>
+                  <DatePicker
+                    selected={values.dueDate}
+                    name="dueDate"
+                    onChange={(value) => {
+                      setFieldValue("dueDate", value);
+                    }}
+                    timeInputLabel="Time:"
+                    dateFormat="MM/dd/yyyy h:mm aa"
+                    showTimeInput
+                  />
+                  <Form.Text className="text-muted">
+                    <span style={{ color: "red" }}>{errors.dueDate}</span>
+                  </Form.Text>
+                </Form.Group>
+
+                {props.dataToEdit.type !== "new-objective" && (
+                  <Form.Group>
+                    <Form.Label>Status</Form.Label>
+                    <Form.Select
+                      id="edit-goal-status"
+                      className="form-control"
+                      name="status"
+                      value={values.status}
+                      onChange={handleChange}
+                      autoFocus={true}
+                    >
+                      {statusOptions.map(
+                        (status: { name: string; value: string }) => {
+                          return (
+                            <option key={status.value} value={status.value}>
+                              {" "}
+                              {status.name}{" "}
+                            </option>
+                          );
+                        }
+                      )}
+                    </Form.Select>
+                  </Form.Group>
+                )}
+
+                {props.dataToEdit.type !== "new-objective" && (
+                  <Form.Group>
+                    <div className="pt-2">
+                      <strong>Created On: </strong>
+                      <span>
+                        <Moment format="dddd Do MMMM YYYY h:mm A">
+                          {data?.createDate}
+                        </Moment>
+                      </span>
+                    </div>
+                  </Form.Group>
+                )}
+                <Form.Group>
+                  <Button
+                    variant="primary"
+                    className="mt-3 float-end"
+                    type="submit"
+                    disabled={!isValid}
+                  >
+                    Save Changes
+                  </Button>
+                </Form.Group>
+              </Form>
+            )}
+          </Formik>
+        </Modal.Body>
+      </Modal>
+    </>
   );
 };
 
