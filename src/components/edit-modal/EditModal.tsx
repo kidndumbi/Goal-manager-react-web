@@ -77,7 +77,6 @@ const EditModal = (props: PropsWithChildren<EditModalProps>) => {
                     <span style={{ color: "red" }}>{errors.name}</span>
                   </Form.Text>
                 </Form.Group>
-                {/* <pre>{errors.name}</pre> */}
                 <Form.Group className="mb-3" controlId="formBasicPassword">
                   <Form.Label>Due Date</Form.Label>
                   <DatePicker

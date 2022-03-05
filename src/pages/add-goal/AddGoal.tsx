@@ -1,16 +1,16 @@
 import { v4 as uuidv4 } from "uuid";
 import { PropsWithChildren, useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
-import Moment from "react-moment";
+import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { EditModal } from "../../components/edit-modal/EditModal";
 import { Objective } from "../../components/objective/Objective";
-import { GoalModel } from "../../models/GoalModel.interface";
 import { ObjectiveModel } from "../../models/ObjectiveModel.interface";
 import { currentPageActions } from "../../store/currentPage";
 import { goalsActions } from "../../store/goals";
 import DatePicker from "react-datepicker";
+import { FieldArray, Formik } from "formik";
 
 interface AddGoalProps {}
 
@@ -19,15 +19,11 @@ const AddGoal = (props: PropsWithChildren<AddGoalProps>) => {
 
   const navigate = useNavigate();
 
+  let formik: any;
+
   useEffect(() => {
     dispatch(currentPageActions.setCurrentPage({ currentPage: "AddGoal" }));
   }, []);
-
-  const [goal, setGoal] = useState<GoalModel>({
-    name: "HI",
-    dueDate: new Date().getTime(),
-    objectives: [],
-  });
 
   const [dataToEdit, setDataToEdit] = useState<{ data: any; type: string }>({
     data: {},
@@ -42,11 +38,7 @@ const AddGoal = (props: PropsWithChildren<AddGoalProps>) => {
   const handleShowEditModal = () => setshowEditModal(true);
 
   const onSaveEditChangesHandler = (modifiedData: any) => {
-    setshowEditModal(false);
-
-    const objectiveClone = goal?.objectives
-      ? JSON.parse(JSON.stringify(goal.objectives))
-      : [];
+    const objectiveClone = [...formik.values.objectives];
 
     if (modifiedData.data.tempIdForNew) {
       objectiveClone.forEach((objectiveC: ObjectiveModel) => {
@@ -62,18 +54,14 @@ const AddGoal = (props: PropsWithChildren<AddGoalProps>) => {
       });
     }
 
-    setGoal((prevState: any) => {
-      return {
-        ...prevState,
-        objectives: objectiveClone,
-      };
-    });
+    formik.setFieldValue("objectives", objectiveClone);
+    setshowEditModal(false);
   };
 
   const addNewObjectiveHandler = () => {
     setDataToEdit({
       data: {
-        dueDate: goal?.dueDate,
+        dueDate: formik.values.dueDate,
         name: "",
         id: null,
         isNew: true,
@@ -88,20 +76,13 @@ const AddGoal = (props: PropsWithChildren<AddGoalProps>) => {
   };
 
   const markedFordeleteHandler = (objective: ObjectiveModel) => {
-    let objectiveClone = goal?.objectives
-      ? JSON.parse(JSON.stringify(goal.objectives))
-      : [];
+    let objectiveClone = [...formik.values.objectives];
 
     objectiveClone = objectiveClone.filter((o: ObjectiveModel) => {
       return o.tempIdForNew !== objective.tempIdForNew;
     });
 
-    setGoal((prevState: any) => {
-      return {
-        ...prevState,
-        objectives: objectiveClone,
-      };
-    });
+    formik.setFieldValue("objectives", objectiveClone);
   };
 
   const onObjectiveEdithandler = (objective: ObjectiveModel) => {
@@ -130,86 +111,115 @@ const AddGoal = (props: PropsWithChildren<AddGoalProps>) => {
         </Button>
       </Link>
       <hr />
-      <Form
-        onSubmit={(e) => {
-          e.preventDefault();
-          console.log("form submitted");
+
+      <Formik
+        innerRef={(p) => (formik = p)}
+        initialValues={{
+          name: "",
+          dueDate: new Date().getTime(),
+          objectives: [],
+        }}
+        validationSchema={Yup.object().shape({
+          name: Yup.string().required("Required"),
+          dueDate: Yup.string().nullable().required("Required"),
+        })}
+        onSubmit={(goal, { setSubmitting }) => {
           dispatch(
-            goalsActions.createGoal(goal, () => {
-              navigate("/");
-            })
+            goalsActions.createGoal(
+              { ...goal, dueDate: new Date(goal.dueDate).getTime() },
+              () => {
+                navigate("/");
+              }
+            )
           );
         }}
       >
-        <Form.Group className="mb-3" controlId="formNamel">
-          <Form.Label>Name</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter Name"
-            value={goal.name}
-            onChange={(e) => {
-              setGoal((prevState: GoalModel) => {
-                return {
-                  ...prevState,
-                  name: e.target.value,
-                };
-              });
-            }}
-          />
-        </Form.Group>
+        {({
+          values,
+          handleChange,
+          handleSubmit,
+          setFieldValue,
+          isValid,
+          errors,
+        }) => (
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-3" controlId="formNamel">
+              <Form.Label>Name</Form.Label>
+              <Form.Control
+                type="text"
+                name="name"
+                placeholder="Enter Name"
+                value={values.name}
+                onChange={handleChange}
+              />
+              <Form.Text className="text-muted">
+                <span style={{ color: "red" }}>{errors.name}</span>
+              </Form.Text>
+            </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formDueDate">
-          <Form.Label>Due date</Form.Label>
-          <DatePicker
-            className=""
-            selected={goal.dueDate ? new Date(goal.dueDate) : new Date()}
-            onChange={(date: any) => {
-              setGoal((prevState: GoalModel) => {
-                return {
-                  ...prevState,
-                  dueDate: date,
-                };
-              });
-            }}
-            timeInputLabel="Time:"
-            dateFormat="MM/dd/yyyy h:mm aa"
-            showTimeInput
-          />
-        </Form.Group>
-        <Form.Group>
-          <div className="pt-4" style={{ color: "#0d6efd" }}>
-            {/* <h3>Objectives</h3> */}
-            <div className="d-flex justify-content-between pt-2">
-              <h3>Objectives</h3>
-              <Button
-                variant="outline-success"
-                onClick={addNewObjectiveHandler}
-              >
-                <i className="bi bi-plus-circle-fill"></i>
-                {" ADD"}
-              </Button>
-            </div>
-          </div>
-          <hr></hr>
-        </Form.Group>
-        <Form.Group>
-          {goal?.objectives.map((objective: ObjectiveModel) => {
-            return (
-              <Objective
-                key={objective.id}
-                className="mb-2"
-                onMarkedForDelete={markedFordeleteHandler.bind(null, objective)}
-                onEdit={onObjectiveEdithandler.bind(null, objective)}
-                data={objective}
-              ></Objective>
-            );
-          })}
-        </Form.Group>
+            <Form.Group className="mb-3" controlId="formDueDate">
+              <Form.Label>Due date</Form.Label>
+              <DatePicker
+                selected={
+                  values.dueDate ? new Date(values.dueDate) : new Date()
+                }
+                name="dueDate"
+                onChange={(value) => {
+                  setFieldValue("dueDate", value);
+                }}
+                timeInputLabel="Time:"
+                dateFormat="MM/dd/yyyy h:mm aa"
+                showTimeInput
+              />
+              <Form.Text className="text-muted">
+                <span style={{ color: "red" }}>{errors.dueDate}</span>
+              </Form.Text>
+            </Form.Group>
 
-        <Button variant="primary" type="submit">
-          Add
-        </Button>
-      </Form>
+            <Form.Group>
+              <div className="pt-4" style={{ color: "#0d6efd" }}>
+                <div className="d-flex justify-content-between pt-2">
+                  <h3>Objectives</h3>
+                  <Button
+                    variant="outline-success"
+                    onClick={addNewObjectiveHandler}
+                  >
+                    <i className="bi bi-plus-circle-fill"></i>
+                    {" ADD"}
+                  </Button>
+                </div>
+              </div>
+              <hr></hr>
+            </Form.Group>
+
+            <Form.Group>
+              <FieldArray name="objectives">
+                {() =>
+                  values.objectives.length > 0 &&
+                  values.objectives.map((objective: ObjectiveModel) => {
+                    return (
+                      <Objective
+                        key={objective.id}
+                        className="mb-2"
+                        onMarkedForDelete={markedFordeleteHandler.bind(
+                          null,
+                          objective
+                        )}
+                        onEdit={onObjectiveEdithandler.bind(null, objective)}
+                        data={objective}
+                      ></Objective>
+                    );
+                  })
+                }
+              </FieldArray>
+            </Form.Group>
+
+            <Button variant="primary" type="submit" disabled={!isValid}>
+              Add
+            </Button>
+          </Form>
+        )}
+      </Formik>
     </>
   );
 };
