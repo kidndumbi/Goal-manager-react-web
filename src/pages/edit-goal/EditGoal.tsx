@@ -136,7 +136,6 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
       });
       return;
     } else if (modifiedData.type === "new-objective") {
-      console.log("new-objective", modifiedData.data);
 
       const objectiveClone = goal?.objectives
         ? JSON.parse(JSON.stringify(goal.objectives))
@@ -201,7 +200,6 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
   });
 
   const updateFormValidity = () => {
-    console.log("goal update is ", JSON.stringify(goal, null, 2));
     setFormErrors({});
     formSchema
       .isValid(goal, {
@@ -247,7 +245,6 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
             setShowDeleteConfirmModal(false);
           }}
           onOk={() => {
-            console.log("User Is OK");
             setShowDeleteConfirmModal(false);
 
             dispatch(
