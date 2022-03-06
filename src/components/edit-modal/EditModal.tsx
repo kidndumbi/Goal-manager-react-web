@@ -7,6 +7,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 
 import "react-datepicker/dist/react-datepicker.css";
+import { validateDueDate } from "./validators";
 
 type EditModalProps = {
   showModal: boolean;
@@ -17,6 +18,7 @@ type EditModalProps = {
 
 const EditModal = (props: PropsWithChildren<EditModalProps>) => {
   const { data } = props.dataToEdit;
+  const mainDuedate = props.dataToEdit.data.dueDate;
 
   const statusOptions = useSelector(
     (state: any) => state.statusOptions.options
@@ -24,7 +26,10 @@ const EditModal = (props: PropsWithChildren<EditModalProps>) => {
 
   const SignupSchema = Yup.object().shape({
     name: Yup.string().required("Required"),
-    dueDate: Yup.string().nullable().required("Required"),
+    dueDate: Yup.string()
+      .nullable()
+      .required("Required")
+      .test("is-date-greater", "Objective date cannot be greater than goal date!", validateDueDate(mainDuedate)),
   });
 
   return (
