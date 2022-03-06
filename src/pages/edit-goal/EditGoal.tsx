@@ -5,13 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { GoalModel } from "../../models/GoalModel.interface";
 import { currentPageActions } from "../../store/currentPage";
-import { Button } from "react-bootstrap";
+import { Alert, Button } from "react-bootstrap";
 import { Objective } from "../../components/objective/Objective";
 import { ObjectiveModel } from "../../models/ObjectiveModel.interface";
 import { EditModal } from "../../components/edit-modal/EditModal";
 import { goalsActions } from "../../store/goals";
 import { ConfirmModal } from "../../components/confirm-modal/ConfirmModal";
-
+import * as yup from "yup";
 
 interface EditGoalProps {}
 
@@ -25,13 +25,17 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
 
   const dispatch = useDispatch();
 
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
+  const [isFormValid, setIsFormValid] = useState<boolean>();
+
   useEffect(() => {
     dispatch(currentPageActions.setCurrentPage({ currentPage: "EditGoal" }));
   }, []);
 
   const [goal, setGoal] = useState<GoalModel>();
   useEffect(() => {
-    console.log("goal data", goal);
+    console.log("goal data change", goal);
+    goal && updateFormValidity();
   }, [goal]);
 
   const [dataToEdit, setDataToEdit] = useState<{ data: any; type: string }>({
@@ -174,6 +178,57 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
     }
   };
 
+  const formSchema = yup.object().shape({
+    objectives: yup.array(),
+    status: yup
+      .string()
+      .required()
+      .test(
+        "objective-statuses",
+        "All Objective statuses must also be in complete",
+        function (value) {
+          const objectives: any[] = (this.options as any).parent.objectives;
+
+          if (objectives?.length === 0) return true;
+          if (value !== "COMPLETE") return true;
+
+          return (
+            value === "COMPLETE" &&
+            objectives.every((objective) => objective.status === "COMPLETE")
+          );
+        }
+      ),
+  });
+
+  const updateFormValidity = () => {
+    console.log("goal update is ", JSON.stringify(goal, null, 2));
+    setFormErrors({});
+    formSchema
+      .isValid(goal, {
+        abortEarly: false, // Prevent aborting validation after first error
+      })
+      .then((isValid) => {
+        setIsFormValid(isValid);
+        !isValid && updateFormErrors();
+      });
+  };
+
+  const updateFormErrors = () => {
+    let errors = {};
+    setFormErrors(errors);
+
+    formSchema.validate(goal, { abortEarly: false }).catch((err) => {
+      errors = err.inner.reduce((acc: any, error: any) => {
+        return {
+          ...acc,
+          [error.path]: error.message,
+        };
+      }, {});
+
+      setFormErrors(errors);
+    });
+  };
+
   return (
     <>
       {showEditModal && (
@@ -194,6 +249,7 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
           onOk={() => {
             console.log("User Is OK");
             setShowDeleteConfirmModal(false);
+
             dispatch(
               goalsActions.deleteGoal(goal?.id, () => {
                 navigate("/");
@@ -233,6 +289,9 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
         <div>
           <strong>Status: </strong>
           {statusOptions.find((stat: any) => stat.value === goal?.status)?.name}
+          {formErrors?.status && (
+            <Alert variant="danger">{formErrors?.status}</Alert>
+          )}
         </div>
         <div className="pt-2 pb-2">
           <strong>Created On: </strong>
@@ -249,7 +308,6 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
         </div>
       </div>
       <div className="pt-4" style={{ color: "#0d6efd" }}>
-        {/* <h3>Objectives</h3> */}
         <div className="d-flex justify-content-between pt-2">
           <h3>Objectives</h3>
           <Button variant="outline-success" onClick={addNewObjectiveHandler}>
@@ -276,9 +334,10 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
         <Button
           variant="primary"
           size="lg"
-          onClick={() => {
+          onClick={async () => {
             dispatch(goalsActions.updateGoal(goal));
           }}
+          disabled={!isFormValid}
         >
           Update
         </Button>
