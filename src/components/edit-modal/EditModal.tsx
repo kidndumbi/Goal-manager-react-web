@@ -4,10 +4,10 @@ import Moment from "react-moment";
 import { useSelector } from "react-redux";
 import DatePicker from "react-datepicker";
 import { Formik } from "formik";
-import * as Yup from "yup";
+
 
 import "react-datepicker/dist/react-datepicker.css";
-import { validateDueDate } from "./validators";
+import { EditModalSchema } from "./validators";
 
 type EditModalProps = {
   showModal: boolean;
@@ -24,14 +24,6 @@ const EditModal = (props: PropsWithChildren<EditModalProps>) => {
     (state: any) => state.statusOptions.options
   );
 
-  const SignupSchema = Yup.object().shape({
-    name: Yup.string().required("Required"),
-    dueDate: Yup.string()
-      .nullable()
-      .required("Required")
-      .test("is-date-greater", "Objective date cannot be greater than goal date!", validateDueDate(mainDuedate)),
-  });
-
   return (
     <>
       <Modal show={props.showModal} onHide={props.onCloseModal}>
@@ -45,7 +37,7 @@ const EditModal = (props: PropsWithChildren<EditModalProps>) => {
               dueDate: data.dueDate,
               status: data.status,
             }}
-            validationSchema={SignupSchema}
+            validationSchema={EditModalSchema({mainDuedate})}
             onSubmit={(formData, { setSubmitting }) => {
               props.onSaveChanges({
                 data: {
