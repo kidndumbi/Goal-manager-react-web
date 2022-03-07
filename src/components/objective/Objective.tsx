@@ -32,6 +32,7 @@ const Objective: React.FC<ObjectiveProps> = ({
               }`}
               onClick={onMarkedForDelete.bind(null, data)}
             >
+              <i className={`me-1 bi  ${data.markedForDeletion === true ? "bi-arrow-counterclockwise" : "bi-trash" }`}></i>
               {`${data.markedForDeletion === true ? "Undo Delete" : "Delete"}`}
             </Button>
           </div>

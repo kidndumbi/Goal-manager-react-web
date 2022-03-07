@@ -196,6 +196,11 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
           );
         }
       ),
+    notes: yup
+      .string()
+      .when("status", (status, field) =>
+        status === "FAILED" ? field.required() : field
+      ),
   });
 
   const updateFormValidity = () => {
@@ -271,6 +276,7 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
             setShowDeleteConfirmModal(true);
           }}
         >
+          <i className="me-1 bi bi-trash"></i>
           Delete
         </Button>
       </div>
@@ -337,12 +343,15 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
               setGoal((prevState: any) => {
                 return {
                   ...prevState,
-                  notes: event.target.value
+                  notes: event.target.value,
                 };
               });
             }}
           />
         </FloatingLabel>
+        {formErrors?.notes && (
+            <div className="mt-2"><Alert variant="danger">{formErrors?.notes}</Alert></div>
+          )}
       </div>
       <div className="d-grid gap-2 mb-4 pt-3">
         <Button
