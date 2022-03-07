@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { PropsWithChildren, useEffect, useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, FloatingLabel, Form } from "react-bootstrap";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -118,6 +118,7 @@ const AddGoal = (props: PropsWithChildren<AddGoalProps>) => {
           name: "",
           dueDate: new Date().getTime(),
           objectives: [],
+          notes: "",
         }}
         validationSchema={Yup.object().shape({
           name: Yup.string().required("Required"),
@@ -213,8 +214,25 @@ const AddGoal = (props: PropsWithChildren<AddGoalProps>) => {
                 }
               </FieldArray>
             </Form.Group>
-
-            <Button variant="primary" type="submit" disabled={!isValid}>
+            <Form.Group>
+              <FloatingLabel controlId="floatingTextarea2" label="Notes">
+                <Form.Control
+                  as="textarea"
+                  name="notes"
+                  placeholder="Leave a comment here"
+                  style={{ height: "100px" }}
+                  value={values.notes}
+                  onChange={handleChange}
+                />
+              </FloatingLabel>
+            </Form.Group>
+            <Button
+              variant="primary"
+              size="lg"
+              className="mt-3"
+              type="submit"
+              disabled={!isValid}
+            >
               Add
             </Button>
           </Form>

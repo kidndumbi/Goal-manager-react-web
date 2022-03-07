@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { GoalModel } from "../../models/GoalModel.interface";
 import { currentPageActions } from "../../store/currentPage";
-import { Alert, Button } from "react-bootstrap";
+import { Alert, Button, FloatingLabel, Form } from "react-bootstrap";
 import { Objective } from "../../components/objective/Objective";
 import { ObjectiveModel } from "../../models/ObjectiveModel.interface";
 import { EditModal } from "../../components/edit-modal/EditModal";
@@ -136,7 +136,6 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
       });
       return;
     } else if (modifiedData.type === "new-objective") {
-
       const objectiveClone = goal?.objectives
         ? JSON.parse(JSON.stringify(goal.objectives))
         : [];
@@ -327,11 +326,30 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
           );
         })}
       </div>
-      <div className="d-grid gap-2 mb-4">
+      <div>
+        <FloatingLabel controlId="floatingTextarea2" label="Notes">
+          <Form.Control
+            as="textarea"
+            placeholder="Leave a comment here"
+            style={{ height: "100px" }}
+            value={goal?.notes}
+            onChange={(event: any) => {
+              setGoal((prevState: any) => {
+                return {
+                  ...prevState,
+                  notes: event.target.value
+                };
+              });
+            }}
+          />
+        </FloatingLabel>
+      </div>
+      <div className="d-grid gap-2 mb-4 pt-3">
         <Button
           variant="primary"
           size="lg"
           onClick={async () => {
+            console.log(JSON.stringify(goal, null, 2));
             dispatch(goalsActions.updateGoal(goal));
           }}
           disabled={!isFormValid}
