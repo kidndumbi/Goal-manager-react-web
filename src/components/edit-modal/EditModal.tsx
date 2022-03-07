@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import DatePicker from "react-datepicker";
 import { Formik } from "formik";
 
-
 import "react-datepicker/dist/react-datepicker.css";
 import { EditModalSchema } from "./validators";
 
@@ -37,7 +36,7 @@ const EditModal = (props: PropsWithChildren<EditModalProps>) => {
               dueDate: data.dueDate,
               status: data.status,
             }}
-            validationSchema={EditModalSchema({mainDuedate})}
+            validationSchema={EditModalSchema({ mainDuedate })}
             onSubmit={(formData, { setSubmitting }) => {
               props.onSaveChanges({
                 data: {
