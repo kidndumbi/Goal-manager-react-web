@@ -1,4 +1,9 @@
-import { render, screen } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { Provider } from "react-redux";
 import { EditModal } from "./EditModal";
 // import configureStore from "redux-mock-store"
@@ -132,7 +137,7 @@ describe("EditModal", () => {
     );
 
     const nameInput = screen.queryByDisplayValue("submit");
-    expect(nameInput).toBeNull(); // it doesn't exist
+    expect(nameInput).toBeNull();
   });
 
   test("Should hide status if objective is New creation", () => {
@@ -150,6 +155,53 @@ describe("EditModal", () => {
     );
 
     const statusInput = screen.queryByDisplayValue("In Progress");
-    expect(statusInput).toBeNull(); // it doesn't exist
+    expect(statusInput).toBeNull();
+  });
+
+  test("Should trigger save changes", async () => {
+    const onSaveChanges = jest.fn();
+
+    render(
+      <Provider store={store}>
+        <EditModal
+          showModal={true}
+          onCloseModal={function (): void {}}
+          onSaveChanges={onSaveChanges}
+          dataToEdit={dataToEdit}
+        ></EditModal>
+      </Provider>
+    );
+
+    const saveChangesBtn = await screen.findByText("Save Changes");
+    fireEvent.click(saveChangesBtn);
+
+    await waitFor(() => {
+      expect(onSaveChanges).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  test("Should display required when name text bux is emptied", async () => {
+    render(
+      <Provider store={store}>
+        <EditModal
+          showModal={true}
+          onCloseModal={function (): void {}}
+          onSaveChanges={() => {}}
+          dataToEdit={dataToEdit}
+        ></EditModal>
+      </Provider>
+    );
+
+    const nameInput = screen.getByDisplayValue("5 day fast Let's go!");
+    fireEvent.change(nameInput, { target: { value: "" } });
+
+    await waitFor(() => {
+      expect((nameInput as HTMLInputElement).value).toEqual("");
+    });
+    await waitFor(() => {
+      expect(screen.getByText("Required")).toBeInTheDocument();
+    });
+
+    
   });
 });
