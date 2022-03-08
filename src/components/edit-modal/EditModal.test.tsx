@@ -76,6 +76,7 @@ describe("EditModal", () => {
       ],
     },
     type: "goalHeaders",
+    goalDueDate: 1646959920000
   };
 
   test("Should display right labels", async () => {

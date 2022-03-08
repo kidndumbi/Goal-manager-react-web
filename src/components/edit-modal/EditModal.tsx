@@ -13,7 +13,11 @@ type EditModalProps = {
   showModal: boolean;
   onCloseModal: () => void;
   onSaveChanges: (data: any) => void;
-  dataToEdit: { data: any; type: string };
+  dataToEdit: {
+    data: any;
+    type: string;
+    goalDueDate: number | null | undefined;
+  };
 };
 
 //Cassava
@@ -26,8 +30,7 @@ const CustomInput = React.forwardRef((props: any, ref: any) => {
 });
 
 const EditModal = (props: PropsWithChildren<EditModalProps>) => {
-  const { data } = props.dataToEdit;
-  const mainDuedate = props.dataToEdit.data.dueDate;
+  const { data, goalDueDate } = props.dataToEdit;
 
   const statusOptions = useSelector(
     (state: any) => state.statusOptions.options
@@ -46,7 +49,10 @@ const EditModal = (props: PropsWithChildren<EditModalProps>) => {
               dueDate: data.dueDate,
               status: data.status,
             }}
-            validationSchema={EditModalSchema({ mainDuedate })}
+            validationSchema={EditModalSchema({
+              goalDueDate,
+              dataToEditType: props.dataToEdit.type,
+            })}
             onSubmit={(formData, { setSubmitting }) => {
               props.onSaveChanges({
                 data: {

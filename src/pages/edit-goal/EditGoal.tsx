@@ -38,9 +38,10 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
     goal && updateFormValidity();
   }, [goal]);
 
-  const [dataToEdit, setDataToEdit] = useState<{ data: any; type: string }>({
+  const [dataToEdit, setDataToEdit] = useState<{ data: any; type: string, goalDueDate: number | null | undefined }>({
     data: {},
     type: "",
+    goalDueDate: null
   });
 
   const goalsData = useSelector((state: any) => state.goals.goals);
@@ -93,6 +94,7 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
     setDataToEdit({
       data: objective,
       type: objective.isNew ? "new-objective" : "objective",
+      goalDueDate: goal?.dueDate
     });
     handleShowEditModal();
   };
@@ -109,13 +111,14 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
         markedForUpdate: true,
       },
       type: "new-objective",
+      goalDueDate: goal?.dueDate
     });
 
     handleShowEditModal();
   };
 
   const onGoalHeaderEdithandler = () => {
-    setDataToEdit({ data: goal, type: "goalHeaders" });
+    setDataToEdit({ data: goal, type: "goalHeaders", goalDueDate: goal?.dueDate });
     handleShowEditModal();
   };
 
