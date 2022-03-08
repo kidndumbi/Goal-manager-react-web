@@ -25,9 +25,14 @@ const AddGoal = (props: PropsWithChildren<AddGoalProps>) => {
     dispatch(currentPageActions.setCurrentPage({ currentPage: "AddGoal" }));
   }, []);
 
-  const [dataToEdit, setDataToEdit] = useState<{ data: any; type: string }>({
+  const [dataToEdit, setDataToEdit] = useState<{
+    data: any;
+    type: string;
+    goalDueDate: number | null | undefined;
+  }>({
     data: {},
     type: "",
+    goalDueDate: null,
   });
 
   const [showEditModal, setshowEditModal] = useState(false);
@@ -70,6 +75,7 @@ const AddGoal = (props: PropsWithChildren<AddGoalProps>) => {
         markedForUpdate: true,
       },
       type: "new-objective",
+      goalDueDate: formik.values.dueDate,
     });
 
     handleShowEditModal();
@@ -89,6 +95,7 @@ const AddGoal = (props: PropsWithChildren<AddGoalProps>) => {
     setDataToEdit({
       data: objective,
       type: "new-objective",
+      goalDueDate: formik.values.dueDate,
     });
     handleShowEditModal();
   };
