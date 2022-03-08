@@ -117,8 +117,9 @@ describe("EditModal", () => {
     expect(nameInput).toHaveAttribute("type", "text");
     const statusInput = screen.getByDisplayValue("In Progress");
     expect((statusInput as HTMLSelectElement).value).toEqual("IN_PROGRESS");
-    const dueDateInput = screen.getByDisplayValue("03/10/2022 7:52 PM");
-    expect((dueDateInput as HTMLInputElement).value).toEqual(
+    const dueDateInput = screen.getByRole('button', {name: "03/10/2022 7:52 PM"});
+    console.log(dueDateInput);
+    expect((dueDateInput as HTMLButtonElement)).toHaveTextContent(
       "03/10/2022 7:52 PM"
     );
 
