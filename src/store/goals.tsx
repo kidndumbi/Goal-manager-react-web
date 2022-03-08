@@ -57,18 +57,33 @@ const getGoals = () => {
       dispatch(goalsActions.setLoading({ loading: false }));
       dispatch(goalsActions.setError({ error }));
       dispatch(
-        toastActions.addToast<{toast: ToastModel}>({
+        toastActions.addToast<{ toast: ToastModel }>({
           toast: {
             header: "Error",
             bodyText: "There was an error retrieving goals.",
             backgroundColor: "danger",
-            delay: 3000
-            
+            delay: 3000,
           },
         })
       );
     }
   };
+};
+
+const triggerToast = ({
+  header,
+  bodyText,
+  backgroundColor,
+  delay,
+}: ToastModel) => {
+  return toastActions.addToast<{ toast: ToastModel }>({
+    toast: {
+      header: header || "Success",
+      bodyText: bodyText || "Success",
+      backgroundColor: backgroundColor || "success",
+      delay: delay || 3000,
+    },
+  });
 };
 
 const updateGoal = (goal: GoalModel | undefined, callBackFn?: () => void) => {
@@ -87,26 +102,22 @@ const updateGoal = (goal: GoalModel | undefined, callBackFn?: () => void) => {
       ).then((response) => response.json());
 
       dispatch(
-        toastActions.addToast<{toast: ToastModel}>({
-          toast: {
-            header: "Success",
-            bodyText: "Goal Updated successfully.",
-            backgroundColor: "success",
-            delay: 3000
-          },
+        triggerToast({
+          header: "Success",
+          bodyText: "Goal Updated successfully.",
+          backgroundColor: "success",
+          delay: 3000,
         })
       );
       dispatch(goalsActions.getGoals());
     } catch (error) {
       dispatch(goalsActions.setGoalUpdateError({ error }));
       dispatch(
-        toastActions.addToast<{toast: ToastModel}>({
-          toast: {
-            header: "Error",
-            bodyText: "There was an error updating the goal. Please try again.",
-            backgroundColor: "danger",
-            delay: 3000
-          },
+        triggerToast({
+          header: "Error",
+          bodyText: "There was an error updating the goal. Please try again.",
+          backgroundColor: "danger",
+          delay: 3000,
         })
       );
     }
@@ -128,12 +139,11 @@ const createGoal = (goal: GoalModel | undefined, callBackFn?: () => void) => {
       ).then((response) => response.json());
 
       dispatch(
-        toastActions.addToast({
-          toast: {
-            header: "Success",
-            bodyText: "Goal Added successfully.",
-            backgroundColor: "success",
-          },
+        triggerToast({
+          header: "Success",
+          bodyText: "Goal Added successfully.",
+          backgroundColor: "success",
+          delay: 3000,
         })
       );
       dispatch(goalsActions.getGoals());
@@ -141,12 +151,11 @@ const createGoal = (goal: GoalModel | undefined, callBackFn?: () => void) => {
       callBackFn && callBackFn();
     } catch (error) {
       dispatch(
-        toastActions.addToast({
-          toast: {
-            header: "Error",
-            bodyText: "There was an error creating the goal. Please try again.",
-            backgroundColor: "danger",
-          },
+        triggerToast({
+          header: "Error",
+          bodyText: "There was an error creating the goal. Please try again.",
+          backgroundColor: "danger",
+          delay: 3000,
         })
       );
     }
@@ -163,31 +172,28 @@ const deleteGoal = (id: string | undefined, callBackFn?: () => void) => {
         }
       ).then((response) => response.text());
 
-      console.log('data received:::', data);
+      console.log("data received:::", data);
 
       dispatch(
-        toastActions.addToast({
-          toast: {
-            header: "Success",
-            bodyText: "Goal Deleted successfully.",
-            backgroundColor: "success",
-          },
+        triggerToast({
+          header: "Success",
+          bodyText: "Goal Deleted successfully.",
+          backgroundColor: "success",
+          delay: 3000,
         })
       );
       dispatch(goalsActions.getGoals());
 
       callBackFn && callBackFn();
     } catch (error) {
-
-      console.log('Error received:::', error);
+      console.log("Error received:::", error);
 
       dispatch(
-        toastActions.addToast({
-          toast: {
-            header: "Error",
-            bodyText: "There was an error Deleting the goal. Please try again.",
-            backgroundColor: "danger",
-          },
+        triggerToast({
+          header: "Error",
+          bodyText: "There was an error Deleting the goal. Please try again.",
+          backgroundColor: "danger",
+          delay: 3000,
         })
       );
     }
