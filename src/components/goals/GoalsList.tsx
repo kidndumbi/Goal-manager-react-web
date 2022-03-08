@@ -14,7 +14,6 @@ const GoalList = ({ selectedGoalType: type }: PropsWithChildren<Props>) => {
 
   const goalsData = useSelector((state: any) => state.goals.goals);
   const loadingGoals = useSelector((state: any) => state.goals.loading);
-  const goalsError = useSelector((state: any) => state.goals.error);
 
   const [goalsInfo, dispatchGoalsData] = useReducer(goalsReducer, goalsData);
   const searchValue = useSelector(
