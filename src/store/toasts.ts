@@ -1,4 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
+
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ToastModel } from "../models/ToastModel.interface";
 
 type ToastStateModel = {
@@ -16,7 +17,7 @@ const toastsSlice = createSlice<ToastStateModel, ToastReducerModel>({
     toasts: [],
   },
   reducers: {
-    addToast(state: ToastStateModel, action) {
+    addToast(state: ToastStateModel, action: PayloadAction<{toast: ToastModel}>) {
       state.toasts.push({
         ...action.payload.toast,
       });
