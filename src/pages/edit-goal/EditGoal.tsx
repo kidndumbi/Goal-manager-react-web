@@ -329,7 +329,7 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
       </div>
       <hr></hr>
       <div>
-        {goal?.objectives.map((objective: ObjectiveModel) => {
+        {goal &&  goal.objectives && goal?.objectives.map((objective: ObjectiveModel) => {
           return (
             <Objective
               key={objective.id}
