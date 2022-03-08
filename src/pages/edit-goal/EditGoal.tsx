@@ -45,8 +45,14 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
 
   const goalsData = useSelector((state: any) => state.goals.goals);
   useEffect(() => {
-    const filteredGoal = goalsData.filter((g: any) => g.id === params.id);
-    setGoal(filteredGoal[0]);
+    if (goalsData) {
+      let filteredGoalFound = goalsData.filter((g: any) => g.id === params.id);
+
+      let filteredGoal: GoalModel = { ...filteredGoalFound[0] };
+      if (filteredGoal?.notes === null) filteredGoal.notes = "";
+      if (filteredGoal?.objectives === null) filteredGoal.objectives = [];
+      setGoal(filteredGoal);
+    }
   }, [goalsData]);
 
   const [showEditModal, setshowEditModal] = useState(false);
@@ -350,8 +356,10 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
           />
         </FloatingLabel>
         {formErrors?.notes && (
-            <div className="mt-2"><Alert variant="danger">{formErrors?.notes}</Alert></div>
-          )}
+          <div className="mt-2">
+            <Alert variant="danger">{formErrors?.notes}</Alert>
+          </div>
+        )}
       </div>
       <div className="d-grid gap-2 mb-4 pt-3">
         <Button
