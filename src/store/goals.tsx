@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { useNavigate } from "react-router-dom";
 import { GoalModel } from "../models/GoalModel.interface";
+import { ToastModel } from "../models/ToastModel.interface";
 import { toastActions } from "./toasts";
 
 export type GoalsStateModel = {
@@ -57,11 +57,13 @@ const getGoals = () => {
       dispatch(goalsActions.setLoading({ loading: false }));
       dispatch(goalsActions.setError({ error }));
       dispatch(
-        toastActions.addToast({
+        toastActions.addToast<{toast: ToastModel}>({
           toast: {
             header: "Error",
             bodyText: "There was an error retrieving goals.",
             backgroundColor: "danger",
+            delay: 3000
+            
           },
         })
       );
@@ -85,11 +87,12 @@ const updateGoal = (goal: GoalModel | undefined, callBackFn?: () => void) => {
       ).then((response) => response.json());
 
       dispatch(
-        toastActions.addToast({
+        toastActions.addToast<{toast: ToastModel}>({
           toast: {
             header: "Success",
             bodyText: "Goal Updated successfully.",
             backgroundColor: "success",
+            delay: 3000
           },
         })
       );
@@ -97,11 +100,12 @@ const updateGoal = (goal: GoalModel | undefined, callBackFn?: () => void) => {
     } catch (error) {
       dispatch(goalsActions.setGoalUpdateError({ error }));
       dispatch(
-        toastActions.addToast({
+        toastActions.addToast<{toast: ToastModel}>({
           toast: {
             header: "Error",
             bodyText: "There was an error updating the goal. Please try again.",
             backgroundColor: "danger",
+            delay: 3000
           },
         })
       );
