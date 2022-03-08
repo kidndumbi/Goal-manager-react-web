@@ -3,6 +3,8 @@ import "moment-timezone";
 import { timeDiffCalc } from "../../utils/timeFormatting";
 import { useState, useEffect, PropsWithChildren } from "react";
 import { GoalModel } from "../../models/GoalModel.interface";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import classes from "./GoalItem.module.scss";
 
 interface Props {
   goal: GoalModel;
@@ -11,7 +13,6 @@ interface Props {
 }
 
 const GoalItem = ({ goal, className, onEdit }: PropsWithChildren<Props>) => {
-  
   const getStatusColor = (status: "FAILED" | "IN_PROGRESS" | "COMPLETE") => {
     const colors = {
       FAILED: "text-danger",
@@ -35,15 +36,27 @@ const GoalItem = ({ goal, className, onEdit }: PropsWithChildren<Props>) => {
   };
 
   const [timeDisplayData, settimeDisplayData] = useState({
-    ellapsed: timeDiffCalc(new Date(), goal.createDate ? new Date(goal.createDate) : new Date()),
-    remaining: timeDiffCalc(goal.dueDate ? new Date(goal.dueDate) : new Date(), new Date()),
+    ellapsed: timeDiffCalc(
+      new Date(),
+      goal.createDate ? new Date(goal.createDate) : new Date()
+    ),
+    remaining: timeDiffCalc(
+      goal.dueDate ? new Date(goal.dueDate) : new Date(),
+      new Date()
+    ),
   });
 
   useEffect(() => {
     const interval = setInterval(() => {
       settimeDisplayData({
-        ellapsed: timeDiffCalc(new Date(),  goal.createDate ? new Date(goal.createDate) : new Date()),
-        remaining: timeDiffCalc(goal.dueDate ? new Date(goal.dueDate) : new Date(), new Date()),
+        ellapsed: timeDiffCalc(
+          new Date(),
+          goal.createDate ? new Date(goal.createDate) : new Date()
+        ),
+        remaining: timeDiffCalc(
+          goal.dueDate ? new Date(goal.dueDate) : new Date(),
+          new Date()
+        ),
       });
     }, 1000);
 
@@ -65,8 +78,12 @@ const GoalItem = ({ goal, className, onEdit }: PropsWithChildren<Props>) => {
         </span>
         <span className="d-block ">
           Status:{" "}
-          <span className={`fw-bold ${getStatusColor(goal.status || 'IN_PROGRESS')} `}>
-            {getStatusDisplayName((goal.status || 'IN_PROGRESS'))}
+          <span
+            className={`fw-bold ${getStatusColor(
+              goal.status || "IN_PROGRESS"
+            )} `}
+          >
+            {getStatusDisplayName(goal.status || "IN_PROGRESS")}
           </span>
         </span>
 
@@ -77,18 +94,35 @@ const GoalItem = ({ goal, className, onEdit }: PropsWithChildren<Props>) => {
           </span>
           <span className="d-block">
             total:{" "}
-            {timeDiffCalc(goal.dueDate ? new Date(goal.dueDate) : new Date(),goal.createDate ? new Date(goal.createDate) : new Date())}
+            {timeDiffCalc(
+              goal.dueDate ? new Date(goal.dueDate) : new Date(),
+              goal.createDate ? new Date(goal.createDate) : new Date()
+            )}
           </span>
         </div>
+        <div>
+          {goal.notes && (
+            <OverlayTrigger
+              placement="right"
+              delay={{ show: 250, hide: 400 }}
+              overlay={<Tooltip id="button-tooltip">{goal.notes}</Tooltip>}
+            >
+              <i style={{ fontSize: "30px" }} className="bi bi-card-text"></i>
+            </OverlayTrigger>
+          )}
+        </div>
 
-        {goal.objectives && (
+        {goal.objectives && goal.objectives.length > 0 && (
           <div>
+            <hr></hr>
+            <h6>Objectives</h6>
+
             <ul>
               {goal.objectives.map((g: any) => {
                 return (
                   <li
                     key={g.id}
-                    className={`text-warning ${
+                    className={`${classes.objectiveTextColor} ${
                       g.status === "COMPLETE" && "text-decoration-line-through"
                     }`}
                   >
@@ -103,7 +137,7 @@ const GoalItem = ({ goal, className, onEdit }: PropsWithChildren<Props>) => {
         <button
           className="btn btn-primary"
           onClick={() => {
-            onEdit(goal.id || '');
+            onEdit(goal.id || "");
           }}
         >
           Edit

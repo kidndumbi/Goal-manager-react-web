@@ -41,6 +41,22 @@ const goalsSlice = createSlice<GoalsStateModel, GoalsReducersModel>({
   },
 });
 
+const triggerToast = ({
+  header,
+  bodyText,
+  backgroundColor,
+  delay,
+}: ToastModel) => {
+  return toastActions.addToast<{ toast: ToastModel }>({
+    toast: {
+      header: header || "Success",
+      bodyText: bodyText || "Success",
+      backgroundColor: backgroundColor || "success",
+      delay,
+    },
+  });
+};
+
 const getGoals = () => {
   return async (dispatch: any) => {
     try {
@@ -57,34 +73,17 @@ const getGoals = () => {
       dispatch(goalsActions.setLoading({ loading: false }));
       dispatch(goalsActions.setError({ error }));
       dispatch(
-        toastActions.addToast<{ toast: ToastModel }>({
-          toast: {
-            header: "Error",
-            bodyText: "There was an error retrieving goals.",
-            backgroundColor: "danger",
-            delay: 3000,
-          },
+        triggerToast({
+          header: "Error",
+          bodyText: "There was an error retrieving goals.",
+          backgroundColor: "danger",
         })
       );
     }
   };
 };
 
-const triggerToast = ({
-  header,
-  bodyText,
-  backgroundColor,
-  delay,
-}: ToastModel) => {
-  return toastActions.addToast<{ toast: ToastModel }>({
-    toast: {
-      header: header || "Success",
-      bodyText: bodyText || "Success",
-      backgroundColor: backgroundColor || "success",
-      delay: delay || 3000,
-    },
-  });
-};
+
 
 const updateGoal = (goal: GoalModel | undefined, callBackFn?: () => void) => {
   return async (dispatch: any) => {
