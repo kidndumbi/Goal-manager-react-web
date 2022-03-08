@@ -7,6 +7,7 @@ import { Formik } from "formik";
 
 import "react-datepicker/dist/react-datepicker.css";
 import { EditModalSchema } from "./validators";
+import React from "react";
 
 type EditModalProps = {
   showModal: boolean;
@@ -14,6 +15,15 @@ type EditModalProps = {
   onSaveChanges: (data: any) => void;
   dataToEdit: { data: any; type: string };
 };
+
+//Cassava
+const CustomInput = React.forwardRef((props: any, ref: any) => {
+  return (
+    <button type="button" onClick={props.onClick} ref={ref}>
+      {props.value || props.placeholder}
+    </button>
+  );
+});
 
 const EditModal = (props: PropsWithChildren<EditModalProps>) => {
   const { data } = props.dataToEdit;
@@ -84,6 +94,7 @@ const EditModal = (props: PropsWithChildren<EditModalProps>) => {
                     timeInputLabel="Time:"
                     dateFormat="MM/dd/yyyy h:mm aa"
                     showTimeInput
+                    customInput={<CustomInput />}
                   />
                   <Form.Text className="text-muted">
                     <span style={{ color: "red" }}>{errors.dueDate}</span>
