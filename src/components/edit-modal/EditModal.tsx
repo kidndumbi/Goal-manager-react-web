@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import { Modal, Button, Form } from "react-bootstrap";
+import { Modal, Button, Form, FloatingLabel } from "react-bootstrap";
 import Moment from "react-moment";
 import { useSelector } from "react-redux";
 import { Formik } from "formik";
@@ -17,7 +17,6 @@ type EditModalProps = {
     goalDueDate: number | null | undefined;
   };
 };
-
 
 const EditModal = (props: PropsWithChildren<EditModalProps>) => {
   const { data, goalDueDate } = props.dataToEdit;
@@ -38,6 +37,7 @@ const EditModal = (props: PropsWithChildren<EditModalProps>) => {
               name: data.name,
               dueDate: data.dueDate,
               status: data.status,
+              notes: data.notes || "",
             }}
             validationSchema={EditModalSchema({
               goalDueDate,
@@ -67,6 +67,18 @@ const EditModal = (props: PropsWithChildren<EditModalProps>) => {
               getFieldProps,
             }) => (
               <Form onSubmit={handleSubmit}>
+                {props.dataToEdit.type !== "new-objective" && (
+                  <Form.Group>
+                    <div className="pt-2">
+                      <strong>Created On: </strong>
+                      <span>
+                        <Moment format="dddd Do MMMM YYYY h:mm A">
+                          {data?.createDate}
+                        </Moment>
+                      </span>
+                    </div>
+                  </Form.Group>
+                )}
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label>Name</Form.Label>
                   <Form.Control
@@ -114,18 +126,21 @@ const EditModal = (props: PropsWithChildren<EditModalProps>) => {
                     </Form.Select>
                   </Form.Group>
                 )}
-
-                {props.dataToEdit.type !== "new-objective" && (
-                  <Form.Group>
-                    <div className="pt-2">
-                      <strong>Created On: </strong>
-                      <span>
-                        <Moment format="dddd Do MMMM YYYY h:mm A">
-                          {data?.createDate}
-                        </Moment>
-                      </span>
-                    </div>
-                  </Form.Group>
+                {true && (
+                  <FloatingLabel
+                    controlId="floatingTextarea2"
+                    className="mt-2"
+                    label="Notes"
+                  >
+                    <Form.Control
+                      as="textarea"
+                      name="notes"
+                      placeholder="Leave a comment here"
+                      style={{ height: "100px" }}
+                      value={values?.notes}
+                      onChange={handleChange}
+                    />
+                  </FloatingLabel>
                 )}
                 <Form.Group>
                   <Button

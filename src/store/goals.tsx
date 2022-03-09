@@ -17,6 +17,10 @@ type GoalsReducersModel = {
   setGoalUpdateError: (state: GoalsStateModel, action: any) => void;
 };
 
+// http://localhost:3001/
+// https://whispering-headland-62985.herokuapp.com
+const domain = 'https://whispering-headland-62985.herokuapp.com';
+
 const goalsSlice = createSlice<GoalsStateModel, GoalsReducersModel>({
   name: "goals",
   initialState: {
@@ -64,7 +68,7 @@ const getGoals = () => {
 
       dispatch(goalsActions.setError({ error: null }));
       const goals = await fetch(
-        "https://whispering-headland-62985.herokuapp.com/goals-manager/goals"
+        domain + "/goals-manager/goals"
       ).then((response) => response.json());
 
       dispatch(goalsActions.setGoals({ goals }));
@@ -90,7 +94,7 @@ const updateGoal = (goal: GoalModel | undefined, callBackFn?: () => void) => {
     try {
       dispatch(goalsActions.setGoalUpdateError({ error: null }));
       await fetch(
-        `https://whispering-headland-62985.herokuapp.com/goals-manager/goals/${goal?.id}`,
+        `${domain}/goals-manager/goals/${goal?.id}`,
         {
           method: "PUT",
           headers: {
@@ -127,7 +131,7 @@ const createGoal = (goal: GoalModel | undefined, callBackFn?: () => void) => {
   return async (dispatch: any) => {
     try {
       await fetch(
-        `https://whispering-headland-62985.herokuapp.com/goals-manager/goals/`,
+        `${domain}/goals-manager/goals/`,
         {
           method: "POST",
           headers: {
@@ -165,7 +169,7 @@ const deleteGoal = (id: string | undefined, callBackFn?: () => void) => {
   return async (dispatch: any) => {
     try {
       const data = await fetch(
-        `https://whispering-headland-62985.herokuapp.com/goals-manager/goals/${id}`,
+        `${domain}/goals-manager/goals/${id}`,
         {
           method: "DELETE",
         }
