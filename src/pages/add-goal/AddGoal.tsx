@@ -9,8 +9,8 @@ import { Objective } from "../../components/objective/Objective";
 import { ObjectiveModel } from "../../models/ObjectiveModel.interface";
 import { currentPageActions } from "../../store/currentPage";
 import { goalsActions } from "../../store/goals";
-import DatePicker from "react-datepicker";
 import { FieldArray, Formik } from "formik";
+import { DatePickerWrapper } from "../../components/date-picker/DatePickerWrapper";
 
 interface AddGoalProps {}
 
@@ -146,9 +146,9 @@ const AddGoal = (props: PropsWithChildren<AddGoalProps>) => {
           values,
           handleChange,
           handleSubmit,
-          setFieldValue,
           isValid,
           errors,
+          getFieldProps
         }) => (
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="formNamel">
@@ -167,18 +167,9 @@ const AddGoal = (props: PropsWithChildren<AddGoalProps>) => {
 
             <Form.Group className="mb-3" controlId="formDueDate">
               <Form.Label>Due date</Form.Label>
-              <DatePicker
-                selected={
-                  values.dueDate ? new Date(values.dueDate) : new Date()
-                }
-                name="dueDate"
-                onChange={(value) => {
-                  setFieldValue("dueDate", value);
-                }}
-                timeInputLabel="Time:"
-                dateFormat="MM/dd/yyyy h:mm aa"
-                showTimeInput
-              />
+              <DatePickerWrapper
+                {...getFieldProps("dueDate")}
+              ></DatePickerWrapper>
               <Form.Text className="text-muted">
                 <span style={{ color: "red" }}>{errors.dueDate}</span>
               </Form.Text>

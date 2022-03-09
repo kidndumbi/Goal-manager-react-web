@@ -2,12 +2,10 @@ import { PropsWithChildren } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import Moment from "react-moment";
 import { useSelector } from "react-redux";
-import DatePicker from "react-datepicker";
 import { Formik } from "formik";
-
 import "react-datepicker/dist/react-datepicker.css";
 import { EditModalSchema } from "./validators";
-import React from "react";
+import { DatePickerWrapper } from "../date-picker/DatePickerWrapper";
 
 type EditModalProps = {
   showModal: boolean;
@@ -20,14 +18,6 @@ type EditModalProps = {
   };
 };
 
-//Cassava
-const CustomInput = React.forwardRef((props: any, ref: any) => {
-  return (
-    <button type="button" onClick={props.onClick} ref={ref}>
-      {props.value || props.placeholder}
-    </button>
-  );
-});
 
 const EditModal = (props: PropsWithChildren<EditModalProps>) => {
   const { data, goalDueDate } = props.dataToEdit;
@@ -74,6 +64,7 @@ const EditModal = (props: PropsWithChildren<EditModalProps>) => {
               setFieldValue,
               isValid,
               errors,
+              getFieldProps,
             }) => (
               <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -91,17 +82,9 @@ const EditModal = (props: PropsWithChildren<EditModalProps>) => {
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicPassword">
                   <Form.Label>Due Date</Form.Label>
-                  <DatePicker
-                    selected={values.dueDate}
-                    name="dueDate"
-                    onChange={(value) => {
-                      setFieldValue("dueDate", value);
-                    }}
-                    timeInputLabel="Time:"
-                    dateFormat="MM/dd/yyyy h:mm aa"
-                    showTimeInput
-                    customInput={<CustomInput />}
-                  />
+                  <DatePickerWrapper
+                    {...getFieldProps("dueDate")}
+                  ></DatePickerWrapper>
                   <Form.Text className="text-muted">
                     <span style={{ color: "red" }}>{errors.dueDate}</span>
                   </Form.Text>
