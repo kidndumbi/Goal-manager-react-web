@@ -1,9 +1,10 @@
+import { GoalItemObjective } from './GoalItemObjective';
+import { NotesIcon } from "../notes-icon/NotesIcon";
 import Moment from "react-moment";
 import "moment-timezone";
 import { timeDiffCalc } from "../../utils/timeFormatting";
 import { useState, useEffect, PropsWithChildren } from "react";
 import { GoalModel } from "../../models/GoalModel.interface";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import classes from "./GoalItem.module.scss";
 
 interface Props {
@@ -100,34 +101,17 @@ const GoalItem = ({ goal, className, onEdit }: PropsWithChildren<Props>) => {
             )}
           </span>
         </div>
-        <div>
-          {goal.notes && (
-            <OverlayTrigger
-              placement="right"
-              delay={{ show: 250, hide: 400 }}
-              overlay={<Tooltip id="button-tooltip">{goal.notes}</Tooltip>}
-            >
-              <i style={{ fontSize: "30px" }} className="bi bi-card-text"></i>
-            </OverlayTrigger>
-          )}
-        </div>
+        <div>{goal.notes && <NotesIcon text={goal?.notes} />}</div>
 
         {goal.objectives && goal.objectives.length > 0 && (
           <div>
             <hr></hr>
             <h6>Objectives</h6>
 
-            <ul>
-              {goal.objectives.map((g: any) => {
+            <ul className='ps-0'>
+              {goal.objectives.map((objective: any) => {
                 return (
-                  <li
-                    key={g.id}
-                    className={`${classes.objectiveTextColor} ${
-                      g.status === "COMPLETE" && "text-decoration-line-through"
-                    }`}
-                  >
-                    <span>{g.name}</span>
-                  </li>
+                 <GoalItemObjective  objective={objective} className={classes.objectiveTextColor}  />
                 );
               })}
             </ul>
