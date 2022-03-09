@@ -8,4 +8,5 @@ export interface ObjectiveModel {
   status: string;
   isNew?: boolean;
   tempIdForNew?:string;
+  notes?: string;
 }

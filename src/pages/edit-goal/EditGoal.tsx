@@ -135,6 +135,7 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
           objectiveC.dueDate = modifiedData.data.dueDate;
           objectiveC.name = modifiedData.data.name;
           objectiveC.status = modifiedData.data.status;
+          objectiveC.notes = modifiedData.data.notes;
         }
       });
       setGoal((prevState: any) => {
@@ -157,6 +158,7 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
           if (modifiedData.data.tempIdForNew === objectiveC.tempIdForNew) {
             objectiveC.dueDate = modifiedData.data.dueDate;
             objectiveC.name = modifiedData.data.name;
+            objectiveC.notes = modifiedData.data.notes;
           }
         });
       } else {
