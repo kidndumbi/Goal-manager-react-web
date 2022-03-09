@@ -1,12 +1,14 @@
 import { forwardRef } from "react";
 import DatePicker from "react-datepicker";
 import { useFormikContext } from "formik";
+import { Button } from "react-bootstrap";
 
 const CustomInput = forwardRef((props: any, ref: any) => {
   return (
-    <button type="button" onClick={props.onClick} ref={ref}>
+    <Button variant="primary" onClick={props.onClick} ref={ref}>
+      <i className="bi bi-calendar3 me-2"></i>
       {props.value || props.placeholder}
-    </button>
+    </Button>
   );
 });
 

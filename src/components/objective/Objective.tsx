@@ -2,6 +2,7 @@ import { Button, Card } from "react-bootstrap";
 import Moment from "react-moment";
 import { useSelector } from "react-redux";
 import { ObjectiveModel } from "../../models/ObjectiveModel.interface";
+import { NotesIcon } from "../notes-icon/NotesIcon";
 
 type ObjectiveProps = {
   data: ObjectiveModel;
@@ -32,7 +33,13 @@ const Objective: React.FC<ObjectiveProps> = ({
               }`}
               onClick={onMarkedForDelete.bind(null, data)}
             >
-              <i className={`me-1 bi  ${data.markedForDeletion === true ? "bi-arrow-counterclockwise" : "bi-trash" }`}></i>
+              <i
+                className={`me-1 bi  ${
+                  data.markedForDeletion === true
+                    ? "bi-arrow-counterclockwise"
+                    : "bi-trash"
+                }`}
+              ></i>
               {`${data.markedForDeletion === true ? "Undo Delete" : "Delete"}`}
             </Button>
           </div>
@@ -65,6 +72,7 @@ const Objective: React.FC<ObjectiveProps> = ({
                 </span>
               </div>
             </div>
+            {data?.notes && <NotesIcon text={data?.notes} />}
           </Card.Text>
           <Button variant="primary" onClick={onEdit.bind(null, data)}>
             Edit
