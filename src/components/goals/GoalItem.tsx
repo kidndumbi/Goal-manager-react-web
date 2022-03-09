@@ -140,7 +140,7 @@ const GoalItem = ({ goal, className, onEdit }: PropsWithChildren<Props>) => {
             onEdit(goal.id || "");
           }}
         >
-          Edit
+          <i className="bi bi-pencil-square"></i>
         </button>
       </div>
     </div>

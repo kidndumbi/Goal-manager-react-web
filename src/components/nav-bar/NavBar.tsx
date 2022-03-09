@@ -70,7 +70,7 @@ const NavBar = (props: PropsWithChildren<Props>) => {
                       navigate("/addGoal");
                     }}
                   >
-                    New Goal
+                    <i className="bi bi-plus-circle-fill"></i>
                   </button>
                 </li>
               )}

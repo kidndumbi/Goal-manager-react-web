@@ -114,7 +114,6 @@ const AddGoal = (props: PropsWithChildren<AddGoalProps>) => {
       <Link to="/">
         <Button variant="outline-primary">
           <i className="bi bi-arrow-left-circle-fill"></i>
-          {" Back"}
         </Button>
       </Link>
       <hr />
@@ -184,7 +183,6 @@ const AddGoal = (props: PropsWithChildren<AddGoalProps>) => {
                     onClick={addNewObjectiveHandler}
                   >
                     <i className="bi bi-plus-circle-fill"></i>
-                    {" ADD"}
                   </Button>
                 </div>
               </div>
@@ -231,6 +229,7 @@ const AddGoal = (props: PropsWithChildren<AddGoalProps>) => {
               type="submit"
               disabled={!isValid}
             >
+              <i className="bi bi-plus-circle-fill me-1"></i>
               Add
             </Button>
           </Form>

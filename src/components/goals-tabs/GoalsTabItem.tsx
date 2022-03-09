@@ -8,6 +8,7 @@ interface Props {
   count: number;
   tabName: string;
   onClick: MouseEventHandler<HTMLAnchorElement>;
+  icon: string;
 }
 
 const GoalsTabItem = (props: PropsWithChildren<Props>) => {
@@ -15,12 +16,11 @@ const GoalsTabItem = (props: PropsWithChildren<Props>) => {
     <li className="nav-item">
       <a
         className={`nav-link ${props.className}`}
-        style={{ cursor: "pointer" }}
+        style={{ cursor: "pointer", padding: '0.25rem 0.5rem' }}
         aria-current="page"
         onClick={props.onClick}
       >
-        <span className={`badge ${props.background} me-1`}>{props.count}</span>
-        {props.tabName}
+        <h4><span className={`badge ${props.background} me-1`}>{props.count} <i className={`bi ${props.icon}`}></i></span></h4>
       </a>
     </li>
   );

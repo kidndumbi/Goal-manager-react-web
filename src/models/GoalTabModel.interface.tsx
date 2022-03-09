@@ -4,4 +4,5 @@ export interface GoalTabModel {
   count: number;
   title: string;
   active: boolean;
+  icon: string;
 }
