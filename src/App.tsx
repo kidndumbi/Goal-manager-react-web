@@ -13,7 +13,6 @@ import { goalsActions } from "./store/goals";
 import { Toasts } from "./components/toasts/Toasts";
 
 function App() {
-  /// GOLABAL DATA
 
   const dispatch = useDispatch();
 
@@ -24,6 +23,7 @@ function App() {
       count: 0,
       title: "All Tasks",
       active: false,
+      icon: 'bi-globe'
     },
     {
       name: "IN_PROGRESS",
@@ -31,6 +31,7 @@ function App() {
       count: 0,
       title: "Tasks in Progress",
       active: true,
+      icon: 'bi-cone-striped'
     },
     {
       name: "COMPLETE",
@@ -38,6 +39,7 @@ function App() {
       count: 0,
       title: "Completed Tasks",
       active: false,
+      icon: 'bi-emoji-sunglasses'
     },
     {
       name: "FAILED",
@@ -45,6 +47,7 @@ function App() {
       count: 0,
       title: "Failed Tasks",
       active: false,
+      icon: 'bi-emoji-frown'
     },
   ]);
 

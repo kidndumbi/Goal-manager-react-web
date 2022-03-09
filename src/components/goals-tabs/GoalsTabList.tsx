@@ -1,11 +1,7 @@
-import { PropsWithChildren, useContext, useEffect, useState } from "react";
+import { PropsWithChildren, useContext, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { GoalsTabsContext } from "../../contexts/goalsTabs.context";
-import { GoalTabModel } from "../../models/GoalTabModel.interface";
-import { Loading } from "../loading/Loading";
 import GoalsTabItem from "./GoalsTabItem";
-
-/* eslint-disable jsx-a11y/anchor-is-valid */
 
 interface Props {
   onGoalTypeSelected: Function;
@@ -55,11 +51,11 @@ const GoalsTabList = (props: PropsWithChildren<Props>) => {
 
   return (
     <div>
-      
-      <ul className="nav nav-tabs">
-        {goalsTabs.map((tab: any) => {
+      <ul className="nav nav-tabs justify-content-center">
+        {goalsTabs.map((tab) => {
           return (
             <GoalsTabItem
+              icon={tab.icon}
               key={tab.name}
               tabName={tab.name}
               background={tab.background}

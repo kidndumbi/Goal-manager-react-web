@@ -286,7 +286,6 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
           }}
         >
           <i className="me-1 bi bi-trash"></i>
-          Delete
         </Button>
       </div>
       <hr />
@@ -314,7 +313,7 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
         </div>
         <div>
           <Button variant="primary" onClick={onGoalHeaderEdithandler}>
-            Edit
+            <i className="bi bi-pencil-square"></i>
           </Button>
         </div>
       </div>
@@ -323,7 +322,6 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
           <h3>Objectives</h3>
           <Button variant="outline-success" onClick={addNewObjectiveHandler}>
             <i className="bi bi-plus-circle-fill"></i>
-            {" ADD"}
           </Button>
         </div>
       </div>
