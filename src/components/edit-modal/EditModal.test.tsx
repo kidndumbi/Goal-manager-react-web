@@ -25,26 +25,19 @@ const EditModalWrapper = (p: any) => {
 describe("EditModal", () => {
   test("Should display right labels", async () => {
     render(<EditModalWrapper {...props}></EditModalWrapper>);
-    const nameLabel = screen.getByText("Name");
-    expect(nameLabel).toBeInTheDocument();
-    const dueDateLabel = screen.getByText("Due Date");
-    expect(dueDateLabel).toBeInTheDocument();
-    const status = screen.getByText("Status");
-    expect(status).toBeInTheDocument();
-    const createdOn = screen.getByText("Created On:");
-    expect(createdOn).toBeInTheDocument();
+    expect(screen.getByText("Name")).toBeInTheDocument();
+    expect(screen.getByText("Due Date")).toBeInTheDocument();
+    expect(screen.getByText("Status")).toBeInTheDocument();
+    expect(screen.getByText("Created On:")).toBeInTheDocument();
   });
 
   test("Should display right control values", async () => {
     render(<EditModalWrapper {...props}></EditModalWrapper>);
-    const nameInput = screen.getByDisplayValue("5 day fast Let's go!");
-    expect(nameInput).toHaveAttribute("type", "text");
-    const statusInput = screen.getByDisplayValue("In Progress");
-    expect((statusInput as HTMLSelectElement).value).toEqual("IN_PROGRESS");
-    const dueDateInput = screen.getByRole("button", {
+    expect(screen.getByDisplayValue("5 day fast Let's go!")).toHaveAttribute("type", "text");
+    expect((screen.getByDisplayValue("In Progress") as HTMLSelectElement).value).toEqual("IN_PROGRESS");
+    expect(screen.getByRole("button", {
       name: "03/10/2022 7:52 PM",
-    });
-    expect(dueDateInput as HTMLButtonElement).toHaveTextContent(
+    }) as HTMLButtonElement).toHaveTextContent(
       "03/10/2022 7:52 PM"
     );
 
@@ -53,16 +46,13 @@ describe("EditModal", () => {
 
   test("Should not display Data when Showmodal is set to false", () => {
     render(<EditModalWrapper {...props}></EditModalWrapper>);
-
-    const nameInput = screen.queryByDisplayValue("submit");
-    expect(nameInput).toBeNull();
+    expect(screen.queryByDisplayValue("submit")).toBeNull();
   });
 
   test("Should hide status if objective is New creation", () => {
     dataToEdit.type = "new-objective";
     render(<EditModalWrapper {...props}></EditModalWrapper>);
-    const statusInput = screen.queryByDisplayValue("In Progress");
-    expect(statusInput).toBeNull();
+    expect(screen.queryByDisplayValue("In Progress")).toBeNull();
   });
 
   test("Should trigger save changes", async () => {
@@ -73,8 +63,7 @@ describe("EditModal", () => {
         onSaveChanges={onSaveChanges}
       ></EditModalWrapper>
     );
-    const saveChangesBtn = await screen.findByText("Save Changes");
-    fireEvent.click(saveChangesBtn);
+    fireEvent.click(await screen.findByText("Save Changes"));
     await waitFor(() => {
       expect(onSaveChanges).toHaveBeenCalledTimes(1);
     });
