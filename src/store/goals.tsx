@@ -168,14 +168,13 @@ const createGoal = (goal: GoalModel | undefined, callBackFn?: () => void) => {
 const deleteGoal = (id: string | undefined, callBackFn?: () => void) => {
   return async (dispatch: any) => {
     try {
-      const data = await fetch(
+      await fetch(
         `${domain}/goals-manager/goals/${id}`,
         {
           method: "DELETE",
         }
       ).then((response) => response.text());
 
-      console.log("data received:::", data);
 
       dispatch(
         triggerToast({
@@ -189,7 +188,6 @@ const deleteGoal = (id: string | undefined, callBackFn?: () => void) => {
 
       callBackFn && callBackFn();
     } catch (error) {
-      console.log("Error received:::", error);
 
       dispatch(
         triggerToast({

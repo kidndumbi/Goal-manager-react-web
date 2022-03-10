@@ -34,7 +34,6 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
 
   const [goal, setGoal] = useState<GoalModel>();
   useEffect(() => {
-    console.log("goal data change", goal);
     goal && updateFormValidity();
   }, [goal]);
 
@@ -273,15 +272,15 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
       )}
 
       <Link to="/">
-        <Button variant="outline-primary">
-          <i className="bi bi-arrow-left-circle-fill"></i>
-          {" Back"}
+        <Button variant="outline-primary" aria-label="Back">
+          <i className="bi bi-arrow-left-circle-fill" ></i>
         </Button>
       </Link>
 
       <div className="d-flex justify-content-between pt-2">
         <h2>{goal?.name}</h2>
         <Button
+        aria-label="delete goal"
           variant="danger"
           onClick={() => {
             setShowDeleteConfirmModal(true);
@@ -314,7 +313,7 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
           </span>
         </div>
         <div>
-          <Button variant="primary" onClick={onGoalHeaderEdithandler}>
+          <Button variant="primary" aria-label="Edit Goal" onClick={onGoalHeaderEdithandler}>
             <i className="bi bi-pencil-square"></i>
           </Button>
         </div>
@@ -322,7 +321,7 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
       <div className="pt-4" style={{ color: "#0d6efd" }}>
         <div className="d-flex justify-content-between pt-2">
           <h3>Objectives</h3>
-          <Button variant="outline-success" onClick={addNewObjectiveHandler}>
+          <Button aria-label="add new objective" variant="outline-success" onClick={addNewObjectiveHandler}>
             <i className="bi bi-plus-circle-fill"></i>
           </Button>
         </div>
@@ -369,7 +368,6 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
           variant="primary"
           size="lg"
           onClick={async () => {
-            console.log(JSON.stringify(goal, null, 2));
             dispatch(goalsActions.updateGoal(goal));
           }}
           disabled={!isFormValid}

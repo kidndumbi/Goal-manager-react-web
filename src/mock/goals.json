@@ -132,7 +132,7 @@
   },
   {
     "id": "6079ff699c9fb9799056caa5",
-    "name": "Rutherford heights apartment appointment ",
+    "name": "Rutherford heights apartment appointment",
     "status": "FAILED",
     "createDate": 1618607976862,
     "dueDate": 1619883010958,
@@ -140,7 +140,7 @@
     "objectives": [
       {
         "id": "6ed5ddb7-e420-42fe-b88b-6bd377a171ab",
-        "name": "Print necessarily documents ",
+        "name": "Print necessarily documents",
         "status": "COMPLETE",
         "createDate": 1619788237514,
         "dueDate": 1619796610958,
