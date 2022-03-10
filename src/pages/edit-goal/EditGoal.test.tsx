@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { Provider, useDispatch } from "react-redux";
 import Router, { BrowserRouter } from "react-router-dom";
 import { store } from "../../store";
@@ -62,9 +62,10 @@ describe("EditGoal Component", () => {
 
   test("Should Have back button", async () => {
     setup("62278dc9d24b5539be2f0bae");
-    expect(
-      await screen.findByRole("button", { name: "Back" })
-    ).toBeInTheDocument();
+    const backButton = await screen.findByRole("button", { name: "Back" });
+    expect(backButton).toBeInTheDocument();
+    expect(backButton).toHaveClass("btn btn-outline-primary");
+    expect(backButton).toContainHTML('<i class="bi bi-arrow-left-circle-fill" />');
   });
 
   test("Should Have Delete Goal button", async () => {
