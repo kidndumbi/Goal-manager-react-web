@@ -37,10 +37,14 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
     goal && updateFormValidity();
   }, [goal]);
 
-  const [dataToEdit, setDataToEdit] = useState<{ data: any; type: string, goalDueDate: number | null | undefined }>({
+  const [dataToEdit, setDataToEdit] = useState<{
+    data: any;
+    type: string;
+    goalDueDate: number | null | undefined;
+  }>({
     data: {},
     type: "",
-    goalDueDate: null
+    goalDueDate: null,
   });
 
   const goalsData = useSelector((state: any) => state.goals.goals);
@@ -93,7 +97,7 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
     setDataToEdit({
       data: objective,
       type: objective.isNew ? "new-objective" : "objective",
-      goalDueDate: goal?.dueDate
+      goalDueDate: goal?.dueDate,
     });
     handleShowEditModal();
   };
@@ -110,14 +114,18 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
         markedForUpdate: true,
       },
       type: "new-objective",
-      goalDueDate: goal?.dueDate
+      goalDueDate: goal?.dueDate,
     });
 
     handleShowEditModal();
   };
 
   const onGoalHeaderEdithandler = () => {
-    setDataToEdit({ data: goal, type: "goalHeaders", goalDueDate: goal?.dueDate });
+    setDataToEdit({
+      data: goal,
+      type: "goalHeaders",
+      goalDueDate: goal?.dueDate,
+    });
     handleShowEditModal();
   };
 
@@ -273,14 +281,14 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
 
       <Link to="/">
         <Button variant="outline-primary" aria-label="Back">
-          <i className="bi bi-arrow-left-circle-fill" ></i>
+          <i className="bi bi-arrow-left-circle-fill"></i>
         </Button>
       </Link>
 
       <div className="d-flex justify-content-between pt-2">
         <h2>{goal?.name}</h2>
         <Button
-        aria-label="delete goal"
+          aria-label="delete goal"
           variant="danger"
           onClick={() => {
             setShowDeleteConfirmModal(true);
@@ -313,7 +321,11 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
           </span>
         </div>
         <div>
-          <Button variant="primary" aria-label="Edit Goal" onClick={onGoalHeaderEdithandler}>
+          <Button
+            variant="primary"
+            aria-label="Edit Goal"
+            onClick={onGoalHeaderEdithandler}
+          >
             <i className="bi bi-pencil-square"></i>
           </Button>
         </div>
@@ -321,24 +333,30 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
       <div className="pt-4" style={{ color: "#0d6efd" }}>
         <div className="d-flex justify-content-between pt-2">
           <h3>Objectives</h3>
-          <Button aria-label="add new objective" variant="outline-success" onClick={addNewObjectiveHandler}>
+          <Button
+            aria-label="add new objective"
+            variant="outline-success"
+            onClick={addNewObjectiveHandler}
+          >
             <i className="bi bi-plus-circle-fill"></i>
           </Button>
         </div>
       </div>
       <hr></hr>
       <div>
-        {goal &&  goal.objectives && goal?.objectives.map((objective: ObjectiveModel) => {
-          return (
-            <Objective
-              key={objective.id}
-              className="mb-2"
-              onMarkedForDelete={markedFordeleteHandler.bind(null, objective)}
-              onEdit={onObjectiveEdithandler.bind(null, objective)}
-              data={objective}
-            ></Objective>
-          );
-        })}
+        {goal &&
+          goal.objectives &&
+          goal?.objectives.map((objective: ObjectiveModel) => {
+            return (
+              <Objective
+                key={objective.id}
+                className="mb-2"
+                onMarkedForDelete={markedFordeleteHandler.bind(null, objective)}
+                onEdit={onObjectiveEdithandler.bind(null, objective)}
+                data={objective}
+              ></Objective>
+            );
+          })}
       </div>
       <div>
         <FloatingLabel controlId="floatingTextarea2" label="Notes">
@@ -368,7 +386,11 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
           variant="primary"
           size="lg"
           onClick={async () => {
-            dispatch(goalsActions.updateGoal(goal));
+            dispatch(
+              goalsActions.updateGoal(goal, () => {
+                navigate("/");
+              })
+            );
           }}
           disabled={!isFormValid}
         >
