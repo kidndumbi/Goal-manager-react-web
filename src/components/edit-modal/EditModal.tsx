@@ -151,7 +151,7 @@ const EditModal = (props: PropsWithChildren<EditModalProps>) => {
                     variant="primary"
                     className="mt-3 float-end"
                     type="submit"
-                    disabled={!isValid || !dirty}
+                    disabled ={!isValid || !dirty}
                   >
                     Save Changes
                   </Button>
