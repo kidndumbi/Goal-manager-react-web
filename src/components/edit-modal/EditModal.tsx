@@ -63,6 +63,7 @@ const EditModal = (props: PropsWithChildren<EditModalProps>) => {
               resetForm,
               setFieldValue,
               isValid,
+              dirty,
               errors,
               getFieldProps,
             }) => (
@@ -87,6 +88,7 @@ const EditModal = (props: PropsWithChildren<EditModalProps>) => {
                     value={values.name}
                     placeholder="Enter name"
                     onChange={handleChange}
+                    onBlur={handleBlur}
                   />
                   <Form.Text className="text-muted">
                     <span style={{ color: "red" }}>{errors.name}</span>
@@ -111,6 +113,7 @@ const EditModal = (props: PropsWithChildren<EditModalProps>) => {
                       name="status"
                       value={values.status}
                       onChange={handleChange}
+                      onBlur={handleBlur}
                       autoFocus={true}
                     >
                       {statusOptions.map(
@@ -126,7 +129,7 @@ const EditModal = (props: PropsWithChildren<EditModalProps>) => {
                     </Form.Select>
                   </Form.Group>
                 )}
-                {true && (
+             
                   <FloatingLabel
                     controlId="floatingTextarea2"
                     className="mt-2"
@@ -139,15 +142,16 @@ const EditModal = (props: PropsWithChildren<EditModalProps>) => {
                       style={{ height: "100px" }}
                       value={values?.notes}
                       onChange={handleChange}
+                      onBlur={handleBlur}
                     />
                   </FloatingLabel>
-                )}
+             
                 <Form.Group>
                   <Button
                     variant="primary"
                     className="mt-3 float-end"
                     type="submit"
-                    disabled={!isValid}
+                    disabled={!isValid || !dirty}
                   >
                     Save Changes
                   </Button>

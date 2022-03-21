@@ -27,6 +27,7 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
 
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
   const [isFormValid, setIsFormValid] = useState<boolean>();
+  const [isFormDirty, setIsFormDirty] = useState<boolean>(false);
 
   useEffect(() => {
     dispatch(currentPageActions.setCurrentPage({ currentPage: "EditGoal" }));
@@ -131,6 +132,8 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
 
   const onSaveEditChangesHandler = (modifiedData: any) => {
     setshowEditModal(false);
+
+    setIsFormDirty(true);
 
     if (modifiedData.type === "objective") {
       const objectiveClone = goal?.objectives
@@ -392,7 +395,7 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
               })
             );
           }}
-          disabled={!isFormValid}
+          disabled={!isFormValid || !isFormDirty}
         >
           Update
         </Button>
