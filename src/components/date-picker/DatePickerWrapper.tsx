@@ -24,7 +24,7 @@ interface DatePickerWarapperProps  {
 
 const DatePickerWrapper = (props: DatePickerWarapperProps) => {
 
-    const { setFieldValue } = useFormikContext();
+    const { setFieldValue, setFieldTouched } = useFormikContext();
 
   return (
     <DatePicker
@@ -33,6 +33,7 @@ const DatePickerWrapper = (props: DatePickerWarapperProps) => {
       onBlur={props.onBlur}
       onChange={(value) => {
         setFieldValue(props.name, value);
+        setFieldTouched(props.name, true);
       }}
       timeInputLabel={props.timeInputLabel || "Time:"}
       dateFormat={ props.dateFormat || "MM/dd/yyyy h:mm aa"}
