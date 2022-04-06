@@ -4,6 +4,12 @@ import { useNavigate } from "react-router-dom";
 import GoalItem from "./GoalItem";
 import { Loading } from "../loading/Loading";
 import { goalsReducer } from "./reducers";
+import classes from "./GoalsList.module.scss";
+import {
+  checkIfDateGreater,
+  checkIfDatesAreEqual,
+} from "../../utils/dateTimeHelpers";
+import { GoalModel } from "../../models/GoalModel.interface";
 
 interface Props {
   selectedGoalType: string;
@@ -32,6 +38,18 @@ const GoalList = ({ selectedGoalType: type }: PropsWithChildren<Props>) => {
     });
   }, [type, goalsData, searchValue]);
 
+  const getGoalItemColor = (goal: GoalModel) => {
+    if (checkIfDateGreater(new Date(), new Date(goal.dueDate!))) {
+      return classes.pastDue;
+    }
+
+    if (checkIfDatesAreEqual(new Date(goal.dueDate!), new Date())) {
+      return classes.dueToday;
+    }
+
+    return "";
+  };
+
   return (
     <>
       {loadingGoals && (
@@ -41,13 +59,13 @@ const GoalList = ({ selectedGoalType: type }: PropsWithChildren<Props>) => {
           text="Please Wait..."
         ></Loading>
       )}
-      {goalsInfo.map((goal: any) => {
+      {goalsInfo.map((goal: GoalModel) => {
         return (
           <GoalItem
             key={goal.id}
             goal={goal}
             onEdit={editHandler}
-            className="mt-3"
+            className={`mt-3 ${getGoalItemColor(goal)}`}
           ></GoalItem>
         );
       })}

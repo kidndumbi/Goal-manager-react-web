@@ -2,7 +2,7 @@ import { GoalItemObjective } from './GoalItemObjective';
 import { NotesIcon } from "../notes-icon/NotesIcon";
 import Moment from "react-moment";
 import "moment-timezone";
-import { timeDiffCalc } from "../../utils/timeFormatting";
+import { timeDiffCalc } from "../../utils/dateTimeHelpers";
 import { useState, useEffect, PropsWithChildren } from "react";
 import { GoalModel } from "../../models/GoalModel.interface";
 import classes from "./GoalItem.module.scss";
