@@ -32,4 +32,16 @@ const timeDiffCalc = (endDate: Date, startDate: Date) => {
   return difference;
 };
 
-export { timeDiffCalc };
+const checkIfDatesAreEqual = (dateOne: Date, datetwo: Date): boolean => {
+  return (
+    dateOne.getFullYear() === datetwo.getFullYear() &&
+    dateOne.getMonth() === datetwo.getMonth() &&
+    dateOne.getDate() === datetwo.getDate()
+  );
+};
+
+const checkIfDateGreater = (dateOne: Date, datetwo: Date): boolean => {
+  return dateOne.getTime() > datetwo.getTime();
+};
+
+export { timeDiffCalc, checkIfDatesAreEqual, checkIfDateGreater };
