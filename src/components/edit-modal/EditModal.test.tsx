@@ -63,6 +63,9 @@ describe("EditModal", () => {
         onSaveChanges={onSaveChanges}
       ></EditModalWrapper>
     );
+    const nameInput = screen.getByDisplayValue("5 day fast Let's go!");
+    fireEvent.change(nameInput, { target: { value: "yo" } });
+
     fireEvent.click(await screen.findByText("Save Changes"));
     await waitFor(() => {
       expect(onSaveChanges).toHaveBeenCalledTimes(1);
