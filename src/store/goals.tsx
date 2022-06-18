@@ -17,9 +17,9 @@ type GoalsReducersModel = {
   setGoalUpdateError: (state: GoalsStateModel, action: any) => void;
 };
 
-// http://localhost:3001/
+// http://localhost:3000/
 // https://whispering-headland-62985.herokuapp.com
-const domain = 'https://whispering-headland-62985.herokuapp.com';
+const domain = 'https://powerful-temple-30770.herokuapp.com';
 
 const goalsSlice = createSlice<GoalsStateModel, GoalsReducersModel>({
   name: "goals",
