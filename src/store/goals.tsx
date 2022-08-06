@@ -18,8 +18,8 @@ type GoalsReducersModel = {
 };
 
 // http://localhost:3000/
-// https://whispering-headland-62985.herokuapp.com
-const domain = 'https://powerful-temple-30770.herokuapp.com';
+// https://powerful-temple-30770.herokuapp.com
+const domain = "https://powerful-temple-30770.herokuapp.com";
 
 const goalsSlice = createSlice<GoalsStateModel, GoalsReducersModel>({
   name: "goals",
@@ -67,9 +67,9 @@ const getGoals = () => {
       dispatch(goalsActions.setLoading({ loading: true }));
 
       dispatch(goalsActions.setError({ error: null }));
-      const goals = await fetch(
-        domain + "/goals-manager/goals"
-      ).then((response) => response.json());
+      const goals = await fetch(domain + "/goals-manager/goals").then(
+        (response) => response.json()
+      );
 
       dispatch(goalsActions.setGoals({ goals }));
       dispatch(goalsActions.setLoading({ loading: false }));
@@ -87,22 +87,17 @@ const getGoals = () => {
   };
 };
 
-
-
 const updateGoal = (goal: GoalModel | undefined, callBackFn?: () => void) => {
   return async (dispatch: any) => {
     try {
       dispatch(goalsActions.setGoalUpdateError({ error: null }));
-      await fetch(
-        `${domain}/goals-manager/goals/${goal?.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(goal),
-        }
-      ).then((response) => response.json());
+      await fetch(`${domain}/goals-manager/goals/${goal?.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(goal),
+      }).then((response) => response.json());
 
       dispatch(
         triggerToast({
@@ -130,16 +125,13 @@ const updateGoal = (goal: GoalModel | undefined, callBackFn?: () => void) => {
 const createGoal = (goal: GoalModel | undefined, callBackFn?: () => void) => {
   return async (dispatch: any) => {
     try {
-      await fetch(
-        `${domain}/goals-manager/goals/`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(goal),
-        }
-      ).then((response) => response.json());
+      await fetch(`${domain}/goals-manager/goals/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(goal),
+      }).then((response) => response.json());
 
       dispatch(
         triggerToast({
@@ -168,13 +160,9 @@ const createGoal = (goal: GoalModel | undefined, callBackFn?: () => void) => {
 const deleteGoal = (id: string | undefined, callBackFn?: () => void) => {
   return async (dispatch: any) => {
     try {
-      await fetch(
-        `${domain}/goals-manager/goals/${id}`,
-        {
-          method: "DELETE",
-        }
-      ).then((response) => response.text());
-
+      await fetch(`${domain}/goals-manager/goals/${id}`, {
+        method: "DELETE",
+      }).then((response) => response.text());
 
       dispatch(
         triggerToast({
@@ -188,11 +176,49 @@ const deleteGoal = (id: string | undefined, callBackFn?: () => void) => {
 
       callBackFn && callBackFn();
     } catch (error) {
-
       dispatch(
         triggerToast({
           header: "Error",
           bodyText: "There was an error Deleting the goal. Please try again.",
+          backgroundColor: "danger",
+          delay: 3000,
+        })
+      );
+    }
+  };
+};
+
+const addImageData = (
+  id: string | undefined,
+  imageData: any,
+  callBackFn?: () => void
+) => {
+  return async (dispatch: any) => {
+    try {
+      await fetch(`${domain}/goals-manager/goals/images/${id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(imageData),
+      }).then((response) => response.json());
+
+      dispatch(
+        triggerToast({
+          header: "Success",
+          bodyText: "Image added successfully.",
+          backgroundColor: "success",
+          delay: 3000,
+        })
+      );
+      // dispatch(goalsActions.getGoals());
+
+      callBackFn && callBackFn();
+    } catch (error) {
+      dispatch(
+        triggerToast({
+          header: "Error",
+          bodyText: "There was an error saving image info. Please try again.",
           backgroundColor: "danger",
           delay: 3000,
         })
@@ -207,6 +233,7 @@ const goalsActions = {
   updateGoal,
   createGoal,
   deleteGoal,
+  addImageData,
 };
 
 export { goalsSlice, goalsActions };

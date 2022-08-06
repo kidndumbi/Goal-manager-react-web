@@ -9,5 +9,6 @@ export interface GoalModel {
   name: string;
   notes?: string;
   objectives: ObjectiveModel[];
-  status?: "FAILED" | "IN_PROGRESS" | "COMPLETE"
+  status?: "FAILED" | "IN_PROGRESS" | "COMPLETE";
+  images?: any[];
 }

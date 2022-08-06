@@ -1,4 +1,4 @@
-import { GoalItemObjective } from './GoalItemObjective';
+import { GoalItemObjective } from "./GoalItemObjective";
 import { NotesIcon } from "../notes-icon/NotesIcon";
 import Moment from "react-moment";
 import "moment-timezone";
@@ -6,12 +6,36 @@ import { timeDiffCalc } from "../../utils/dateTimeHelpers";
 import { useState, useEffect, PropsWithChildren } from "react";
 import { GoalModel } from "../../models/GoalModel.interface";
 import classes from "./GoalItem.module.scss";
+import Uploady, { useItemFinishListener } from "@rpldy/uploady";
+import UploadButton from "@rpldy/upload-button";
+import { useDispatch } from "react-redux";
+import { goalsActions } from "../../store/goals";
 
 interface Props {
   goal: GoalModel;
   className: string;
   onEdit: (id: string) => void;
 }
+
+const MyUplaodButton = ({
+  goalId,
+}: PropsWithChildren<{ goalId: string | undefined }>) => {
+  const dispatch = useDispatch();
+
+  useItemFinishListener((item) => {
+    console.log(
+      `item ${item.id} finished uploading, response was: `,
+      item.uploadResponse,
+      item.uploadStatus
+    );
+
+    dispatch(
+      goalsActions.addImageData(goalId, item.uploadResponse.data, () => {})
+    );
+  });
+
+  return <UploadButton className="ms-2 btn btn-primary" text="Upload Image" />;
+};
 
 const GoalItem = ({ goal, className, onEdit }: PropsWithChildren<Props>) => {
   const getStatusColor = (status: "FAILED" | "IN_PROGRESS" | "COMPLETE") => {
@@ -108,10 +132,13 @@ const GoalItem = ({ goal, className, onEdit }: PropsWithChildren<Props>) => {
             <hr></hr>
             <h6>Objectives</h6>
 
-            <ul className='ps-0'>
+            <ul className="ps-0">
               {goal.objectives.map((objective: any) => {
                 return (
-                 <GoalItemObjective  objective={objective} className={classes.objectiveTextColor}  />
+                  <GoalItemObjective
+                    objective={objective}
+                    className={classes.objectiveTextColor}
+                  />
                 );
               })}
             </ul>
@@ -126,6 +153,26 @@ const GoalItem = ({ goal, className, onEdit }: PropsWithChildren<Props>) => {
         >
           <i className="bi bi-pencil-square"></i>
         </button>
+        <Uploady
+          destination={{
+            url: "https://powerful-temple-30770.herokuapp.com/media/upload?bucket=goalManagerImages",
+          }}
+        >
+          <MyUplaodButton goalId={goal?.id}></MyUplaodButton>
+        </Uploady>
+        {goal.images && goal.images.length > 0 && (
+          <div className="mt-2">
+            {goal.images.map((image) => {
+              return (
+                <div
+                  className={`${classes.thumbnail} me-1 rounded`}
+                  key={image.asset_id}
+                  style={{ backgroundImage: `url(${image.url})` }}
+                ></div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );
