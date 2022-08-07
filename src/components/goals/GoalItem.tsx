@@ -6,11 +6,7 @@ import { timeDiffCalc } from "../../utils/dateTimeHelpers";
 import { useState, useEffect, PropsWithChildren } from "react";
 import { GoalModel } from "../../models/GoalModel.interface";
 import classes from "./GoalItem.module.scss";
-import Uploady, { useItemFinishListener } from "@rpldy/uploady";
-import UploadButton from "@rpldy/upload-button";
-import { useDispatch } from "react-redux";
-import { goalsActions } from "../../store/goals";
-import { ImageViewModal } from "../image-view/ImageView.Modal";
+import { GoalImageList } from "../goal-image-list/GoalImageList";
 
 interface Props {
   goal: GoalModel;
@@ -18,29 +14,7 @@ interface Props {
   onEdit: (id: string) => void;
 }
 
-const MyUplaodButton = ({
-  goalId,
-}: PropsWithChildren<{ goalId: string | undefined }>) => {
-  const dispatch = useDispatch();
-
-  useItemFinishListener((item) => {
-    console.log(
-      `item ${item.id} finished uploading, response was: `,
-      item.uploadResponse,
-      item.uploadStatus
-    );
-
-    dispatch(
-      goalsActions.addImageData(goalId, item.uploadResponse.data, () => {})
-    );
-  });
-
-  return <UploadButton className="ms-2 btn btn-primary" text="Upload Image" />;
-};
-
 const GoalItem = ({ goal, className, onEdit }: PropsWithChildren<Props>) => {
-  const dispatch = useDispatch();
-
   const getStatusColor = (status: "FAILED" | "IN_PROGRESS" | "COMPLETE") => {
     const colors = {
       FAILED: "text-danger",
@@ -92,12 +66,6 @@ const GoalItem = ({ goal, className, onEdit }: PropsWithChildren<Props>) => {
       clearInterval(interval);
     };
   }, []);
-
-  const [showViewImageModal, setViewImageModal] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<{
-    url: string;
-    public_id: "";
-  } | null>(null);
 
   return (
     <div className={`card w-100 text-start ${className}`}>
@@ -162,64 +130,7 @@ const GoalItem = ({ goal, className, onEdit }: PropsWithChildren<Props>) => {
         >
           <i className="bi bi-pencil-square"></i>
         </button>
-        <Uploady
-          destination={{
-            url: "https://powerful-temple-30770.herokuapp.com/media/upload?bucket=goalManagerImages",
-          }}
-        >
-          <MyUplaodButton goalId={goal?.id}></MyUplaodButton>
-        </Uploady>
-        {goal.images && goal.images.length > 0 && (
-          <div className="mt-2">
-            {goal.images.map((image) => {
-              return (
-                <div
-                  className={`${classes.thumbnail} me-1 rounded`}
-                  key={image.asset_id}
-                  style={{
-                    backgroundImage: `url(${image.url})`,
-                    cursor: "pointer",
-                  }}
-                  onClick={() => {
-                    setSelectedImage(image);
-                    setViewImageModal(true);
-                  }}
-                ></div>
-              );
-            })}
-          </div>
-        )}
-        {showViewImageModal && (
-          <ImageViewModal
-            showModal={showViewImageModal}
-            onCloseModal={() => {
-              setViewImageModal(false);
-            }}
-            onDelete={() => {
-              setViewImageModal(false);
-
-              dispatch(
-                goalsActions.deleteImage(
-                  goal?.id,
-                  selectedImage?.public_id,
-                  () => {}
-                )
-              );
-            }}
-          >
-            <a
-              href={selectedImage?.url}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                alt="cool"
-                className="img-fluid"
-                src={selectedImage?.url}
-              ></img>
-            </a>
-          </ImageViewModal>
-        )}
+        <GoalImageList goal={goal}></GoalImageList>
       </div>
     </div>
   );
