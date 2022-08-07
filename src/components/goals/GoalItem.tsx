@@ -10,6 +10,7 @@ import Uploady, { useItemFinishListener } from "@rpldy/uploady";
 import UploadButton from "@rpldy/upload-button";
 import { useDispatch } from "react-redux";
 import { goalsActions } from "../../store/goals";
+import { ImageViewModal } from "../image-view/ImageView.Modal";
 
 interface Props {
   goal: GoalModel;
@@ -38,6 +39,8 @@ const MyUplaodButton = ({
 };
 
 const GoalItem = ({ goal, className, onEdit }: PropsWithChildren<Props>) => {
+  const dispatch = useDispatch();
+
   const getStatusColor = (status: "FAILED" | "IN_PROGRESS" | "COMPLETE") => {
     const colors = {
       FAILED: "text-danger",
@@ -89,6 +92,12 @@ const GoalItem = ({ goal, className, onEdit }: PropsWithChildren<Props>) => {
       clearInterval(interval);
     };
   }, []);
+
+  const [showViewImageModal, setViewImageModal] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<{
+    url: string;
+    public_id: "";
+  } | null>(null);
 
   return (
     <div className={`card w-100 text-start ${className}`}>
@@ -167,11 +176,49 @@ const GoalItem = ({ goal, className, onEdit }: PropsWithChildren<Props>) => {
                 <div
                   className={`${classes.thumbnail} me-1 rounded`}
                   key={image.asset_id}
-                  style={{ backgroundImage: `url(${image.url})` }}
+                  style={{
+                    backgroundImage: `url(${image.url})`,
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    setSelectedImage(image);
+                    setViewImageModal(true);
+                  }}
                 ></div>
               );
             })}
           </div>
+        )}
+        {showViewImageModal && (
+          <ImageViewModal
+            showModal={showViewImageModal}
+            onCloseModal={() => {
+              setViewImageModal(false);
+            }}
+            onDelete={() => {
+              setViewImageModal(false);
+
+              dispatch(
+                goalsActions.deleteImage(
+                  goal?.id,
+                  selectedImage?.public_id,
+                  () => {}
+                )
+              );
+            }}
+          >
+            <a
+              href={selectedImage?.url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                alt="cool"
+                className="img-fluid"
+                src={selectedImage?.url}
+              ></img>
+            </a>
+          </ImageViewModal>
         )}
       </div>
     </div>
