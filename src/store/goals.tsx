@@ -19,7 +19,7 @@ type GoalsReducersModel = {
 
 // http://localhost:3000/
 // https://powerful-temple-30770.herokuapp.com
-const domain = "https://powerful-temple-30770.herokuapp.com";
+const domain = process.env.REACT_APP_GOALS_DOMAIN;
 
 const goalsSlice = createSlice<GoalsStateModel, GoalsReducersModel>({
   name: "goals",
@@ -211,7 +211,6 @@ const addImageData = (
           delay: 3000,
         })
       );
-      // dispatch(goalsActions.getGoals());
 
       callBackFn && callBackFn();
     } catch (error) {
@@ -227,6 +226,44 @@ const addImageData = (
   };
 };
 
+const deleteImage = (
+  id: string | undefined,
+  publicId: string | undefined,
+  callBackFn?: () => void
+) => {
+  console.log("in here");
+  return async (dispatch: any) => {
+    try {
+      await fetch(
+        `${domain}/goals-manager/goals/images/${id}?publicId=${publicId}`,
+        {
+          method: "DELETE",
+        }
+      ).then((response) => response.text());
+
+      dispatch(
+        triggerToast({
+          header: "Success",
+          bodyText: "Image deleted successfully.",
+          backgroundColor: "success",
+          delay: 3000,
+        })
+      );
+
+      callBackFn && callBackFn();
+    } catch (error) {
+      dispatch(
+        triggerToast({
+          header: "Error",
+          bodyText: "There was an error deleting image. Please try again.",
+          backgroundColor: "danger",
+          delay: 3000,
+        })
+      );
+    }
+  };
+};
+
 const goalsActions = {
   ...goalsSlice.actions,
   getGoals,
@@ -234,6 +271,7 @@ const goalsActions = {
   createGoal,
   deleteGoal,
   addImageData,
+  deleteImage,
 };
 
 export { goalsSlice, goalsActions };
