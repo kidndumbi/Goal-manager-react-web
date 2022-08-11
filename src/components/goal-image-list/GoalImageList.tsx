@@ -1,5 +1,8 @@
 import UploadButton from "@rpldy/upload-button";
-import Uploady, { useItemFinishListener } from "@rpldy/uploady";
+import Uploady, {
+  useItemFinishListener,
+  useItemStartListener,
+} from "@rpldy/uploady";
 import { PropsWithChildren, useState } from "react";
 import { useDispatch } from "react-redux";
 import { GoalModel } from "../../models/GoalModel.interface";
@@ -15,8 +18,14 @@ const MyUplaodButton = ({
   onImageSaved?: (data: any) => void;
 }>) => {
   const dispatch = useDispatch();
+  const [uploading, setUploading] = useState(false);
+
+  useItemStartListener(() => {
+    setUploading(true);
+  });
 
   useItemFinishListener((item) => {
+    setUploading(false);
     console.log(
       `item ${item.id} finished uploading, response was: `,
       item.uploadResponse,
@@ -34,7 +43,18 @@ const MyUplaodButton = ({
     );
   });
 
-  return <UploadButton className="ms-2 btn btn-primary" text="Upload Image" />;
+  return !uploading ? (
+    <UploadButton className="ms-2 btn btn-primary" text="Upload Image" />
+  ) : (
+    <button className="ms-2 btn btn-primary" type="button" disabled>
+      <span
+        className="spinner-border spinner-border-sm"
+        role="status"
+        aria-hidden="true"
+      ></span>
+      Uploading...
+    </button>
+  );
 };
 
 type GoalImageListProps = {
