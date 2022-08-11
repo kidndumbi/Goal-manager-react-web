@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+import { useDispatch } from "react-redux";
 import { GoalModel } from "../models/GoalModel.interface";
 import { currentPageSlice } from "./currentPage";
 import { goalsSlice } from "./goals";
@@ -6,11 +7,14 @@ import { searchValueSlice } from "./search";
 import { statusOptionsSlice } from "./statusOptions";
 import { toastsSlice } from "./toasts";
 
+export type AppDispatch = typeof store.dispatch;
+export const useAppDispatch: () => AppDispatch = useDispatch;
+
 export interface StoreStateModel {
   goals?: GoalModel[];
   currentPage?: string;
   searchValue?: string;
-  statusOptions?: any[]
+  statusOptions?: any[];
 }
 
 export interface StoreActionModel {
@@ -26,7 +30,7 @@ const store = configureStore({
     currentPage: currentPageSlice.reducer,
     searchValue: searchValueSlice.reducer,
     statusOptions: statusOptionsSlice.reducer,
-    toasts: toastsSlice.reducer
+    toasts: toastsSlice.reducer,
   },
 });
 

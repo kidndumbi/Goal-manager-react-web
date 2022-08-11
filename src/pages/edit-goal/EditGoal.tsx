@@ -271,10 +271,12 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
           }}
           onOk={() => {
             setShowDeleteConfirmModal(false);
-
             dispatch(
-              goalsActions.deleteGoal(goal?.id, () => {
-                navigate("/");
+              goalsActions.deleteGoal({
+                id: goal?.id,
+                successCallback() {
+                  navigate("/");
+                },
               })
             );
           }}
@@ -390,8 +392,11 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
           size="lg"
           onClick={async () => {
             dispatch(
-              goalsActions.updateGoal(goal, () => {
-                navigate("/");
+              goalsActions.updateGoal({
+                data: goal,
+                successCallback: () => {
+                  navigate("/");
+                },
               })
             );
           }}

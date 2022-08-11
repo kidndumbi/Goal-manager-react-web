@@ -1,4 +1,3 @@
-
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ToastModel } from "../models/ToastModel.interface";
 
@@ -17,7 +16,10 @@ const toastsSlice = createSlice<ToastStateModel, ToastReducerModel>({
     toasts: [],
   },
   reducers: {
-    addToast(state: ToastStateModel, action: PayloadAction<{toast: ToastModel}>) {
+    addToast(
+      state: ToastStateModel,
+      action: PayloadAction<{ toast: ToastModel }>
+    ) {
       state.toasts.push({
         ...action.payload.toast,
       });
@@ -30,4 +32,20 @@ const toastActions = {
   ...toastsSlice.actions,
 };
 
-export { toastsSlice, toastActions };
+const triggerToast = ({
+  header,
+  bodyText,
+  backgroundColor,
+  delay,
+}: ToastModel) => {
+  return toastActions.addToast<{ toast: ToastModel }>({
+    toast: {
+      header: header || "Success",
+      bodyText: bodyText || "Success",
+      backgroundColor: backgroundColor || "success",
+      delay,
+    },
+  });
+};
+
+export { toastsSlice, toastActions, triggerToast };

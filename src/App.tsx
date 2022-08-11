@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import classes from "./App.module.scss";
 import NavBar from "./components/nav-bar/NavBar";
 import { GoalsTabsContext } from "./contexts/goalsTabs.context";
@@ -8,14 +8,9 @@ import { Routes, Route } from "react-router-dom";
 import { EditGoal } from "./pages/edit-goal/EditGoal";
 import { AddGoal } from "./pages/add-goal/AddGoal";
 import { Reports } from "./pages/reports/reporst";
-import { useDispatch } from "react-redux";
-import { goalsActions } from "./store/goals";
 import { Toasts } from "./components/toasts/Toasts";
 
 function App() {
-
-  const dispatch = useDispatch();
-
   const [goalsTabs, setGoalsTabs] = useState<GoalTabModel[]>([
     {
       name: "ALL",
@@ -23,7 +18,7 @@ function App() {
       count: 0,
       title: "All Tasks",
       active: false,
-      icon: 'bi-globe'
+      icon: "bi-globe",
     },
     {
       name: "IN_PROGRESS",
@@ -31,7 +26,7 @@ function App() {
       count: 0,
       title: "Tasks in Progress",
       active: true,
-      icon: 'bi-cone-striped'
+      icon: "bi-cone-striped",
     },
     {
       name: "COMPLETE",
@@ -39,7 +34,7 @@ function App() {
       count: 0,
       title: "Completed Tasks",
       active: false,
-      icon: 'bi-emoji-sunglasses'
+      icon: "bi-emoji-sunglasses",
     },
     {
       name: "FAILED",
@@ -47,13 +42,10 @@ function App() {
       count: 0,
       title: "Failed Tasks",
       active: false,
-      icon: 'bi-emoji-frown'
+      icon: "bi-emoji-frown",
     },
   ]);
 
-  useEffect(() => {
-    dispatch(goalsActions.getGoals());
-  }, []);
   return (
     <>
       <GoalsTabsContext.Provider value={{ goalsTabs, setGoalsTabs }}>
