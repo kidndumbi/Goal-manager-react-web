@@ -110,9 +110,10 @@ const GoalItem = ({ goal, className, onEdit }: PropsWithChildren<Props>) => {
             <h6>Objectives</h6>
 
             <ul className="ps-0">
-              {goal.objectives.map((objective: any) => {
+              {goal.objectives.map((objective: any, index) => {
                 return (
                   <GoalItemObjective
+                    key={index}
                     objective={objective}
                     className={classes.objectiveTextColor}
                   />

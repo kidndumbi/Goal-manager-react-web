@@ -24,8 +24,12 @@ const MyUplaodButton = ({
     );
 
     dispatch(
-      goalsActions.addImageData(goalId, item.uploadResponse.data, () => {
-        onImageSaved && onImageSaved(item.uploadResponse.data);
+      goalsActions.addImageData({
+        id: goalId,
+        imageData: item.uploadResponse.data,
+        successCallback() {
+          onImageSaved && onImageSaved(item.uploadResponse.data);
+        },
       })
     );
   });
@@ -93,17 +97,17 @@ const GoalImageList = ({ goal }: PropsWithChildren<GoalImageListProps>) => {
             setViewImageModal(false);
 
             dispatch(
-              goalsActions.deleteImage(
-                goal?.id,
-                selectedImage?.public_id,
-                () => {
+              goalsActions.deleteImage({
+                id: goal?.id,
+                publicId: selectedImage?.public_id,
+                successCallback() {
                   setImages(
                     images.filter((img) => {
                       return img.public_id !== selectedImage?.public_id;
                     })
                   );
-                }
-              )
+                },
+              })
             );
           }}
         >

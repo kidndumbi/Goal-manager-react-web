@@ -132,12 +132,12 @@ const AddGoal = (props: PropsWithChildren<AddGoalProps>) => {
         })}
         onSubmit={(goal, { setSubmitting }) => {
           dispatch(
-            goalsActions.createGoal(
-              { ...goal, dueDate: new Date(goal.dueDate).getTime() },
-              () => {
+            goalsActions.createGoal({
+              data: { ...goal, dueDate: new Date(goal.dueDate).getTime() },
+              successCallback: () => {
                 navigate("/");
-              }
-            )
+              },
+            })
           );
         }}
       >
@@ -147,7 +147,7 @@ const AddGoal = (props: PropsWithChildren<AddGoalProps>) => {
           handleSubmit,
           isValid,
           errors,
-          getFieldProps
+          getFieldProps,
         }) => (
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="formNamel">
