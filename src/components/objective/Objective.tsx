@@ -3,6 +3,7 @@ import Moment from "react-moment";
 import { useSelector } from "react-redux";
 import { ObjectiveModel } from "../../models/ObjectiveModel.interface";
 import { RootState } from "../../store";
+import { selectStatusOptions } from "../../store/statusOptions.slice";
 import { NotesIcon } from "../notes-icon/NotesIcon";
 
 type ObjectiveProps = {
@@ -18,9 +19,7 @@ const Objective: React.FC<ObjectiveProps> = ({
   className,
   onMarkedForDelete,
 }) => {
-  const statusOptions = useSelector(
-    (state: RootState) => state.statusOptions.options
-  );
+  const statusOptions = useSelector(selectStatusOptions);
 
   return (
     <>

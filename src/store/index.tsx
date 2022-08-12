@@ -1,11 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
 import { GoalModel } from "../models/GoalModel.interface";
-import { currentPageSlice } from "./currentPage";
-import { goalsSlice } from "./goals";
-import { searchValueSlice } from "./search";
-import { statusOptionsSlice } from "./statusOptions";
-import { toastsSlice } from "./toasts";
+import { currentPageSlice } from "./currentPage.slice";
+import { goalsSlice } from "./goals.slice";
+import { searchValueSlice } from "./search.slice";
+import { statusOptionsSlice } from "./statusOptions.slice";
+import { toastsSlice } from "./toasts.slice";
 
 export interface StoreStateModel {
   goals?: GoalModel[];

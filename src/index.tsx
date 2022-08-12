@@ -10,7 +10,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import { store } from "./store";
-import { goalsActions } from "./store/goals";
+import { goalsActions } from "./store/goals.slice";
 
 store.dispatch(goalsActions.getGoals());
 

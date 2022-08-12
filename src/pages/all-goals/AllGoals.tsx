@@ -2,7 +2,7 @@ import { PropsWithChildren, useEffect, useState } from "react";
 import GoalsTabList from "../../components/goals-tabs/GoalsTabList";
 import GoalList from "../../components/goals/GoalsList";
 import { useAppDispatch } from "../../store";
-import { currentPageActions } from "../../store/currentPage";
+import { currentPageActions } from "../../store/currentPage.slice";
 
 interface Props {}
 const AllGoals = (props: PropsWithChildren<Props>) => {

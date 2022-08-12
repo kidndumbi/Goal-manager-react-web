@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { GoalModel } from "../models/GoalModel.interface";
-import { triggerToast } from "./toasts";
+import { triggerToast } from "./toasts.slice";
 import axios from "axios";
+import { RootState } from "../store";
 
 export type GoalsStateModel = {
   goals: GoalModel[];
@@ -49,9 +50,16 @@ const goalsSlice = createSlice<GoalsStateModel, GoalsReducersModel>({
       .addCase(updateGoal.pending, (state, action) => {
         state.updateGoalStatus = "PENDING";
       })
-      .addCase(updateGoal.fulfilled, (state, action) => {
-        state.updateGoalStatus = "IDLE";
-      })
+      .addCase(
+        updateGoal.fulfilled,
+        (state, action: PayloadAction<GoalModel>) => {
+          const indexOfGoal = state.goals.findIndex(
+            (g) => g.id === action.payload.id
+          );
+          state.goals[indexOfGoal] = action.payload;
+          state.updateGoalStatus = "IDLE";
+        }
+      )
       .addCase(updateGoal.rejected, (state, action) => {
         state.updateGoalStatus = "ERROR";
       })
@@ -125,7 +133,6 @@ const updateGoal = createAsyncThunk(
         { ...goal }
       );
 
-      dispatch(goalsActions.getGoals());
       dispatch(
         triggerToast({
           header: "Success",
@@ -303,6 +310,14 @@ const goalsActions = {
   deleteGoal,
   addImageData,
   deleteImage,
+};
+
+export const selectGoals = (state: RootState) => state.goals.goals;
+export const selectGoalsStatus = (state: RootState) => state.goals.goalsStatus;
+
+export const selectGoalById = (id: string | undefined) => {
+  return (state: RootState) =>
+    state.goals.goals.find((goal: GoalModel) => goal.id === id);
 };
 
 export { goalsSlice, goalsActions };

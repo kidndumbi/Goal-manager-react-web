@@ -10,7 +10,8 @@ import {
   checkIfDatesAreEqual,
 } from "../../utils/dateTimeHelpers";
 import { GoalModel } from "../../models/GoalModel.interface";
-import { RootState } from "../../store";
+import { selectGoals, selectGoalsStatus } from "../../store/goals.slice";
+import { selectSearchValue } from "../../store/search.slice";
 
 interface Props {
   selectedGoalType: string;
@@ -19,15 +20,11 @@ interface Props {
 const GoalList = ({ selectedGoalType: type }: PropsWithChildren<Props>) => {
   const navigate = useNavigate();
 
-  const goalsData = useSelector((state: RootState) => state.goals.goals);
-  const loadingGoals = useSelector(
-    (state: RootState) => state.goals.goalsStatus
-  );
+  const goalsData = useSelector(selectGoals);
+  const loadingGoals = useSelector(selectGoalsStatus);
 
   const [goalsInfo, dispatchGoalsData] = useReducer(goalsReducer, goalsData);
-  const searchValue = useSelector(
-    (state: RootState) => state.searchValue.searchValue
-  );
+  const searchValue = useSelector(selectSearchValue);
 
   const editHandler = (id: string) => {
     navigate(`/editGoal/${id}`);

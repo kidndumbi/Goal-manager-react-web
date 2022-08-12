@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ToastModel } from "../models/ToastModel.interface";
+import { RootState } from "../store";
 
 type ToastStateModel = {
   toasts: ToastModel[];
@@ -48,4 +49,5 @@ const triggerToast = ({
   });
 };
 
+export const selectToasts = (state: RootState) => state.toasts.toasts;
 export { toastsSlice, toastActions, triggerToast };
