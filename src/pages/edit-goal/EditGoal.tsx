@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { PropsWithChildren, useEffect, useState } from "react";
 import Moment from "react-moment";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { GoalModel } from "../../models/GoalModel.interface";
 import { currentPageActions } from "../../store/currentPage";
@@ -12,6 +12,7 @@ import { EditModal } from "../../components/edit-modal/EditModal";
 import { goalsActions } from "../../store/goals";
 import { ConfirmModal } from "../../components/confirm-modal/ConfirmModal";
 import * as yup from "yup";
+import { RootState, useAppDispatch } from "../../store";
 
 interface EditGoalProps {}
 
@@ -20,10 +21,10 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
   const params = useParams();
 
   const statusOptions = useSelector(
-    (state: any) => state.statusOptions.options
+    (state: RootState) => state.statusOptions.options
   );
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
   const [isFormValid, setIsFormValid] = useState<boolean>();
@@ -48,17 +49,16 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
     goalDueDate: null,
   });
 
-  const goalsData = useSelector((state: any) => state.goals.goals);
+  const filteredGoal = useSelector((state: RootState) =>
+    state.goals.goals.find((goal: GoalModel) => goal.id === params.id)
+  );
   useEffect(() => {
-    if (goalsData) {
-      let filteredGoalFound = goalsData.filter((g: any) => g.id === params.id);
-
-      let filteredGoal: GoalModel = { ...filteredGoalFound[0] };
+    if (filteredGoal) {
       if (filteredGoal?.notes === null) filteredGoal.notes = "";
       if (filteredGoal?.objectives === null) filteredGoal.objectives = [];
       setGoal(filteredGoal);
     }
-  }, [goalsData]);
+  }, [filteredGoal]);
 
   const [showEditModal, setshowEditModal] = useState(false);
 
@@ -269,16 +269,13 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
           onCloseModal={() => {
             setShowDeleteConfirmModal(false);
           }}
-          onOk={() => {
+          onOk={async () => {
             setShowDeleteConfirmModal(false);
             dispatch(
               goalsActions.deleteGoal({
                 id: goal?.id,
-                successCallback() {
-                  navigate("/");
-                },
               })
-            );
+            ).then(() => navigate("/"));
           }}
           bodytext="Are you sure you want to Delete?"
         ></ConfirmModal>
@@ -391,14 +388,10 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
           variant="primary"
           size="lg"
           onClick={async () => {
-            dispatch(
-              goalsActions.updateGoal({
-                data: goal,
-                successCallback: () => {
-                  navigate("/");
-                },
-              })
-            );
+            try {
+              await dispatch(goalsActions.updateGoal(goal));
+              navigate("/");
+            } catch (error) {}
           }}
           disabled={!isFormValid || !isFormDirty}
         >

@@ -10,6 +10,7 @@ import {
   checkIfDatesAreEqual,
 } from "../../utils/dateTimeHelpers";
 import { GoalModel } from "../../models/GoalModel.interface";
+import { RootState } from "../../store";
 
 interface Props {
   selectedGoalType: string;
@@ -18,12 +19,14 @@ interface Props {
 const GoalList = ({ selectedGoalType: type }: PropsWithChildren<Props>) => {
   const navigate = useNavigate();
 
-  const goalsData = useSelector((state: any) => state.goals.goals);
-  const loadingGoals = useSelector((state: any) => state.goals.loading);
+  const goalsData = useSelector((state: RootState) => state.goals.goals);
+  const loadingGoals = useSelector(
+    (state: RootState) => state.goals.goalsStatus
+  );
 
   const [goalsInfo, dispatchGoalsData] = useReducer(goalsReducer, goalsData);
   const searchValue = useSelector(
-    (state: any) => state.searchValue.searchValue
+    (state: RootState) => state.searchValue.searchValue
   );
 
   const editHandler = (id: string) => {
@@ -52,7 +55,7 @@ const GoalList = ({ selectedGoalType: type }: PropsWithChildren<Props>) => {
 
   return (
     <>
-      {loadingGoals && (
+      {loadingGoals === "PENDING" && (
         <Loading
           className="pt-3 "
           style={{ width: "3rem", height: "3rem" }}

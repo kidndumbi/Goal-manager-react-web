@@ -6,6 +6,7 @@ import { Formik } from "formik";
 import "react-datepicker/dist/react-datepicker.css";
 import { EditModalSchema } from "./validators";
 import { DatePickerWrapper } from "../date-picker/DatePickerWrapper";
+import { RootState } from "../../store";
 
 type EditModalProps = {
   showModal: boolean;
@@ -22,7 +23,7 @@ const EditModal = (props: PropsWithChildren<EditModalProps>) => {
   const { data, goalDueDate } = props.dataToEdit;
 
   const statusOptions = useSelector(
-    (state: any) => state.statusOptions.options
+    (state: RootState) => state.statusOptions.options
   );
 
   return (
@@ -129,29 +130,29 @@ const EditModal = (props: PropsWithChildren<EditModalProps>) => {
                     </Form.Select>
                   </Form.Group>
                 )}
-             
-                  <FloatingLabel
-                    controlId="floatingTextarea2"
-                    className="mt-2"
-                    label="Notes"
-                  >
-                    <Form.Control
-                      as="textarea"
-                      name="notes"
-                      placeholder="Leave a comment here"
-                      style={{ height: "100px" }}
-                      value={values?.notes}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />
-                  </FloatingLabel>
-             
+
+                <FloatingLabel
+                  controlId="floatingTextarea2"
+                  className="mt-2"
+                  label="Notes"
+                >
+                  <Form.Control
+                    as="textarea"
+                    name="notes"
+                    placeholder="Leave a comment here"
+                    style={{ height: "100px" }}
+                    value={values?.notes}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                </FloatingLabel>
+
                 <Form.Group>
                   <Button
                     variant="primary"
                     className="mt-3 float-end"
                     type="submit"
-                    disabled ={!isValid || !dirty}
+                    disabled={!isValid || !dirty}
                   >
                     Save Changes
                   </Button>

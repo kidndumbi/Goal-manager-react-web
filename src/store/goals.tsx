@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { GoalModel } from "../models/GoalModel.interface";
 import { triggerToast } from "./toasts";
 import axios from "axios";
@@ -36,10 +36,13 @@ const goalsSlice = createSlice<GoalsStateModel, GoalsReducersModel>({
       .addCase(getGoals.pending, (state, action) => {
         state.goalsStatus = "PENDING";
       })
-      .addCase(getGoals.fulfilled, (state, action) => {
-        state.goalsStatus = "IDLE";
-        state.goals = action.payload;
-      })
+      .addCase(
+        getGoals.fulfilled,
+        (state, action: PayloadAction<GoalModel[]>) => {
+          state.goalsStatus = "IDLE";
+          state.goals = action.payload;
+        }
+      )
       .addCase(getGoals.rejected, (state, action) => {
         state.goalsStatus = "ERROR";
       })
@@ -56,6 +59,7 @@ const goalsSlice = createSlice<GoalsStateModel, GoalsReducersModel>({
         state.createGoalStatus = "PENDING";
       })
       .addCase(createGoal.fulfilled, (state, action) => {
+        state.goals.push(action.payload);
         state.createGoalStatus = "IDLE";
       })
       .addCase(createGoal.rejected, (state, action) => {
@@ -64,7 +68,9 @@ const goalsSlice = createSlice<GoalsStateModel, GoalsReducersModel>({
       .addCase(deleteGoal.pending, (state, action) => {
         state.deleteGoalStatus = "PENDING";
       })
-      .addCase(deleteGoal.fulfilled, (state, action) => {
+      .addCase(deleteGoal.fulfilled, (state, action: PayloadAction<string>) => {
+        const deletedId = action.payload.split(":")[1];
+        state.goals = state.goals.filter((goal) => goal.id !== deletedId);
         state.deleteGoalStatus = "IDLE";
       })
       .addCase(deleteGoal.rejected, (state, action) => {
@@ -112,21 +118,14 @@ const getGoals = createAsyncThunk(
 
 const updateGoal = createAsyncThunk(
   "goals/updateGoal",
-  async (
-    goal: {
-      data: GoalModel | undefined;
-      successCallback?: (data?: any) => void;
-    },
-    { rejectWithValue, dispatch }
-  ) => {
+  async (goal: GoalModel | undefined, { rejectWithValue, dispatch }) => {
     try {
       const response = await axios.put(
-        `${domain}/goals-manager/goals/${goal.data?.id}`,
-        { ...goal.data }
+        `${domain}/goals-manager/goals/${goal?.id}`,
+        { ...goal }
       );
 
       dispatch(goalsActions.getGoals());
-      goal.successCallback && goal.successCallback();
       dispatch(
         triggerToast({
           header: "Success",
@@ -155,7 +154,6 @@ const createGoal = createAsyncThunk(
   async (
     goal: {
       data: GoalModel | undefined;
-      successCallback?: (data?: any) => void;
     },
     { rejectWithValue, dispatch }
   ) => {
@@ -164,8 +162,6 @@ const createGoal = createAsyncThunk(
         ...goal.data,
       });
 
-      dispatch(goalsActions.getGoals());
-      goal.successCallback && goal.successCallback();
       dispatch(
         triggerToast({
           header: "Success",
@@ -194,7 +190,6 @@ const deleteGoal = createAsyncThunk(
   async (
     goal: {
       id: string | undefined;
-      successCallback?: (data?: any) => void;
     },
     { rejectWithValue, dispatch }
   ) => {
@@ -203,8 +198,6 @@ const deleteGoal = createAsyncThunk(
         `${domain}/goals-manager/goals/${goal.id}`
       );
 
-      dispatch(goalsActions.getGoals());
-      goal.successCallback && goal.successCallback();
       dispatch(
         triggerToast({
           header: "Success",
@@ -234,7 +227,6 @@ const addImageData = createAsyncThunk(
     goal: {
       id: string | undefined;
       imageData: any;
-      successCallback?: (data?: any) => void;
     },
     { rejectWithValue, dispatch }
   ) => {
@@ -244,8 +236,6 @@ const addImageData = createAsyncThunk(
         { ...goal.imageData }
       );
 
-      dispatch(goalsActions.getGoals());
-      goal.successCallback && goal.successCallback();
       dispatch(
         triggerToast({
           header: "Success",
@@ -275,7 +265,6 @@ const deleteImage = createAsyncThunk(
     goal: {
       id: string | undefined;
       publicId: string | undefined;
-      successCallback?: (data?: any) => void;
     },
     { rejectWithValue, dispatch }
   ) => {
@@ -284,7 +273,6 @@ const deleteImage = createAsyncThunk(
         `${domain}/goals-manager/goals/images/${goal.id}?publicId=${goal.publicId}`
       );
 
-      goal.successCallback && goal.successCallback();
       dispatch(
         triggerToast({
           header: "Success",

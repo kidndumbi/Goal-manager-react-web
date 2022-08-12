@@ -4,8 +4,8 @@ import Uploady, {
   useItemStartListener,
 } from "@rpldy/uploady";
 import { PropsWithChildren, useState } from "react";
-import { useDispatch } from "react-redux";
 import { GoalModel } from "../../models/GoalModel.interface";
+import { useAppDispatch } from "../../store";
 import { goalsActions } from "../../store/goals";
 import { ImageViewModal } from "../image-view/ImageView.Modal";
 import classes from "./GoalImageList.module.scss";
@@ -17,7 +17,7 @@ const MyUplaodButton = ({
   goalId: string | undefined;
   onImageSaved?: (data: any) => void;
 }>) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [uploading, setUploading] = useState(false);
 
   useItemStartListener(() => {
@@ -36,11 +36,10 @@ const MyUplaodButton = ({
       goalsActions.addImageData({
         id: goalId,
         imageData: item.uploadResponse.data,
-        successCallback() {
-          onImageSaved && onImageSaved(item.uploadResponse.data);
-        },
       })
-    );
+    ).then(() => {
+      onImageSaved && onImageSaved(item.uploadResponse.data);
+    });
   });
 
   return !uploading ? (
@@ -62,7 +61,7 @@ type GoalImageListProps = {
 };
 
 const GoalImageList = ({ goal }: PropsWithChildren<GoalImageListProps>) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [images, setImages] = useState(goal.images || []);
   const [showViewImageModal, setViewImageModal] = useState(false);
@@ -120,15 +119,14 @@ const GoalImageList = ({ goal }: PropsWithChildren<GoalImageListProps>) => {
               goalsActions.deleteImage({
                 id: goal?.id,
                 publicId: selectedImage?.public_id,
-                successCallback() {
-                  setImages(
-                    images.filter((img) => {
-                      return img.public_id !== selectedImage?.public_id;
-                    })
-                  );
-                },
               })
-            );
+            ).then(() => {
+              setImages(
+                images.filter((img) => {
+                  return img.public_id !== selectedImage?.public_id;
+                })
+              );
+            });
           }}
         >
           <a
