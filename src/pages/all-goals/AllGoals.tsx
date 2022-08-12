@@ -1,18 +1,13 @@
 import { PropsWithChildren, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import GoalsTabList from "../../components/goals-tabs/GoalsTabList";
 import GoalList from "../../components/goals/GoalsList";
-import { Loading } from "../../components/loading/Loading";
-import { currentPageActions } from "../../store/currentPage";;
+import { useAppDispatch } from "../../store";
+import { currentPageActions } from "../../store/currentPage";
 
-interface Props {
-
-}
+interface Props {}
 const AllGoals = (props: PropsWithChildren<Props>) => {
   const [selectedGoalType, setSelectedGoalType] = useState("");
-  const dispatch = useDispatch();
-
-
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(currentPageActions.setCurrentPage({ currentPage: "MainPage" }));
@@ -24,9 +19,7 @@ const AllGoals = (props: PropsWithChildren<Props>) => {
   return (
     <>
       <GoalsTabList onGoalTypeSelected={goalTypeSelectedHandler}></GoalsTabList>
-      <GoalList
-        selectedGoalType={selectedGoalType}
-      ></GoalList>
+      <GoalList selectedGoalType={selectedGoalType}></GoalList>
     </>
   );
 };

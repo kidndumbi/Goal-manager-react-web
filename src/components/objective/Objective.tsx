@@ -2,6 +2,7 @@ import { Button, Card } from "react-bootstrap";
 import Moment from "react-moment";
 import { useSelector } from "react-redux";
 import { ObjectiveModel } from "../../models/ObjectiveModel.interface";
+import { RootState } from "../../store";
 import { NotesIcon } from "../notes-icon/NotesIcon";
 
 type ObjectiveProps = {
@@ -18,7 +19,7 @@ const Objective: React.FC<ObjectiveProps> = ({
   onMarkedForDelete,
 }) => {
   const statusOptions = useSelector(
-    (state: any) => state.statusOptions.options
+    (state: RootState) => state.statusOptions.options
   );
 
   return (

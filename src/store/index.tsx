@@ -7,9 +7,6 @@ import { searchValueSlice } from "./search";
 import { statusOptionsSlice } from "./statusOptions";
 import { toastsSlice } from "./toasts";
 
-export type AppDispatch = typeof store.dispatch;
-export const useAppDispatch: () => AppDispatch = useDispatch;
-
 export interface StoreStateModel {
   goals?: GoalModel[];
   currentPage?: string;
@@ -35,3 +32,9 @@ const store = configureStore({
 });
 
 export { store, searchValueActions };
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+
+export function useAppDispatch() {
+  return useDispatch<AppDispatch>();
+}

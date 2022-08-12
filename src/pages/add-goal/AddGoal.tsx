@@ -2,7 +2,6 @@ import { v4 as uuidv4 } from "uuid";
 import { PropsWithChildren, useEffect, useState } from "react";
 import { Button, FloatingLabel, Form } from "react-bootstrap";
 import * as Yup from "yup";
-import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { EditModal } from "../../components/edit-modal/EditModal";
 import { Objective } from "../../components/objective/Objective";
@@ -11,11 +10,12 @@ import { currentPageActions } from "../../store/currentPage";
 import { goalsActions } from "../../store/goals";
 import { FieldArray, Formik } from "formik";
 import { DatePickerWrapper } from "../../components/date-picker/DatePickerWrapper";
+import { useAppDispatch } from "../../store";
 
 interface AddGoalProps {}
 
 const AddGoal = (props: PropsWithChildren<AddGoalProps>) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
 
@@ -134,11 +134,8 @@ const AddGoal = (props: PropsWithChildren<AddGoalProps>) => {
           dispatch(
             goalsActions.createGoal({
               data: { ...goal, dueDate: new Date(goal.dueDate).getTime() },
-              successCallback: () => {
-                navigate("/");
-              },
             })
-          );
+          ).then(() => navigate("/"));
         }}
       >
         {({

@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
-import { Provider, useDispatch } from "react-redux";
+import { Provider } from "react-redux";
 import Router, { BrowserRouter } from "react-router-dom";
-import { store } from "../../store";
+import { store, useAppDispatch } from "../../store";
 import { goalsActions } from "../../store/goals";
 import { EditGoal } from "./EditGoal";
 import { rest } from "msw";
@@ -35,7 +35,7 @@ jest.mock("react-router-dom", () => ({
 }));
 
 function EditGoalWrapper() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   dispatch(goalsActions.getGoals());
   return <EditGoal />;
 }
@@ -65,7 +65,9 @@ describe("EditGoal Component", () => {
     const backButton = await screen.findByRole("button", { name: "Back" });
     expect(backButton).toBeInTheDocument();
     expect(backButton).toHaveClass("btn btn-outline-primary");
-    expect(backButton).toContainHTML('<i class="bi bi-arrow-left-circle-fill" />');
+    expect(backButton).toContainHTML(
+      '<i class="bi bi-arrow-left-circle-fill" />'
+    );
   });
 
   test("Should Have Delete Goal button", async () => {
