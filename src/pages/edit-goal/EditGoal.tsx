@@ -4,15 +4,16 @@ import Moment from "react-moment";
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { GoalModel } from "../../models/GoalModel.interface";
-import { currentPageActions } from "../../store/currentPage";
+import { currentPageActions } from "../../store/currentPage.slice";
 import { Alert, Button, FloatingLabel, Form } from "react-bootstrap";
 import { Objective } from "../../components/objective/Objective";
 import { ObjectiveModel } from "../../models/ObjectiveModel.interface";
 import { EditModal } from "../../components/edit-modal/EditModal";
-import { goalsActions } from "../../store/goals";
+import { goalsActions, selectGoalById } from "../../store/goals.slice";
 import { ConfirmModal } from "../../components/confirm-modal/ConfirmModal";
 import * as yup from "yup";
 import { RootState, useAppDispatch } from "../../store";
+import { selectStatusOptions } from "../../store/statusOptions.slice";
 
 interface EditGoalProps {}
 
@@ -20,9 +21,7 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
   const navigate = useNavigate();
   const params = useParams();
 
-  const statusOptions = useSelector(
-    (state: RootState) => state.statusOptions.options
-  );
+  const statusOptions = useSelector(selectStatusOptions);
 
   const dispatch = useAppDispatch();
 
@@ -49,9 +48,7 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
     goalDueDate: null,
   });
 
-  const filteredGoal = useSelector((state: RootState) =>
-    state.goals.goals.find((goal: GoalModel) => goal.id === params.id)
-  );
+  const filteredGoal = useSelector(selectGoalById(params.id));
   useEffect(() => {
     if (filteredGoal) {
       if (filteredGoal?.notes === null) filteredGoal.notes = "";

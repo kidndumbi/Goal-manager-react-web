@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../store";
 
 const statusOptionsSlice = createSlice({
   name: "statusOptions",
@@ -12,4 +13,6 @@ const statusOptionsSlice = createSlice({
   reducers: {},
 });
 
+export const selectStatusOptions = (state: RootState) =>
+  state.statusOptions.options;
 export { statusOptionsSlice };

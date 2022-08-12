@@ -1,7 +1,7 @@
 import { PropsWithChildren, useContext, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { GoalsTabsContext } from "../../contexts/goalsTabs.context";
-import { RootState } from "../../store";
+import { selectGoals } from "../../store/goals.slice";
 import GoalsTabItem from "./GoalsTabItem";
 
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
 }
 
 const GoalsTabList = (props: PropsWithChildren<Props>) => {
-  const goalsData = useSelector((state: RootState) => state.goals.goals);
+  const goalsData = useSelector(selectGoals);
 
   const { goalsTabs, setGoalsTabs } = useContext(GoalsTabsContext);
 

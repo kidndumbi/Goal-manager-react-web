@@ -6,7 +6,7 @@ import Uploady, {
 import { PropsWithChildren, useState } from "react";
 import { GoalModel } from "../../models/GoalModel.interface";
 import { useAppDispatch } from "../../store";
-import { goalsActions } from "../../store/goals";
+import { goalsActions } from "../../store/goals.slice";
 import { ImageViewModal } from "../image-view/ImageView.Modal";
 import classes from "./GoalImageList.module.scss";
 

@@ -1,7 +1,8 @@
 import { PropsWithChildren, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { RootState, searchValueActions, useAppDispatch } from "../../store";
+import { searchValueActions, useAppDispatch } from "../../store";
+import { selectCurrentPage } from "../../store/currentPage.slice";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
@@ -10,9 +11,7 @@ interface Props {}
 const NavBar = (props: PropsWithChildren<Props>) => {
   const [searchValue, setSearchValue] = useState("");
 
-  const currentPage = useSelector(
-    (state: RootState) => state.currentPage.currentPage
-  );
+  const currentPage = useSelector(selectCurrentPage);
   const dispatch = useAppDispatch();
 
   useEffect(() => {}, [currentPage]);

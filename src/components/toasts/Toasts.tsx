@@ -1,13 +1,13 @@
 import { PropsWithChildren } from "react";
 import { ToastContainer } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { selectToasts } from "../../store/toasts.slice";
 import { ToastItem } from "./ToastItem";
 
 type ToastsProps = {};
 
 const Toasts = (props: PropsWithChildren<ToastsProps>) => {
-  const toastList = useSelector((state: RootState) => state.toasts.toasts);
+  const toastList = useSelector(selectToasts);
 
   const toastClosedHandler = (tostId: string) => {};
 

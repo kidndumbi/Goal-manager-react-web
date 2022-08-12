@@ -6,7 +6,7 @@ import { Formik } from "formik";
 import "react-datepicker/dist/react-datepicker.css";
 import { EditModalSchema } from "./validators";
 import { DatePickerWrapper } from "../date-picker/DatePickerWrapper";
-import { RootState } from "../../store";
+import { selectStatusOptions } from "../../store/statusOptions.slice";
 
 type EditModalProps = {
   showModal: boolean;
@@ -22,9 +22,7 @@ type EditModalProps = {
 const EditModal = (props: PropsWithChildren<EditModalProps>) => {
   const { data, goalDueDate } = props.dataToEdit;
 
-  const statusOptions = useSelector(
-    (state: RootState) => state.statusOptions.options
-  );
+  const statusOptions = useSelector(selectStatusOptions);
 
   return (
     <>
