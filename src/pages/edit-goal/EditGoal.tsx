@@ -9,11 +9,16 @@ import { Alert, Button, FloatingLabel, Form } from "react-bootstrap";
 import { Objective } from "../../components/objective/Objective";
 import { ObjectiveModel } from "../../models/ObjectiveModel.interface";
 import { EditModal } from "../../components/edit-modal/EditModal";
-import { goalsActions, selectGoalById } from "../../store/goals.slice";
 import { ConfirmModal } from "../../components/confirm-modal/ConfirmModal";
 import * as yup from "yup";
-import { RootState, useAppDispatch } from "../../store";
+import { useAppDispatch } from "../../store";
 import { selectStatusOptions } from "../../store/statusOptions.slice";
+import {
+  useDeleteGoalMutation,
+  useGetGoalsQuery,
+  useUpdateGoalMutation,
+} from "../../store/api/goalsApi";
+import { triggerToast } from "../../store/toasts.slice";
 
 interface EditGoalProps {}
 
@@ -24,6 +29,16 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
   const statusOptions = useSelector(selectStatusOptions);
 
   const dispatch = useAppDispatch();
+  const [deleteGoal] = useDeleteGoalMutation();
+
+  const [updateGoal] = useUpdateGoalMutation();
+  const { filteredGoal } = useGetGoalsQuery(undefined, {
+    selectFromResult: (data) => {
+      return {
+        filteredGoal: data.data?.find((g) => g.id === params.id),
+      };
+    },
+  });
 
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
   const [isFormValid, setIsFormValid] = useState<boolean>();
@@ -48,7 +63,6 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
     goalDueDate: null,
   });
 
-  const filteredGoal = useSelector(selectGoalById(params.id));
   useEffect(() => {
     if (filteredGoal) {
       if (filteredGoal?.notes === null) filteredGoal.notes = "";
@@ -268,11 +282,29 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
           }}
           onOk={async () => {
             setShowDeleteConfirmModal(false);
-            dispatch(
-              goalsActions.deleteGoal({
-                id: goal?.id,
+            deleteGoal(goal?.id)
+              .then(() => {
+                dispatch(
+                  triggerToast({
+                    header: "Success",
+                    bodyText: "Goal Deleted successfully.",
+                    backgroundColor: "success",
+                    delay: 3000,
+                  })
+                );
+                navigate("/");
               })
-            ).then(() => navigate("/"));
+              .catch(() => {
+                dispatch(
+                  triggerToast({
+                    header: "Error",
+                    bodyText:
+                      "There was an error Deleting the goal. Please try again.",
+                    backgroundColor: "danger",
+                    delay: 3000,
+                  })
+                );
+              });
           }}
           bodytext="Are you sure you want to Delete?"
         ></ConfirmModal>
@@ -385,10 +417,29 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
           variant="primary"
           size="lg"
           onClick={async () => {
-            try {
-              await dispatch(goalsActions.updateGoal(goal));
-              navigate("/");
-            } catch (error) {}
+            updateGoal(goal)
+              .then(() => {
+                dispatch(
+                  triggerToast({
+                    header: "Success",
+                    bodyText: "Goal Updated successfully.",
+                    backgroundColor: "success",
+                    delay: 3000,
+                  })
+                );
+                navigate("/");
+              })
+              .catch(() => {
+                dispatch(
+                  triggerToast({
+                    header: "Error",
+                    bodyText:
+                      "There was an error updating the goal. Please try again.",
+                    backgroundColor: "danger",
+                    delay: 3000,
+                  })
+                );
+              });
           }}
           disabled={!isFormValid || !isFormDirty}
         >

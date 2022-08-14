@@ -1,8 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { Provider } from "react-redux";
 import Router, { BrowserRouter } from "react-router-dom";
-import { store, useAppDispatch } from "../../store";
-import { goalsActions } from "../../store/goals.slice";
+import { store } from "../../store";
 import { EditGoal } from "./EditGoal";
 import { rest } from "msw";
 import { setupServer } from "msw/node";
@@ -35,8 +34,6 @@ jest.mock("react-router-dom", () => ({
 }));
 
 function EditGoalWrapper() {
-  const dispatch = useAppDispatch();
-  dispatch(goalsActions.getGoals());
   return <EditGoal />;
 }
 

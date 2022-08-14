@@ -7,10 +7,11 @@ import { EditModal } from "../../components/edit-modal/EditModal";
 import { Objective } from "../../components/objective/Objective";
 import { ObjectiveModel } from "../../models/ObjectiveModel.interface";
 import { currentPageActions } from "../../store/currentPage.slice";
-import { goalsActions } from "../../store/goals.slice";
 import { FieldArray, Formik } from "formik";
 import { DatePickerWrapper } from "../../components/date-picker/DatePickerWrapper";
 import { useAppDispatch } from "../../store";
+import { useCreateGoalMutation } from "../../store/api/goalsApi";
+import { triggerToast } from "../../store/toasts.slice";
 
 interface AddGoalProps {}
 
@@ -34,6 +35,8 @@ const AddGoal = (props: PropsWithChildren<AddGoalProps>) => {
     type: "",
     goalDueDate: null,
   });
+
+  const [createGoal] = useCreateGoalMutation();
 
   const [showEditModal, setshowEditModal] = useState(false);
 
@@ -131,11 +134,32 @@ const AddGoal = (props: PropsWithChildren<AddGoalProps>) => {
           dueDate: Yup.string().nullable().required("Required"),
         })}
         onSubmit={(goal, { setSubmitting }) => {
-          dispatch(
-            goalsActions.createGoal({
-              data: { ...goal, dueDate: new Date(goal.dueDate).getTime() },
+          createGoal({
+            ...goal,
+            dueDate: new Date(goal.dueDate).getTime(),
+          })
+            .then(() => {
+              dispatch(
+                triggerToast({
+                  header: "Success",
+                  bodyText: "Goal Added successfully.",
+                  backgroundColor: "success",
+                  delay: 3000,
+                })
+              );
+              navigate("/");
             })
-          ).then(() => navigate("/"));
+            .catch(() => {
+              dispatch(
+                triggerToast({
+                  header: "Error",
+                  bodyText:
+                    "There was an error creating the goal. Please try again.",
+                  backgroundColor: "danger",
+                  delay: 3000,
+                })
+              );
+            });
         }}
       >
         {({
