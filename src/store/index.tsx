@@ -29,6 +29,8 @@ const store = configureStore({
     toasts: toastsSlice.reducer,
     [goalsApi.reducerPath]: goalsApi.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(goalsApi.middleware),
 });
 
 export { store, searchValueActions };
