@@ -1,7 +1,14 @@
 import { GoalModel } from "../../models/GoalModel.interface";
 
-const goalsReducer = (state: any, action: { type: string; goalsData: any[]; searchValue: string; }) => {
-  let goals: GoalModel[] = [];
+const goalsReducer = (
+  state: any,
+  action: { type: string; goalsData: any[] | undefined; searchValue: string }
+) => {
+  let goals: GoalModel[] | undefined = [];
+
+  if (!action.goalsData) {
+    return;
+  }
 
   if (action.type === "ALL") {
     goals = action.goalsData;

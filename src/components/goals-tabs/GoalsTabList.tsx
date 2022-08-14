@@ -1,7 +1,6 @@
 import { PropsWithChildren, useContext, useEffect } from "react";
-import { useSelector } from "react-redux";
 import { GoalsTabsContext } from "../../contexts/goalsTabs.context";
-import { selectGoals } from "../../store/goals.slice";
+import { useGetGoalsQuery } from "../../store/api/goalsApi";
 import GoalsTabItem from "./GoalsTabItem";
 
 interface Props {
@@ -9,16 +8,20 @@ interface Props {
 }
 
 const GoalsTabList = (props: PropsWithChildren<Props>) => {
-  const goalsData = useSelector(selectGoals);
+  const { data: goalsData = [] } = useGetGoalsQuery();
 
   const { goalsTabs, setGoalsTabs } = useContext(GoalsTabsContext);
 
   useEffect(() => {
+    if (goalsData.length === 0) {
+      return;
+    }
+
     const tabsClone = [...goalsTabs];
 
     tabsClone.forEach((tab) => {
       if (tab.name === "ALL") {
-        tab["count"] = goalsData.length;
+        tab["count"] = goalsData?.length;
       } else {
         const filteredData = goalsData.filter(
           (g: any) => g.status === tab.name

@@ -10,8 +10,10 @@ import {
   checkIfDatesAreEqual,
 } from "../../utils/dateTimeHelpers";
 import { GoalModel } from "../../models/GoalModel.interface";
-import { selectGoals, selectGoalsStatus } from "../../store/goals.slice";
 import { selectSearchValue } from "../../store/search.slice";
+import { useGetGoalsQuery } from "../../store/api/goalsApi";
+import { triggerToast } from "../../store/toasts.slice";
+import { useAppDispatch } from "../../store";
 
 interface Props {
   selectedGoalType: string;
@@ -19,9 +21,21 @@ interface Props {
 
 const GoalList = ({ selectedGoalType: type }: PropsWithChildren<Props>) => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-  const goalsData = useSelector(selectGoals);
-  const loadingGoals = useSelector(selectGoalsStatus);
+  const { data: goalsData, error, isLoading } = useGetGoalsQuery();
+
+  useEffect(() => {
+    if (error) {
+      dispatch(
+        triggerToast({
+          header: "Error",
+          bodyText: "There was an error retrieving goals.",
+          backgroundColor: "danger",
+        })
+      );
+    }
+  }, [error, dispatch]);
 
   const [goalsInfo, dispatchGoalsData] = useReducer(goalsReducer, goalsData);
   const searchValue = useSelector(selectSearchValue);
@@ -52,23 +66,24 @@ const GoalList = ({ selectedGoalType: type }: PropsWithChildren<Props>) => {
 
   return (
     <>
-      {loadingGoals === "PENDING" && (
+      {isLoading && (
         <Loading
           className="pt-3 "
           style={{ width: "3rem", height: "3rem" }}
           text="Please Wait..."
         ></Loading>
       )}
-      {goalsInfo.map((goal: GoalModel) => {
-        return (
-          <GoalItem
-            key={goal.id}
-            goal={goal}
-            onEdit={editHandler}
-            className={`mt-3 ${getGoalItemColor(goal)}`}
-          ></GoalItem>
-        );
-      })}
+      {goalsInfo &&
+        goalsInfo.map((goal: GoalModel) => {
+          return (
+            <GoalItem
+              key={goal.id}
+              goal={goal}
+              onEdit={editHandler}
+              className={`mt-3 ${getGoalItemColor(goal)}`}
+            ></GoalItem>
+          );
+        })}
     </>
   );
 };

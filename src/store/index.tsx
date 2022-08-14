@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
 import { GoalModel } from "../models/GoalModel.interface";
+import { goalsApi } from "./api/goalsApi";
 import { currentPageSlice } from "./currentPage.slice";
-import { goalsSlice } from "./goals.slice";
 import { searchValueSlice } from "./search.slice";
 import { statusOptionsSlice } from "./statusOptions.slice";
 import { toastsSlice } from "./toasts.slice";
@@ -23,11 +23,11 @@ const searchValueActions = searchValueSlice.actions;
 
 const store = configureStore({
   reducer: {
-    goals: goalsSlice.reducer,
     currentPage: currentPageSlice.reducer,
     searchValue: searchValueSlice.reducer,
     statusOptions: statusOptionsSlice.reducer,
     toasts: toastsSlice.reducer,
+    [goalsApi.reducerPath]: goalsApi.reducer,
   },
 });
 
