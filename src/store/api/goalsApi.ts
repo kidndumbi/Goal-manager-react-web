@@ -10,7 +10,7 @@ export const goalsApi = createApi({
   endpoints: (builder) => ({
     getGoals: builder.query<GoalModel[], void>({
       query: () => "goals",
-      providesTags: [{ type: "Goals", id: "LIST" }],
+      providesTags: ["Goals"],
     }),
     updateGoal: builder.mutation<GoalModel, GoalModel | undefined>({
       query: (goal) => ({
@@ -18,7 +18,7 @@ export const goalsApi = createApi({
         method: "PUT",
         body: goal,
       }),
-      invalidatesTags: [{ type: "Goals", id: "LIST" }],
+      invalidatesTags: ["Goals"],
     }),
     createGoal: builder.mutation<GoalModel, GoalModel | undefined>({
       query: (goal) => ({
@@ -26,14 +26,14 @@ export const goalsApi = createApi({
         method: "POST",
         body: goal,
       }),
-      invalidatesTags: [{ type: "Goals", id: "LIST" }],
+      invalidatesTags: ["Goals"],
     }),
     deleteGoal: builder.mutation<GoalModel, string | undefined>({
       query: (id) => ({
         url: `goals/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: [{ type: "Goals", id: "LIST" }],
+      invalidatesTags: ["Goals"],
     }),
     addImageData: builder.mutation<GoalModel, any | undefined>({
       query: (goal) => ({
@@ -41,14 +41,14 @@ export const goalsApi = createApi({
         method: "POST",
         body: goal.imageData,
       }),
-      invalidatesTags: [{ type: "Goals", id: "LIST" }],
+      invalidatesTags: ["Goals"],
     }),
     deleteImage: builder.mutation<GoalModel, any | undefined>({
       query: (goal) => ({
         url: `goals/images/${goal.id}?publicId=${goal.publicId}`,
         method: "DELETE",
       }),
-      invalidatesTags: [{ type: "Goals", id: "LIST" }],
+      invalidatesTags: ["Goals"],
     }),
   }),
 });
