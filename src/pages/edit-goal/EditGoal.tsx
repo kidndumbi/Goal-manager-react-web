@@ -32,10 +32,11 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
   const [deleteGoal] = useDeleteGoalMutation();
 
   const [updateGoal] = useUpdateGoalMutation();
+
   const { filteredGoal } = useGetGoalsQuery(undefined, {
-    selectFromResult: (data) => {
+    selectFromResult: (data: any) => {
       return {
-        filteredGoal: data.data?.find((g) => g.id === params.id),
+        filteredGoal: data.data?.find((g: any) => g.id === params.id),
       };
     },
   });
@@ -283,6 +284,7 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
           onOk={async () => {
             setShowDeleteConfirmModal(false);
             deleteGoal(goal?.id)
+              .unwrap()
               .then(() => {
                 dispatch(
                   triggerToast({
@@ -418,6 +420,7 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
           size="lg"
           onClick={async () => {
             updateGoal(goal)
+              .unwrap()
               .then(() => {
                 dispatch(
                   triggerToast({

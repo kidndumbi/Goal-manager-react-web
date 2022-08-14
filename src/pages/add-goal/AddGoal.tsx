@@ -138,6 +138,7 @@ const AddGoal = (props: PropsWithChildren<AddGoalProps>) => {
             ...goal,
             dueDate: new Date(goal.dueDate).getTime(),
           })
+            .unwrap()
             .then(() => {
               dispatch(
                 triggerToast({
