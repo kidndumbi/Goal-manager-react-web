@@ -140,27 +140,9 @@ const AddGoal = (props: PropsWithChildren<AddGoalProps>) => {
           })
             .unwrap()
             .then(() => {
-              dispatch(
-                triggerToast({
-                  header: "Success",
-                  bodyText: "Goal Added successfully.",
-                  backgroundColor: "success",
-                  delay: 3000,
-                })
-              );
               navigate("/");
             })
-            .catch(() => {
-              dispatch(
-                triggerToast({
-                  header: "Error",
-                  bodyText:
-                    "There was an error creating the goal. Please try again.",
-                  backgroundColor: "danger",
-                  delay: 3000,
-                })
-              );
-            });
+            .catch((e) => {});
         }}
       >
         {({
