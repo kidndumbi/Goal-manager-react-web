@@ -65,10 +65,19 @@ export const goalsApi = createApi({
         url: `goals/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Goals"],
       onQueryStarted: async (goal, { dispatch, queryFulfilled }) => {
         try {
-          await queryFulfilled;
+          const { data } = await queryFulfilled;
+          dispatch(
+            goalsApi.util.updateQueryData(
+              "getGoals",
+              undefined,
+              (draft: GoalModel[]) => {
+                return draft.filter((g) => g.id !== data.id);
+              }
+            )
+          );
+
           dispatch(
             triggerToast({
               header: "Success",
