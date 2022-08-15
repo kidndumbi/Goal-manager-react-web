@@ -1,5 +1,6 @@
 import { GoalModel } from "./../../models/GoalModel.interface";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { triggerToast } from "../toasts.slice";
 
 export const goalsApi = createApi({
   reducerPath: "goalsApi",
@@ -26,7 +27,38 @@ export const goalsApi = createApi({
         method: "POST",
         body: goal,
       }),
-      invalidatesTags: ["Goals"],
+      async onQueryStarted(goal, { dispatch, queryFulfilled }) {
+        try {
+          const { data: addedGoal } = await queryFulfilled;
+          const patchResult = dispatch(
+            goalsApi.util.updateQueryData(
+              "getGoals",
+              undefined,
+              (draft: GoalModel[]) => {
+                return [...draft, addedGoal];
+              }
+            )
+          );
+          dispatch(
+            triggerToast({
+              header: "Success",
+              bodyText: "Goal Added successfully.",
+              backgroundColor: "success",
+              delay: 3000,
+            })
+          );
+        } catch {
+          dispatch(
+            triggerToast({
+              header: "Error",
+              bodyText:
+                "There was an error creating the goal. Please try again.",
+              backgroundColor: "danger",
+              delay: 3000,
+            })
+          );
+        }
+      },
     }),
     deleteGoal: builder.mutation<GoalModel, string | undefined>({
       query: (id) => ({
