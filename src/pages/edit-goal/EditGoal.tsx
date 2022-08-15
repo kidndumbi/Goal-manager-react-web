@@ -286,27 +286,9 @@ const EditGoal = (props: PropsWithChildren<EditGoalProps>) => {
             deleteGoal(goal?.id)
               .unwrap()
               .then(() => {
-                dispatch(
-                  triggerToast({
-                    header: "Success",
-                    bodyText: "Goal Deleted successfully.",
-                    backgroundColor: "success",
-                    delay: 3000,
-                  })
-                );
                 navigate("/");
               })
-              .catch(() => {
-                dispatch(
-                  triggerToast({
-                    header: "Error",
-                    bodyText:
-                      "There was an error Deleting the goal. Please try again.",
-                    backgroundColor: "danger",
-                    delay: 3000,
-                  })
-                );
-              });
+              .catch(() => {});
           }}
           bodytext="Are you sure you want to Delete?"
         ></ConfirmModal>

@@ -60,12 +60,35 @@ export const goalsApi = createApi({
         }
       },
     }),
-    deleteGoal: builder.mutation<GoalModel, string | undefined>({
+    deleteGoal: builder.mutation<{ id: string }, string | undefined>({
       query: (id) => ({
         url: `goals/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Goals"],
+      onQueryStarted: async (goal, { dispatch, queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+          dispatch(
+            triggerToast({
+              header: "Success",
+              bodyText: "Goal Deleted successfully.",
+              backgroundColor: "success",
+              delay: 3000,
+            })
+          );
+        } catch (error) {
+          dispatch(
+            triggerToast({
+              header: "Error",
+              bodyText:
+                "There was an error Deleting the goal. Please try again.",
+              backgroundColor: "danger",
+              delay: 3000,
+            })
+          );
+        }
+      },
     }),
     addImageData: builder.mutation<GoalModel, any | undefined>({
       query: (goal) => ({
