@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useState } from "react";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../store";
 import { useDeleteGoalMutation } from "../../store/api/goalsApi";
@@ -6,6 +6,7 @@ import {
   massUpdateActions,
   selectMassUpdateIds,
 } from "../../store/massUpdate.slice";
+import { ConfirmModal } from "../confirm-modal/ConfirmModal";
 
 type MassUpdateProps = {};
 
@@ -14,10 +15,12 @@ const MassUpdate = (props: PropsWithChildren<MassUpdateProps>) => {
 
   const massUpdateIds = useSelector(selectMassUpdateIds);
   const [deleteGoal] = useDeleteGoalMutation();
+  const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
+  const [massUpdateType, setMassUpdateType] = useState<
+    "delete" | "complete" | "in_progress" | "failed" | null
+  >(null);
 
-  const massUpdateHandler = (
-    massUpdateType: "delete" | "complete" | "in_progress" | "failed"
-  ) => {
+  const massUpdateHandler = () => {
     const requests: Promise<any>[] = [];
 
     switch (massUpdateType) {
@@ -51,13 +54,29 @@ const MassUpdate = (props: PropsWithChildren<MassUpdateProps>) => {
           Failed
         </button>
         <button
-          onClick={() => massUpdateHandler("delete")}
+          onClick={() => {
+            setMassUpdateType("delete");
+            setShowDeleteConfirmModal(true);
+          }}
           type="button"
           className="btn btn-danger"
         >
           Delete
         </button>
       </div>
+      {showDeleteConfirmModal && (
+        <ConfirmModal
+          showModal={showDeleteConfirmModal}
+          onCloseModal={() => {
+            setShowDeleteConfirmModal(false);
+          }}
+          onOk={async () => {
+            setShowDeleteConfirmModal(false);
+            massUpdateHandler();
+          }}
+          bodytext={`Are you sure you want to ${massUpdateType}?`}
+        ></ConfirmModal>
+      )}
     </>
   );
 };
