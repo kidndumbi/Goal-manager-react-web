@@ -9,6 +9,7 @@ import {
   massUpdateActions,
   selectMassUpdateIds,
 } from "../../store/massUpdate.slice";
+import { AppTranstion } from "../../components/app-transition/AppTransition";
 
 interface Props {}
 const AllGoals = (props: PropsWithChildren<Props>) => {
@@ -34,7 +35,9 @@ const AllGoals = (props: PropsWithChildren<Props>) => {
     <>
       <GoalsTabList onGoalTypeSelected={goalTypeSelectedHandler}></GoalsTabList>
       <div className="pt-2">
-        {massUpdateIds.length > 0 && <MassUpdate></MassUpdate>}
+        <AppTranstion show={massUpdateIds.length > 0}>
+          <MassUpdate></MassUpdate>
+        </AppTranstion>
       </div>
       <GoalList selectedGoalType={selectedGoalType}></GoalList>
     </>
