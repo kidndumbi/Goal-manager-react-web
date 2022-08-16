@@ -6,6 +6,7 @@ import {
   massUpdateActions,
   selectMassUpdateIds,
 } from "../../store/massUpdate.slice";
+import { triggerToast } from "../../store/toasts.slice";
 import { ConfirmModal } from "../confirm-modal/ConfirmModal";
 
 type MassUpdateProps = {};
@@ -26,12 +27,32 @@ const MassUpdate = (props: PropsWithChildren<MassUpdateProps>) => {
     switch (massUpdateType) {
       case "delete":
         massUpdateIds.forEach((id) => {
-          requests.push(deleteGoal(id));
+          requests.push(deleteGoal(id).unwrap());
         });
 
-        Promise.all([...requests]).then(() => {
-          dispatch(massUpdateActions.clearMassUpdateIds());
-        });
+        Promise.all([...requests])
+          .then(() => {
+            dispatch(massUpdateActions.clearMassUpdateIds());
+            dispatch(
+              triggerToast({
+                header: "Success",
+                bodyText: "Goals Deleted successfully.",
+                backgroundColor: "success",
+                delay: 3000,
+              })
+            );
+          })
+          .catch((error) => {
+            dispatch(
+              triggerToast({
+                header: "Error",
+                bodyText:
+                  "There was an error Deleting the goals. Please try again.",
+                backgroundColor: "danger",
+                delay: 3000,
+              })
+            );
+          });
 
         break;
 

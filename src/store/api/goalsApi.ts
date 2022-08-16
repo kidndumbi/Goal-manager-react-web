@@ -77,26 +77,7 @@ export const goalsApi = createApi({
               }
             )
           );
-
-          dispatch(
-            triggerToast({
-              header: "Success",
-              bodyText: "Goal Deleted successfully.",
-              backgroundColor: "success",
-              delay: 3000,
-            })
-          );
-        } catch (error) {
-          dispatch(
-            triggerToast({
-              header: "Error",
-              bodyText:
-                "There was an error Deleting the goal. Please try again.",
-              backgroundColor: "danger",
-              delay: 3000,
-            })
-          );
-        }
+        } catch (error) {}
       },
     }),
     addImageData: builder.mutation<GoalModel, any | undefined>({
