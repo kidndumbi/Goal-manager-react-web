@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { GoalModel } from "../models/GoalModel.interface";
 import { goalsApi } from "./api/goalsApi";
 import { currentPageSlice } from "./currentPage.slice";
+import { massUpdateSlice } from "./massUpdate.slice";
 import { searchValueSlice } from "./search.slice";
 import { statusOptionsSlice } from "./statusOptions.slice";
 import { toastsSlice } from "./toasts.slice";
@@ -12,6 +13,7 @@ export interface StoreStateModel {
   currentPage?: string;
   searchValue?: string;
   statusOptions?: any[];
+  massUpdateIds?: string[];
 }
 
 export interface StoreActionModel {
@@ -28,6 +30,7 @@ const store = configureStore({
     statusOptions: statusOptionsSlice.reducer,
     toasts: toastsSlice.reducer,
     [goalsApi.reducerPath]: goalsApi.reducer,
+    massUpdateIds: massUpdateSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(goalsApi.middleware),
