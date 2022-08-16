@@ -7,6 +7,8 @@ import { useState, useEffect, PropsWithChildren } from "react";
 import { GoalModel } from "../../models/GoalModel.interface";
 import classes from "./GoalItem.module.scss";
 import { GoalImageList } from "../goal-image-list/GoalImageList";
+import { useAppDispatch } from "../../store";
+import { massUpdateActions } from "../../store/massUpdate.slice";
 
 interface Props {
   goal: GoalModel;
@@ -15,6 +17,8 @@ interface Props {
 }
 
 const GoalItem = ({ goal, className, onEdit }: PropsWithChildren<Props>) => {
+  const dispatch = useAppDispatch();
+
   const getStatusColor = (status: "FAILED" | "IN_PROGRESS" | "COMPLETE") => {
     const colors = {
       FAILED: "text-danger",
@@ -67,9 +71,26 @@ const GoalItem = ({ goal, className, onEdit }: PropsWithChildren<Props>) => {
     };
   }, []);
 
+  const checkboxClickHandler = (e: any) => {
+    dispatch(
+      massUpdateActions.setMassUpdateIds({
+        id: goal.id,
+        checked: e.target.checked,
+      })
+    );
+  };
+
   return (
     <div className={`card w-100 text-start ${className}`}>
       <div className="card-body">
+        <div className="form-check">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            value=""
+            onClick={checkboxClickHandler}
+          ></input>
+        </div>
         <h5 className="card-title">{goal.name}</h5>
         <span className="d-block">
           Created On:{" "}
