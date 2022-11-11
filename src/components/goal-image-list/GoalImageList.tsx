@@ -72,7 +72,7 @@ const GoalImageList = ({ goal }: PropsWithChildren<GoalImageListProps>) => {
     <>
       <Uploady
         destination={{
-          url: process.env.CLOUDINARY_API + "/upload?bucket=goalManagerImages",
+          url: "https://cloudinary-api-production.up.railway.app/api/upload?bucket=goalManagerImages",
         }}
       >
         <MyUplaodButton
