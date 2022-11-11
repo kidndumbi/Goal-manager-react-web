@@ -72,9 +72,7 @@ const GoalImageList = ({ goal }: PropsWithChildren<GoalImageListProps>) => {
     <>
       <Uploady
         destination={{
-          url:
-            process.env.REACT_APP_GOALS_DOMAIN +
-            "/media/upload?bucket=goalManagerImages",
+          url: process.env.CLOUDINARY_API + "/upload?bucket=goalManagerImages",
         }}
       >
         <MyUplaodButton
